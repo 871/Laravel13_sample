@@ -1,35 +1,68 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('my_sql_type_samples', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->integer('int_col')->nullable();
-            $table->bigInteger('bigint_col')->nullable();
-            $table->decimal('decimal_col', 10, 2)->nullable();
-            $table->float('float_col')->nullable();
-            $table->double('double_col')->nullable();
-            $table->date('date_col')->nullable();
-            $table->time('time_col')->nullable();
-            $table->dateTime('datetime_col')->nullable();
-            $table->char('char_col', 10)->nullable();
-            $table->string('varchar_col', 255)->nullable();
-            $table->text('text_col')->nullable();
-            $table->mediumText('mediumtext_col')->nullable();
-            $table->longText('longtext_col')->nullable();
-            $table->json('json_col')->nullable();
-            $table->longText('search_text')->nullable();
-            $table->timestamps();
-        });
+        $sql = <<<'SQL'
+
+            DROP TABLE IF EXISTS my_sql_type_samples;
+
+            CREATE TABLE my_sql_type_samples (
+                -- Primary Key (UUIDv7)
+                id CHAR(36) NOT NULL,
+
+                /* ===== Numeric Types ===== */
+                int_col INT,
+                bigint_col BIGINT,
+                decimal_col DECIMAL(10,2),
+                float_col FLOAT,
+                double_col DOUBLE,
+
+                /* ===== Date & Time Types ===== */
+                date_col DATE,
+                time_col TIME,
+                datetime_col DATETIME,
+
+                /* ===== String Types ===== */
+                char_col CHAR(10),
+                varchar_col VARCHAR(255),
+
+                text_col TEXT,
+                mediumtext_col MEDIUMTEXT,
+                longtext_col LONGTEXT,
+
+                /* ===== JSON ===== */
+                json_col JSON,
+
+                /* ===== Search Column (日本語全文検索用) ===== */
+                search_text LONGTEXT GENERATED ALWAYS AS (
+                    CONCAT_WS(' ',
+                        char_col,
+                        varchar_col,
+                        text_col,
+                        mediumtext_col,
+                        longtext_col
+                    )
+                ) STORED,
+
+                /* ===== Index ===== */
+                PRIMARY KEY (id),
+                FULLTEXT KEY ft_search_text (search_text) WITH PARSER ngram
+            )
+            ENGINE=InnoDB
+            DEFAULT CHARSET=utf8mb4
+            COLLATE=utf8mb4_0900_ai_ci;
+
+        SQL;
+
+        DB::statement($sql);
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('my_sql_type_samples');
+        DB::statement('DROP TABLE IF EXISTS my_sql_type_samples;');
     }
 };
