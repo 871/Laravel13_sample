@@ -3,11 +3,24 @@
 namespace App\Models\Log;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Admin\AdminAccount;
 
 class PageAccessLog extends Model
 {
     protected $table = 'page_access_logs';
-    const CREATED_AT = 'created';
-    const UPDATED_AT = 'modified';
+    const CREATED_AT = 'accessed';
+    const UPDATED_AT = null;
+    public $timestamps = true;
     protected $guarded = [];
+
+    protected $casts = [
+        'id' => 'integer',
+        'account_id' => 'integer',
+        'accessed' => 'datetime',
+    ];
+
+    public function adminAccount()
+    {
+        return $this->belongsTo(AdminAccount::class, 'account_id')->where('account_type', 'ADMIN');
+    }
 }

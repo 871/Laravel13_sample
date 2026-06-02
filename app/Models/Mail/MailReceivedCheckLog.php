@@ -10,4 +10,9 @@ class MailReceivedCheckLog extends Model
     const CREATED_AT = 'created';
     const UPDATED_AT = 'modified';
     protected $guarded = [];
+
+    public function mail()
+    {
+        return $this->belongsTo(Mail::class, 'mail_id');
+    }
 }

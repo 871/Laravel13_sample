@@ -10,4 +10,16 @@ class MySqlTypeSample extends Model
     const CREATED_AT = 'created';
     const UPDATED_AT = 'modified';
     protected $guarded = [];
+
+    protected $casts = [
+        'int_col' => 'integer',
+        'bigint_col' => 'integer',
+        'decimal_col' => 'decimal:6',
+        'float_col' => 'float',
+        'double_col' => 'float',
+        'date_col' => 'date',
+        'time_col' => 'string',
+        'datetime_col' => 'datetime',
+        'json_col' => 'array',
+    ];
 }

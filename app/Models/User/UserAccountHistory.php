@@ -3,11 +3,33 @@
 namespace App\Models\User;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User\UserAccount;
+use App\Models\Shared\AccountStatusMaster;
 
 class UserAccountHistory extends Model
 {
     protected $table = 'user_account_histories';
-    const CREATED_AT = 'created';
-    const UPDATED_AT = 'modified';
+    const CREATED_AT = 'history_created';
+    const UPDATED_AT = null;
+    public $timestamps = true;
     protected $guarded = [];
+
+    protected $casts = [
+        'user_account_id' => 'integer',
+        'account_status_master_id' => 'integer',
+        'is_email_verified' => 'boolean',
+        'password_changed_at' => 'datetime',
+        'password_expires_at' => 'datetime',
+        'history_created' => 'datetime',
+    ];
+
+    public function userAccount()
+    {
+        return $this->belongsTo(UserAccount::class, 'user_account_id');
+    }
+
+    public function accountStatusMaster()
+    {
+        return $this->belongsTo(AccountStatusMaster::class, 'account_status_master_id');
+    }
 }

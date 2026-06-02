@@ -10,4 +10,19 @@ class RefreshToken extends Model
     const CREATED_AT = 'created';
     const UPDATED_AT = 'modified';
     protected $guarded = [];
+
+    // UUID primary key
+    public $incrementing = false;
+    protected $keyType = 'string';
+
+    protected $casts = [
+        'id' => 'string',
+        'user_account_id' => 'integer',
+        'expires_at' => 'datetime',
+    ];
+
+    public function userAccount()
+    {
+        return $this->belongsTo(UserAccount::class, 'user_account_id');
+    }
 }
