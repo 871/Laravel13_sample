@@ -3,6 +3,9 @@
 namespace App\Models\Grant;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Admin\AdminAccount;
+use App\Models\User\UserAccount;
+use App\Models\Grant\GrantRole;
 
 class GrantAccountRole extends Model
 {
@@ -20,4 +23,19 @@ class GrantAccountRole extends Model
         'grant_role_id' => 'integer',
         'account_id' => 'integer',
     ];
+
+    public function grantRole()
+    {
+        return $this->belongsTo(GrantRole::class, 'grant_role_id');
+    }
+
+    public function adminAccount()
+    {
+        return $this->belongsTo(AdminAccount::class, 'account_id')->where('account_type', 'ADMIN');
+    }
+
+    public function userAccount()
+    {
+        return $this->belongsTo(UserAccount::class, 'account_id')->where('account_type', 'USER');
+    }
 }
