@@ -4,6 +4,7 @@ namespace App\Models\Log;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Admin\AdminAccount;
+use App\Models\User\UserAccount;
 
 class PageAccessLog extends Model
 {
@@ -22,5 +23,10 @@ class PageAccessLog extends Model
     public function adminAccount()
     {
         return $this->belongsTo(AdminAccount::class, 'account_id')->where('account_type', 'ADMIN');
+    }
+
+    public function userAccount()
+    {
+        return $this->belongsTo(UserAccount::class, 'account_id')->where('account_type', 'USER');
     }
 }
