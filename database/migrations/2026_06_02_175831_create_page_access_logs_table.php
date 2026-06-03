@@ -41,11 +41,11 @@ return new class extends Migration {
 
         SQL;
 
-        DB::statement($sql);
+        DB::unprepared($sql);
     }
 
     public function down(): void
     {
-        DB::statement('DROP TABLE IF EXISTS page_access_logs;');
+        DB::unprepared('DROP TABLE IF EXISTS page_access_logs;');
     }
 };

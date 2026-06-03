@@ -116,15 +116,15 @@ return new class extends Migration {
 
         SQL;
 
-        DB::statement($sql);
+        DB::unprepared($sql);
     }
 
     public function down(): void
     {
-        DB::statement('DROP TABLE IF EXISTS grant_account_permissions;');
-        DB::statement('DROP TABLE IF EXISTS grant_role_permissions;');
-        DB::statement('DROP TABLE IF EXISTS grant_account_roles;');
-        DB::statement('DROP TABLE IF EXISTS grant_permissions;');
-        DB::statement('DROP TABLE IF EXISTS grant_roles;');
+        DB::unprepared('DROP TABLE IF EXISTS grant_account_permissions;');
+        DB::unprepared('DROP TABLE IF EXISTS grant_role_permissions;');
+        DB::unprepared('DROP TABLE IF EXISTS grant_account_roles;');
+        DB::unprepared('DROP TABLE IF EXISTS grant_permissions;');
+        DB::unprepared('DROP TABLE IF EXISTS grant_roles;');
     }
 };

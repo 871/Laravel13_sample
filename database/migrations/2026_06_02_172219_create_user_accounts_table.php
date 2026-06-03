@@ -112,13 +112,13 @@ return new class extends Migration {
 
         SQL;
 
-        DB::statement($sql);
+        DB::unprepared($sql);
     }
 
     public function down(): void
     {
-        DB::statement('DROP TABLE IF EXISTS user_accounts;');
-        DB::statement('DROP TABLE IF EXISTS user_account_histories;');
-        DB::statement('DROP TABLE IF EXISTS refresh_tokens;');
+        DB::unprepared('DROP TABLE IF EXISTS user_accounts;');
+        DB::unprepared('DROP TABLE IF EXISTS user_account_histories;');
+        DB::unprepared('DROP TABLE IF EXISTS refresh_tokens;');
     }
 };

@@ -141,14 +141,14 @@ return new class extends Migration {
             COLLATE=utf8mb4_0900_ai_ci;
         SQL;
 
-        DB::statement($sql);
+        DB::unprepared($sql);
     }
 
     public function down(): void
     {
-        DB::statement('DROP TABLE IF EXISTS mails;');
-        DB::statement('DROP TABLE IF EXISTS mail_sent_logs;');
-        DB::statement('DROP TABLE IF EXISTS mail_received_check_logs;');
-        DB::statement('DROP TABLE IF EXISTS mail_bounce_logs;');
+        DB::unprepared('DROP TABLE IF EXISTS mails;');
+        DB::unprepared('DROP TABLE IF EXISTS mail_sent_logs;');
+        DB::unprepared('DROP TABLE IF EXISTS mail_received_check_logs;');
+        DB::unprepared('DROP TABLE IF EXISTS mail_bounce_logs;');
     }
 };
