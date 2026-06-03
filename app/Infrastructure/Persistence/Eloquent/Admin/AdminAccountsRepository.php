@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Persistence\Laravel\Admin;
+namespace App\Infrastructure\Persistence\Eloquent\Admin;
 
 use App\Domain\Admin\AdminAccounts\Entity\AdminAccount as DomainEntity;
-use App\Domain\Admin\AdminAccounts\Entity\AdminAccountHistory as DomainHistoryEntity;
 use App\Domain\Admin\AdminAccounts\Repository\AdminAccountsRepository as DomainRepository;
 use App\Domain\Admin\AdminAccounts\SearchCondition;
 use App\Domain\Admin\AdminAccounts\ValueObject as Vo;
@@ -23,40 +22,41 @@ final class AdminAccountsRepository implements DomainRepository
      */
     public function __construct(private readonly DateTimeInterface $datetime)
     {
+        // 処理なし
     }
 
     public function search(SearchCondition $condition): array
     {
-        return (new AdminAccountsRepository\Search($condition))->run();
+        return (new AdminAccountsRepository\Search($this->datetime))->run($condition);
     }
 
     public function create(DomainEntity $entity): DomainEntity
     {
-        return (new AdminAccountsRepository\Create($entity))->run();
+        return (new AdminAccountsRepository\Create($this->datetime))->run($entity);
     }
 
     public function read(Vo\Id $id): DomainEntity
     {
-        return (new AdminAccountsRepository\Read($id))->run();
+        return (new AdminAccountsRepository\Read($this->datetime))->run($id);
     }
 
     public function update(DomainEntity $entity): DomainEntity
     {
-        return (new AdminAccountsRepository\Update($entity))->run();
+        return (new AdminAccountsRepository\Update($this->datetime))->run($entity);
     }
 
     public function delete(Vo\Id $id): DomainEntity
     {
-        return (new AdminAccountsRepository\Delete($id, $this->datetime))->run();
+        return (new AdminAccountsRepository\Delete($this->datetime))->run($id);
     }
 
     public function readHistories(Vo\Id $adminAccountId): array
     {
-        return (new AdminAccountsRepository\ReadHistories($adminAccountId))->run();
+        return (new AdminAccountsRepository\ReadHistories($this->datetime))->run($adminAccountId);
     }
 
     public function findByEmail(Vo\Email $email): ?DomainEntity
     {
-        return (new AdminAccountsRepository\FindByEmail($email))->run();
+        return (new AdminAccountsRepository\FindByEmail($this->datetime))->run($email);
     }
 }

@@ -21,10 +21,10 @@ return new class extends Migration {
                 password_changed_at DATETIME(0) NOT NULL COMMENT 'パスワード最終変更日時',
                 password_expires_at DATETIME(0) NOT NULL COMMENT 'パスワード有効期限',
                 
-                created DATETIME(0) NOT NULL COMMENT '作成日時',
+                created_at DATETIME(0) NOT NULL COMMENT '作成日時',
                 created_by BIGINT DEFAULT NULL COMMENT '作成者管理者アカウントID',
                 created_ip VARCHAR(45) DEFAULT NULL COMMENT '作成時IPアドレス',
-                modified DATETIME(0) NOT NULL COMMENT '更新日時',
+                modified_at DATETIME(0) NOT NULL COMMENT '更新日時',
                 modified_by BIGINT DEFAULT NULL COMMENT '更新者管理者アカウントID',
                 modified_ip VARCHAR(45) DEFAULT NULL COMMENT '更新時IPアドレス',
                 PRIMARY KEY (id),
@@ -50,8 +50,8 @@ return new class extends Migration {
                 is_email_verified,
                 password_changed_at,
                 password_expires_at,
-                created,
-                modified
+                created_at,
+                modified_at
             ) VALUES (
                 900000,
                 'system-reserved@example.local',
@@ -80,10 +80,10 @@ return new class extends Migration {
                 password_changed_at DATETIME(0) NOT NULL COMMENT 'パスワード最終変更日時',
                 password_expires_at DATETIME(0) NOT NULL COMMENT 'パスワード有効期限',
                 
-                created DATETIME(0) NOT NULL COMMENT '作成日時',
+                created_at DATETIME(0) NOT NULL COMMENT '作成日時',
                 created_by BIGINT DEFAULT NULL COMMENT '作成者管理者アカウントID',
                 created_ip VARCHAR(45) DEFAULT NULL COMMENT '作成時IPアドレス',
-                modified DATETIME(0) NOT NULL COMMENT '更新日時',
+                modified_at DATETIME(0) NOT NULL COMMENT '更新日時',
                 modified_by BIGINT DEFAULT NULL COMMENT '更新者管理者アカウントID',
                 modified_ip VARCHAR(45) DEFAULT NULL COMMENT '更新時IPアドレス',
 

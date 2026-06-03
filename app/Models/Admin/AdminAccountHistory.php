@@ -8,11 +8,32 @@ use App\Models\Shared\AccountStatusMaster;
 
 class AdminAccountHistory extends Model
 {
+    public $timestamps = false;
+
     protected $table = 'admin_account_histories';
-    const CREATED_AT = 'history_created';
-    const UPDATED_AT = null;
-    public $timestamps = true; // created/modified handled differently; keep true for history_created
     protected $guarded = [];
+
+
+    protected $fillable = [
+        'id',
+        'admin_account_id',
+        'email',
+        'password',
+        'name',
+        'admin_note',
+        'account_status_master_id',
+        'is_email_verified',
+        'password_changed_at',
+        'password_expires_at',
+        'created_at',
+        'created_by',
+        'created_ip',
+        'modified_at',
+        'modified_by',
+        'modified_ip',
+        'operation_type',
+        'history_created',
+    ];
 
     protected $casts = [
         'admin_account_id' => 'integer',
@@ -21,6 +42,8 @@ class AdminAccountHistory extends Model
         'password_changed_at' => 'datetime',
         'password_expires_at' => 'datetime',
         'history_created' => 'datetime',
+        'created_at' => 'datetime',
+        'modified_at' => 'datetime',
     ];
 
     public function adminAccount()

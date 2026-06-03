@@ -21,7 +21,7 @@ return new class extends Migration {
                 user_agent TEXT NULL COMMENT 'ユーザーエージェント',
                 failure_reason_code VARCHAR(255) NULL COMMENT 'ログイン失敗理由コード',
                 logged_in_at DATETIME NOT NULL COMMENT 'ログイン日時',
-                created DATETIME(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '作成日時',
+                created_at DATETIME(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '作成日時',
                 PRIMARY KEY (id),
                 INDEX login_logs_idx01 (logged_in_at, login_id, login_result),
                 INDEX login_logs_idx02 (account_id, logged_in_at),

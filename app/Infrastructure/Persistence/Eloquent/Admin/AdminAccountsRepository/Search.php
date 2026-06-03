@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Persistence\Laravel\Admin\AdminAccountsRepository;
+namespace App\Infrastructure\Persistence\Eloquent\Admin\AdminAccountsRepository;
 
 use App\Domain\Admin\AdminAccounts\SearchCondition;
 use App\Models\Admin\AdminAccount as EloquentModel;

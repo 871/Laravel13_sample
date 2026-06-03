@@ -2,27 +2,32 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Persistence\Laravel\Admin\AdminAccountsRepository;
+namespace App\Infrastructure\Persistence\Eloquent\Admin\AdminAccountsRepository;
 
 use App\Domain\Admin\AdminAccounts\ValueObject as Vo;
-use App\Domain\Admin\AdminAccounts\Entity\AdminAccountHistory as DomainHistoryEntity;
+use App\Domain\Admin\AdminAccounts\Entity\AdminAccount as DomainEntity;
 use App\Models\Admin\AdminAccount as EloquentModel;
 use App\Models\Admin\AdminAccountHistory as EloquentHistory;
 use DateTimeInterface;
 use Illuminate\Support\Str;
+use Ramsey\Uuid\Uuid;
 
 final class Delete
 {
-    public function __construct(private readonly Vo\Id $id, private readonly DateTimeInterface $datetime)
+    public function __construct(
+        private readonly Vo\Id $id, 
+        private readonly DateTimeInterface $datetime)
     {
+        // 処理なし
     }
 
-    public function run(): DomainHistoryEntity
+    public function run(): DomainEntity
     {
         $model = EloquentModel::findOrFail($this->id->toString());
-
+        $results = Mapper::mapModelToDomain($model->fresh());
+        
         $history = new EloquentHistory();
-        $history->id = (string) Str::uuid();
+        $history->id = (string) Uuid::uuid7()->toString();
         $history->admin_account_id = $model->id;
         $history->email = $model->email;
         $history->password = $model->password;
@@ -44,6 +49,6 @@ final class Delete
 
         $model->delete();
 
-        return Mapper::mapHistoryModelToDomain($history);
+        return $results;
     }
 }

@@ -31,10 +31,10 @@ return new class extends Migration {
                 mail_received_check VARCHAR(255) NOT NULL COMMENT '受信確認メールアドレス',
                 mail_return_path VARCHAR(255) NOT NULL COMMENT 'バウンス確認メールアドレス',
 
-                created DATETIME(0) NOT NULL COMMENT '作成日時',
+                created_at DATETIME(0) NOT NULL COMMENT '作成日時',
                 created_by BIGINT DEFAULT NULL COMMENT '作成者アカウントID',
                 created_ip VARCHAR(45) DEFAULT NULL COMMENT '作成時IPアドレス',
-                modified DATETIME(0) NOT NULL COMMENT '更新日時',
+                modified_at DATETIME(0) NOT NULL COMMENT '更新日時',
                 modified_by BIGINT DEFAULT NULL COMMENT '更新者アカウントID',
                 modified_ip VARCHAR(45) DEFAULT NULL COMMENT '更新時IPアドレス',
                 /* ===== Search Column (日本語全文検索用) ===== */
@@ -69,7 +69,7 @@ return new class extends Migration {
                 error_message TEXT NULL COMMENT 'エラーメッセージ（失敗時）',
                 sent_at DATETIME(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '送信日時',
 
-                created DATETIME(0) NOT NULL COMMENT '作成日時',
+                created_at DATETIME(0) NOT NULL COMMENT '作成日時',
                 created_by BIGINT DEFAULT NULL COMMENT '作成者アカウントID',
                 created_ip VARCHAR(45) DEFAULT NULL COMMENT '作成時IPアドレス',
 
@@ -90,7 +90,7 @@ return new class extends Migration {
                 checked_address VARCHAR(255) NOT NULL COMMENT '確認対象メールアドレス',
                 checked_at DATETIME(0) NOT NULL DEFAULT CURRENT_TIMESTAMP(0) COMMENT '確認日時',
 
-                created DATETIME(0) NOT NULL COMMENT '作成日時',
+                created_at DATETIME(0) NOT NULL COMMENT '作成日時',
                 created_by BIGINT DEFAULT NULL COMMENT '作成者アカウントID',
                 created_ip VARCHAR(45) DEFAULT NULL COMMENT '作成時IPアドレス',
 
@@ -124,7 +124,7 @@ return new class extends Migration {
                 parsed_json JSON NULL COMMENT '解析済み構造JSON',
                 provider VARCHAR(100) NULL COMMENT 'gmail / outlook / ses 等',
                 is_auto_generated TINYINT(1) NOT NULL DEFAULT 1 COMMENT '自動生成メール',
-                created DATETIME(0) NOT NULL COMMENT '作成日時',
+                created_at DATETIME(0) NOT NULL COMMENT '作成日時',
                 created_by BIGINT DEFAULT NULL COMMENT '作成者アカウントID',
                 created_ip VARCHAR(45) DEFAULT NULL COMMENT '作成時IPアドレス',
 

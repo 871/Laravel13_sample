@@ -23,7 +23,7 @@ return new class extends Migration {
                 referer TEXT NULL COMMENT ' リファラ',
                 ip_address VARCHAR(45) NULL COMMENT ' IPアドレス',
                 user_agent TEXT NULL COMMENT ' ユーザエージェント',
-                created DATETIME(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '作成日時',
+                created_at DATETIME(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '作成日時',
                 search_key VARCHAR(50) GENERATED ALWAYS AS (
                     CONCAT_WS('-',
                         DATE_FORMAT(accessed, '%Y%m%d%H%i%s%f'),
