@@ -13,8 +13,8 @@ final class GrantAccountRole
      * @param \App\Domain\Admin\AdminGrant\ValueObject\GrantAccountRoleId $grant_account_role_id
      * @param \App\Domain\Admin\AdminGrant\ValueObject\AdminAccountId $admin_account_id
      * @param \App\Domain\Admin\AdminGrant\ValueObject\GrantRoleId $grant_role_id
-     * @param \App\Domain\Shared\ValueObject\Created $created
-     * @param \App\Domain\Shared\ValueObject\Modified $modified
+     * @param \App\Domain\Shared\ValueObject\Created $created_at
+     * @param \App\Domain\Shared\ValueObject\Modified $modified_at
      * @param ?\App\Domain\Admin\AdminGrant\Entity\AdminAccountGrant $admin_account_grant
      * @param ?\App\Domain\Admin\AdminGrant\Entity\GrantRole $grant_role
      */
@@ -22,8 +22,8 @@ final class GrantAccountRole
         private readonly Vo\GrantAccountRoleId $grant_account_role_id,
         private readonly Vo\AdminAccountId $admin_account_id,
         private readonly Vo\GrantRoleId $grant_role_id,
-        private readonly SVo\Created $created,
-        private readonly SVo\Modified $modified,
+        private readonly SVo\CreatedAt $created_at,
+        private readonly SVo\ModifiedAt $modified_at,
         private ?AdminAccountGrant $admin_account_grant,
         private ?GrantRole $grant_role,
     ) {
@@ -129,17 +129,17 @@ final class GrantAccountRole
     /**
      * @return \App\Domain\Shared\ValueObject\Created
      */
-    public function created(): SVo\Created
+    public function createdAt(): SVo\CreatedAt
     {
-        return $this->created;
+        return $this->created_at;
     }
 
     /**
      * @return \App\Domain\Shared\ValueObject\Modified
      */
-    public function modified(): SVo\Modified
+    public function modifiedAt(): SVo\ModifiedAt
     {
-        return $this->modified;
+        return $this->modified_at;
     }
 
     /**

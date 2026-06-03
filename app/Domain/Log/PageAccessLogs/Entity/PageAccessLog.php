@@ -21,7 +21,7 @@ final class PageAccessLog
      * @param \App\Domain\Log\PageAccessLogs\ValueObject\Referer $referer
      * @param \App\Domain\Log\PageAccessLogs\ValueObject\IpAddress $ip_address
      * @param \App\Domain\Log\PageAccessLogs\ValueObject\UserAgent $user_agent
-     * @param \App\Domain\Shared\ValueObject\Created $created
+     * @param \App\Domain\Shared\ValueObject\Created $created_at
      * @param \App\Domain\Log\PageAccessLogs\ValueObject\SearchKey $search_key
      */
     public function __construct(
@@ -37,7 +37,7 @@ final class PageAccessLog
         private readonly Vo\Referer $referer,
         private readonly Vo\IpAddress $ip_address,
         private readonly Vo\UserAgent $user_agent,
-        private readonly SVo\Created $created,
+        private readonly SVo\CreatedAt $created_at,
         private readonly Vo\SearchKey $search_key,
     ) {
     }
@@ -141,9 +141,9 @@ final class PageAccessLog
     /**
      * @return \App\Domain\Shared\ValueObject\Created
      */
-    public function created(): SVo\Created
+    public function createdAt(): SVo\CreatedAt
     {
-        return $this->created;
+        return $this->created_at;
     }
 
     /**

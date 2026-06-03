@@ -15,8 +15,8 @@ final class GrantPermission
      * @param \App\Domain\Admin\AdminGrant\ValueObject\Description $description
      * @param \App\Domain\Admin\AdminGrant\ValueObject\Sort $sort
      * @param \App\Domain\Admin\AdminGrant\ValueObject\IsActive $is_active
-     * @param \App\Domain\Shared\ValueObject\Created $created
-     * @param \App\Domain\Shared\ValueObject\Modified $modified
+     * @param \App\Domain\Shared\ValueObject\Created $created_at
+     * @param \App\Domain\Shared\ValueObject\Modified $modified_at
      */
     public function __construct(
         private readonly Vo\GrantPermissionId $grant_permission_id,
@@ -25,8 +25,8 @@ final class GrantPermission
         private readonly Vo\Description $description,
         private readonly Vo\Sort $sort,
         private readonly Vo\IsActive $is_active,
-        private readonly SVo\Created $created,
-        private readonly SVo\Modified $modified,
+        private readonly SVo\CreatedAt $created_at,
+        private readonly SVo\ModifiedAt $modified_at,
     ) {
     }
 
@@ -99,16 +99,16 @@ final class GrantPermission
     /**
      * @return \App\Domain\Shared\ValueObject\Created
      */
-    public function created(): SVo\Created
+    public function createdAt(): SVo\CreatedAt
     {
-        return $this->created;
+        return $this->created_at;
     }
 
     /**
      * @return \App\Domain\Shared\ValueObject\Modified
      */
-    public function modified(): SVo\Modified
+    public function modifiedAt(): SVo\ModifiedAt
     {
-        return $this->modified;
+        return $this->modified_at;
     }
 }

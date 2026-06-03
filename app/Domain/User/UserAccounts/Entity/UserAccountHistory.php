@@ -20,10 +20,10 @@ final class UserAccountHistory
      * @param \App\Domain\User\UserAccounts\ValueObject\IsEmailVerified $is_email_verified
      * @param \App\Domain\User\UserAccounts\ValueObject\PasswordChangedAt $password_changed_at
      * @param \App\Domain\User\UserAccounts\ValueObject\PasswordExpiresAt $password_expires_at
-     * @param \App\Domain\Shared\ValueObject\Created $created
+     * @param \App\Domain\Shared\ValueObject\Created $created_at
      * @param \App\Domain\Shared\ValueObject\CreatedBy $created_by
      * @param \App\Domain\Shared\ValueObject\CreatedIp $created_ip
-     * @param \App\Domain\Shared\ValueObject\Modified $modified
+     * @param \App\Domain\Shared\ValueObject\Modified $modified_at
      * @param \App\Domain\Shared\ValueObject\ModifiedBy $modified_by
      * @param \App\Domain\Shared\ValueObject\ModifiedIp $modified_ip
      * @param \App\Domain\Shared\ValueObject\OperationType $operation_type
@@ -41,12 +41,12 @@ final class UserAccountHistory
         private readonly Vo\IsEmailVerified $is_email_verified,
         private readonly Vo\PasswordChangedAt $password_changed_at,
         private readonly Vo\PasswordExpiresAt $password_expires_at,
-        private readonly SVo\Created $created,
-        private readonly SVo\CreatedBy $created_by,
-        private readonly SVo\CreatedIp $created_ip,
-        private readonly SVo\Modified $modified,
-        private readonly SVo\ModifiedBy $modified_by,
-        private readonly SVo\ModifiedIp $modified_ip,
+        private readonly SVo\CreatedAt $created_at,
+        private readonly SVo\CreatedAtBy $created_by,
+        private readonly SVo\CreatedAtIp $created_ip,
+        private readonly SVo\ModifiedAt $modified_at,
+        private readonly SVo\ModifiedAtBy $modified_by,
+        private readonly SVo\ModifiedAtIp $modified_ip,
         private readonly SVo\OperationType $operation_type,
         private readonly SVo\HistoryCreated $history_created,
     ) {
@@ -144,15 +144,15 @@ final class UserAccountHistory
     /**
      * @return \App\Domain\Shared\ValueObject\Created
      */
-    public function created(): SVo\Created
+    public function createdAt(): SVo\CreatedAt
     {
-        return $this->created;
+        return $this->created_at;
     }
 
     /**
      * @return \App\Domain\Shared\ValueObject\CreatedBy
      */
-    public function createdBy(): SVo\CreatedBy
+    public function createdBy(): SVo\CreatedAtBy
     {
         return $this->created_by;
     }
@@ -160,7 +160,7 @@ final class UserAccountHistory
     /**
      * @return \App\Domain\Shared\ValueObject\CreatedIp
      */
-    public function createdIp(): SVo\CreatedIp
+    public function createdIp(): SVo\CreatedAtIp
     {
         return $this->created_ip;
     }
@@ -168,15 +168,15 @@ final class UserAccountHistory
     /**
      * @return \App\Domain\Shared\ValueObject\Modified
      */
-    public function modified(): SVo\Modified
+    public function modifiedAt(): SVo\ModifiedAt
     {
-        return $this->modified;
+        return $this->modified_at;
     }
 
     /**
      * @return \App\Domain\Shared\ValueObject\ModifiedBy
      */
-    public function modifiedBy(): SVo\ModifiedBy
+    public function modifiedBy(): SVo\ModifiedAtBy
     {
         return $this->modified_by;
     }
@@ -184,7 +184,7 @@ final class UserAccountHistory
     /**
      * @return \App\Domain\Shared\ValueObject\ModifiedIp
      */
-    public function modifiedIp(): SVo\ModifiedIp
+    public function modifiedIp(): SVo\ModifiedAtIp
     {
         return $this->modified_ip;
     }

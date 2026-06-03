@@ -9,7 +9,7 @@ use DateTimeInterface;
 use DomainException;
 use Stringable;
 
-class Modified implements Stringable
+class ModifiedAt implements Stringable
 {
     use DateTimeTrait;
 

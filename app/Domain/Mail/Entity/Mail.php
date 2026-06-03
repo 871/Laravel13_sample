@@ -21,10 +21,10 @@ final class Mail
      * @param \App\Domain\Mail\ValueObject\MailBcc $mail_bcc
      * @param \App\Domain\Mail\ValueObject\MailReceivedCheck $mail_received_check
      * @param \App\Domain\Mail\ValueObject\MailReturnPath $mail_return_path
-     * @param \App\Domain\Shared\ValueObject\Created $created
+     * @param \App\Domain\Shared\ValueObject\Created $created_at
      * @param \App\Domain\Shared\ValueObject\CreatedBy $created_by
      * @param \App\Domain\Shared\ValueObject\CreatedIp $created_ip
-     * @param \App\Domain\Shared\ValueObject\Modified $modified
+     * @param \App\Domain\Shared\ValueObject\Modified $modified_at
      * @param \App\Domain\Shared\ValueObject\ModifiedBy $modified_by
      * @param \App\Domain\Shared\ValueObject\ModifiedIp $modified_ip
      * @param array<\App\Domain\Mail\Entity\MailSentLog> $mail_sent_logs
@@ -44,12 +44,12 @@ final class Mail
         private readonly Vo\MailBcc $mail_bcc,
         private readonly Vo\MailReceivedCheck $mail_received_check,
         private readonly Vo\MailReturnPath $mail_return_path,
-        private readonly SVo\Created $created,
-        private readonly SVo\CreatedBy $created_by,
-        private readonly SVo\CreatedIp $created_ip,
-        private readonly SVo\Modified $modified,
-        private readonly SVo\ModifiedBy $modified_by,
-        private readonly SVo\ModifiedIp $modified_ip,
+        private readonly SVo\CreatedAt $created_at,
+        private readonly SVo\CreatedAtBy $created_by,
+        private readonly SVo\CreatedAtIp $created_ip,
+        private readonly SVo\ModifiedAt $modified_at,
+        private readonly SVo\ModifiedAtBy $modified_by,
+        private readonly SVo\ModifiedAtIp $modified_ip,
         private readonly array $mail_sent_logs = [],
         private readonly array $mail_received_check_logs = [],
         private readonly array $mail_bounce_logs = [],
@@ -155,15 +155,15 @@ final class Mail
     /**
      * @return \App\Domain\Shared\ValueObject\Created
      */
-    public function created(): SVo\Created
+    public function createdAt(): SVo\CreatedAt
     {
-        return $this->created;
+        return $this->created_at;
     }
 
     /**
      * @return \App\Domain\Shared\ValueObject\CreatedBy
      */
-    public function createdBy(): SVo\CreatedBy
+    public function createdBy(): SVo\CreatedAtBy
     {
         return $this->created_by;
     }
@@ -171,7 +171,7 @@ final class Mail
     /**
      * @return \App\Domain\Shared\ValueObject\CreatedIp
      */
-    public function createdIp(): SVo\CreatedIp
+    public function createdIp(): SVo\CreatedAtIp
     {
         return $this->created_ip;
     }
@@ -179,15 +179,15 @@ final class Mail
     /**
      * @return \App\Domain\Shared\ValueObject\Modified
      */
-    public function modified(): SVo\Modified
+    public function modifiedAt(): SVo\ModifiedAt
     {
-        return $this->modified;
+        return $this->modified_at;
     }
 
     /**
      * @return \App\Domain\Shared\ValueObject\ModifiedBy
      */
-    public function modifiedBy(): SVo\ModifiedBy
+    public function modifiedBy(): SVo\ModifiedAtBy
     {
         return $this->modified_by;
     }
@@ -195,7 +195,7 @@ final class Mail
     /**
      * @return \App\Domain\Shared\ValueObject\ModifiedIp
      */
-    public function modifiedIp(): SVo\ModifiedIp
+    public function modifiedIp(): SVo\ModifiedAtIp
     {
         return $this->modified_ip;
     }

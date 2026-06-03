@@ -13,8 +13,8 @@ final class GrantRolePermission
      * @param \App\Domain\Admin\AdminGrant\ValueObject\GrantRolePermissionId $grant_role_permission_id
      * @param \App\Domain\Admin\AdminGrant\ValueObject\GrantRoleId $grant_role_id
      * @param \App\Domain\Admin\AdminGrant\ValueObject\GrantPermissionId $grant_permission_id
-     * @param \App\Domain\Shared\ValueObject\Created $created
-     * @param \App\Domain\Shared\ValueObject\Modified $modified
+     * @param \App\Domain\Shared\ValueObject\Created $created_at
+     * @param \App\Domain\Shared\ValueObject\Modified $modified_at
      * @param \App\Domain\Admin\AdminGrant\Entity\GrantRole|null $grant_role
      * @param \App\Domain\Admin\AdminGrant\Entity\GrantPermission|null $grant_permission
      */
@@ -22,8 +22,8 @@ final class GrantRolePermission
         private readonly Vo\GrantRolePermissionId $grant_role_permission_id,
         private readonly Vo\GrantRoleId $grant_role_id,
         private readonly Vo\GrantPermissionId $grant_permission_id,
-        private readonly SVo\Created $created,
-        private readonly SVo\Modified $modified,
+        private readonly SVo\CreatedAt $created_at,
+        private readonly SVo\ModifiedAt $modified_at,
         private readonly ?GrantRole $grant_role,
         private readonly ?GrantPermission $grant_permission,
     ) {
@@ -87,17 +87,17 @@ final class GrantRolePermission
     /**
      * @return \App\Domain\Shared\ValueObject\Created
      */
-    public function created(): SVo\Created
+    public function createdAt(): SVo\CreatedAt
     {
-        return $this->created;
+        return $this->created_at;
     }
 
     /**
      * @return \App\Domain\Shared\ValueObject\Modified
      */
-    public function modified(): SVo\Modified
+    public function modifiedAt(): SVo\ModifiedAt
     {
-        return $this->modified;
+        return $this->modified_at;
     }
 
     /**

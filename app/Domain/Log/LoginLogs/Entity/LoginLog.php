@@ -19,7 +19,7 @@ final class LoginLog
      * @param \App\Domain\Log\LoginLogs\ValueObject\UserAgent $user_agent
      * @param \App\Domain\Log\LoginLogs\ValueObject\FailureReasonCode $failure_reason_code
      * @param \App\Domain\Log\LoginLogs\ValueObject\LoggedInAt $logged_in_at
-     * @param \App\Domain\Shared\ValueObject\Created $created
+     * @param \App\Domain\Shared\ValueObject\Created $created_at
      */
     public function __construct(
         private readonly Vo\Id $id,
@@ -32,7 +32,7 @@ final class LoginLog
         private readonly Vo\UserAgent $user_agent,
         private readonly Vo\FailureReasonCode $failure_reason_code,
         private readonly Vo\LoggedInAt $logged_in_at,
-        private readonly SVo\Created $created,
+        private readonly SVo\CreatedAt $created_at,
     ) {
     }
 
@@ -119,8 +119,8 @@ final class LoginLog
     /**
      * @return \App\Domain\Shared\ValueObject\Created
      */
-    public function created(): SVo\Created
+    public function createdAt(): SVo\CreatedAt
     {
-        return $this->created;
+        return $this->created_at;
     }
 }
