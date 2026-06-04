@@ -7,6 +7,7 @@ namespace App\Infrastructure\Persistence\Eloquent\Admin\AdminAccountsRepository;
 use App\Domain\Admin\AdminAccounts\SearchCondition;
 use App\Models\Admin\AdminAccount;
 use DateTimeInterface;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 final class Search
 {
@@ -46,10 +47,10 @@ final class Search
                 'admin_accounts.modified_ip',
             )
             ->where(array_filter([
-                'id' => $condition->getId()->toStringOrNull(),
-                'account_status_master_id' => $condition->getAccountStatusMasterId()->toStringOrNull(),
-                'name' => $condition->getKeyword()->toQueryLikeOrNull(),
-                'email' => $condition->getKeyword()->toQueryLikeOrNull(),
+                'admin_accounts.id' => $condition->getId()->toStringOrNull(),
+                'admin_accounts.account_status_master_id' => $condition->getAccountStatusMasterId()->toStringOrNull(),
+                'admin_accounts.name' => $condition->getKeyword()->toQueryLikeOrNull(),
+                'admin_accounts.email' => $condition->getKeyword()->toQueryLikeOrNull(),
             ], fn ($v) => !in_array($v, [null, '', []], true)))
             ->orderBy(
                 $condition->getOrderBy()->getColumn(), 
@@ -66,6 +67,7 @@ final class Search
         return $paginator->setCollection(
             $paginator->getCollection()
                 ->map(fn ($model) => Mapper::mapModelToDomain($model))
-        );
+        )
+        ->toArray();
     }
 }
