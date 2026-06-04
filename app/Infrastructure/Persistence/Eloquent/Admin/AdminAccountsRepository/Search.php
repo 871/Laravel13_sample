@@ -46,12 +46,24 @@ final class Search
                 'admin_accounts.modified_by',
                 'admin_accounts.modified_ip',
             )
-            ->where(array_filter([
-                'admin_accounts.id' => $condition->getId()->toStringOrNull(),
-                'admin_accounts.account_status_master_id' => $condition->getAccountStatusMasterId()->toStringOrNull(),
-                'admin_accounts.name' => $condition->getKeyword()->toQueryLikeOrNull(),
-                'admin_accounts.email' => $condition->getKeyword()->toQueryLikeOrNull(),
-            ], fn ($v) => !in_array($v, [null, '', []], true)))
+            ->when(
+                filled($condition->getId()->toStringOrNull()),
+                fn ($q) => $q->where('admin_accounts.id', $condition->getId()->toString())
+            )
+            ->when(
+                filled($condition->getAccountStatusMasterId()->toStringOrNull()),
+                fn ($q) => $q->where('admin_accounts.account_status_master_id', $condition->getAccountStatusMasterId()->toString())
+            )
+            ->when(
+                filled($condition->getKeyword()->toQueryLikeOrNull()),
+                function ($q) use ($condition) {
+                    $keyword = $condition->getKeyword()->toQueryLikeOrNull();
+                    $q->where(function ($q) use ($keyword) {
+                        $q->where('admin_accounts.name', 'like', $keyword)
+                          ->orWhere('admin_accounts.email', 'like', $keyword);
+                    });
+                }
+            )
             ->orderBy(
                 $condition->getOrderBy()->getColumn(), 
                 $condition->getOrderBy()->getOrder(),
