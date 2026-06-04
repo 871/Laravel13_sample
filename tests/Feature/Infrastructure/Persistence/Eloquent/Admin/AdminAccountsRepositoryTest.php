@@ -25,7 +25,7 @@ final class AdminAccountsRepositoryTest extends TestCase
     {
         $repo = new Repo(new \DateTimeImmutable());
 
-        $id = new Vo\Id('900100');
+        $id = new Vo\Id(null);
         $email = new Vo\Email('integ-test@example.com');
         $password = new Vo\Password('secret-password');
         $name = new Vo\Name('Initial Name');
@@ -34,13 +34,14 @@ final class AdminAccountsRepositoryTest extends TestCase
         $statusCode = new Vo\AccountStatusMasterCode(Vo\AccountStatusMasterCode::ACTIVE);
         $statusName = new Vo\AccountStatusMasterName('Active');
         $isVerified = new Vo\IsEmailVerified('0');
-        $pwdChanged = new Vo\PasswordChangedAt(null);
-        $pwdExpires = new Vo\PasswordExpiresAt(null);
+        $now = (new \DateTimeImmutable())->format('Y-m-d\\TH:i:s');
+        $pwdChanged = new Vo\PasswordChangedAt($now);
+        $pwdExpires = new Vo\PasswordExpiresAt($now);
 
-        $createdAt = new SVo\CreatedAt(null);
+        $createdAt = new SVo\CreatedAt($now);
         $createdBy = new SVo\CreatedBy(null);
         $createdIp = new SVo\CreatedIp(null);
-        $modifiedAt = new SVo\ModifiedAt(null);
+        $modifiedAt = new SVo\ModifiedAt($now);
         $modifiedBy = new SVo\ModifiedBy(null);
         $modifiedIp = new SVo\ModifiedIp(null);
 
@@ -75,7 +76,7 @@ final class AdminAccountsRepositoryTest extends TestCase
         $this->assertSame($created->id()->toString(), $found->id()->toString());
 
         // readHistories should contain INSERT history
-        $histories = $repo->readHistories($id);
+        $histories = $repo->readHistories($created->id());
         $this->assertNotEmpty($histories);
         $this->assertSame('INSERT', $histories[0]->operationType()->toString());
 
@@ -106,7 +107,7 @@ final class AdminAccountsRepositoryTest extends TestCase
         $this->assertSame('Updated Name', $afterUpdate->name()->toString());
 
         // read histories again should include UPDATE as most recent
-        $histories2 = $repo->readHistories($id);
+        $histories2 = $repo->readHistories($created->id());
         $this->assertNotEmpty($histories2);
         $this->assertSame('UPDATE', $histories2[0]->operationType()->toString());
     }

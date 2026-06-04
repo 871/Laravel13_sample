@@ -8,6 +8,8 @@ use App\Models\Shared\AccountStatusMaster;
 
 class AdminAccountHistory extends Model
 {
+    public $incrementing = false;
+    protected $keyType = 'string';
     public $timestamps = false;
 
     protected $table = 'admin_account_histories';
@@ -43,7 +45,9 @@ class AdminAccountHistory extends Model
         'password_expires_at' => 'datetime',
         'history_created' => 'datetime',
         'created_at' => 'datetime',
+        'created_by' => 'integer',
         'modified_at' => 'datetime',
+        'modified_by' => 'integer',
     ];
 
     public function adminAccount()

@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\Eloquent\Admin\AdminAccountsRepository;
 
 use App\Domain\Admin\AdminAccounts\Entity\AdminAccount as DomainEntity;
+use App\Domain\Admin\AdminAccounts\ValueObject as Vo;
 use App\Domain\Shared\Enum as SEnum;
-use App\Models\Admin\AdminAccount as MainModel;
-use App\Models\Admin\AdminAccountHistory as HistoryModel;
+use App\Models\Admin\AdminAccount;
+use App\Models\Admin\AdminAccountHistory;
 use DateTimeInterface;
 use Ramsey\Uuid\Uuid;
 use Illuminate\Support\Facades\Hash;
@@ -21,44 +22,44 @@ final class Create
 
     public function run(DomainEntity $entity): DomainEntity
     {
-        $mainModel = MainModel::create([
+        $adminAccount = AdminAccount::create([
             'email' => $entity->email()->toString(),
             'password' => Hash::make($entity->password()->toString()),
             'name' => $entity->name()->toString(),
             'admin_note' => $entity->adminNote()->toString(),
             'account_status_master_id' => $entity->accountStatusMasterId()->toString(),
             'is_email_verified' => $entity->isEmailVerified()->toIntOrNull() ?? 0,
-            'password_changed_at' => $entity->passwordChangedAt()?->toString() ?? null,
-            'password_expires_at' => $entity->passwordExpiresAt()?->toString() ?? null,
+            'password_changed_at' => $entity->passwordChangedAt()?->format('Y-m-d\\TH:i:s') ?? null,
+            'password_expires_at' => $entity->passwordExpiresAt()?->format('Y-m-d\\TH:i:s') ?? null,
             'created_at' => $entity->createdAt()?->format('Y-m-d\\TH:i:s') ?? null,
-            'created_by' => $entity->createdBy()?->toString(), 
-            'created_ip' => $entity->createdIp()?->toString(),
+            'created_by' => $entity->createdBy()->toIntOrNull(), 
+            'created_ip' => $entity->createdIp()->toStringOrNull(),
             'modified_at' => $entity->modifiedAt()?->format('Y-m-d\\TH:i:s') ?? null,
-            'modified_by' => $entity->modifiedBy()?->toString(),
-            'modified_ip' => $entity->modifiedIp()?->toString(),
+            'modified_by' => $entity->modifiedBy()->toIntOrNull(),
+            'modified_ip' => $entity->modifiedIp()->toStringOrNull(),
         ]);
 
-        HistoryModel::create([
+        $h = AdminAccountHistory::create([
             'id' => Uuid::uuid7()->toString(),
-            'admin_account_id' => $mainModel->id,
-            'email' => $mainModel->email,
-            'password' => $mainModel->password,
-            'name' => $mainModel->name,
-            'admin_note' => $mainModel->admin_note,
-            'account_status_master_id' => $mainModel->account_status_master_id,
-            'is_email_verified' => $mainModel->is_email_verified,
-            'password_changed_at' => $mainModel->password_changed_at,
-            'password_expires_at' => $mainModel->password_expires_at,
-            'created_at' => $mainModel->created_at,
-            'created_by' => $mainModel->created_by,
-            'created_ip' => $mainModel->created_ip,
-            'modified_at' => $mainModel->modified_at,
-            'modified_by' => $mainModel->modified_by,
-            'modified_ip' => $mainModel->modified_ip,
+            'admin_account_id' => $adminAccount->id,
+            'email' => $adminAccount->email,
+            'password' => $adminAccount->password,
+            'name' => $adminAccount->name,
+            'admin_note' => $adminAccount->admin_note,
+            'account_status_master_id' => $adminAccount->account_status_master_id,
+            'is_email_verified' => $adminAccount->is_email_verified,
+            'password_changed_at' => $adminAccount->password_changed_at,
+            'password_expires_at' => $adminAccount->password_expires_at,
+            'created_at' => $adminAccount->created_at,
+            'created_by' => $adminAccount->created_by,
+            'created_ip' => $adminAccount->created_ip,
+            'modified_at' => $adminAccount->modified_at,
+            'modified_by' => $adminAccount->modified_by,
+            'modified_ip' => $adminAccount->modified_ip,
             'operation_type' => SEnum\OperationType::INSERT,
             'history_created' => $this->datetime->format('Y-m-d\\TH:i:s'),
         ]);
 
-        return (new Read($this->datetime))->run($entity->id());
+        return (new Read($this->datetime))->run(Vo\Id::fromString((string)$adminAccount->id));
     }
 }

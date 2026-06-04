@@ -40,7 +40,9 @@ class AdminAccount extends Model
         'password_changed_at' => 'datetime',
         'password_expires_at' => 'datetime',
         'created_at' => 'datetime',
+        'created_by' => 'integer',
         'modified_at' => 'datetime',
+        'modified_by' => 'integer',
     ];
 
     public function accountStatusMaster()
