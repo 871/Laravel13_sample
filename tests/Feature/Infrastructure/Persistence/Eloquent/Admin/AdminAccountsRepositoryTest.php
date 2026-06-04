@@ -19,17 +19,6 @@ final class AdminAccountsRepositoryTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        // Seed a minimal account_status_master row required by foreign keys
-        DB::table('account_status_masters')->insert([
-            'id' => 1,
-            'code' => 'ACTIVE',
-            'name' => 'Active',
-            'sort' => 1,
-            'is_active' => 1,
-            'created' => now(),
-            'modified' => now(),
-        ]);
     }
 
     public function testCreateReadFindByEmailReadHistoriesAndUpdate(): void
@@ -41,7 +30,7 @@ final class AdminAccountsRepositoryTest extends TestCase
         $password = new Vo\Password('secret-password');
         $name = new Vo\Name('Initial Name');
         $adminNote = new Vo\AdminNote('note');
-        $statusId = new Vo\AccountStatusMasterId('1');
+        $statusId = new Vo\AccountStatusMasterId('200');
         $statusCode = new Vo\AccountStatusMasterCode(Vo\AccountStatusMasterCode::ACTIVE);
         $statusName = new Vo\AccountStatusMasterName('Active');
         $isVerified = new Vo\IsEmailVerified('0');
