@@ -13,8 +13,8 @@ final class GrantRolePermission
      * @param \App\Domain\Admin\AdminGrant\ValueObject\GrantRolePermissionId $grant_role_permission_id
      * @param \App\Domain\Admin\AdminGrant\ValueObject\GrantRoleId $grant_role_id
      * @param \App\Domain\Admin\AdminGrant\ValueObject\GrantPermissionId $grant_permission_id
-     * @param \App\Domain\Shared\ValueObject\Created $created_at
-     * @param \App\Domain\Shared\ValueObject\Modified $modified_at
+     * @param \App\Domain\Shared\ValueObject\CreatedAt $created_at
+     * @param \App\Domain\Shared\ValueObject\ModifiedAt $modified_at
      * @param \App\Domain\Admin\AdminGrant\Entity\GrantRole|null $grant_role
      * @param \App\Domain\Admin\AdminGrant\Entity\GrantPermission|null $grant_permission
      */
@@ -85,7 +85,7 @@ final class GrantRolePermission
     }
 
     /**
-     * @return \App\Domain\Shared\ValueObject\Created
+     * @return \App\Domain\Shared\ValueObject\CreatedAt
      */
     public function createdAt(): SVo\CreatedAt
     {
@@ -93,7 +93,7 @@ final class GrantRolePermission
     }
 
     /**
-     * @return \App\Domain\Shared\ValueObject\Modified
+     * @return \App\Domain\Shared\ValueObject\ModifiedAt
      */
     public function modifiedAt(): SVo\ModifiedAt
     {

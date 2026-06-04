@@ -40,12 +40,6 @@ interface AdminAccountsRepository
     public function update(AdminAccount $entity): AdminAccount;
 
     /**
-     * @param \App\Domain\Admin\AdminAccounts\ValueObject\Id $id
-     * @return \App\Domain\Admin\AdminAccounts\Entity\AdminAccount
-     */
-    public function delete(Vo\Id $id): AdminAccount;
-
-    /**
      * @param \App\Domain\Admin\AdminAccounts\ValueObject\Email $email
      * @return ?\App\Domain\Admin\AdminAccounts\Entity\AdminAccount
      */

@@ -13,8 +13,8 @@ final class GrantAccountPermission
      * @param \App\Domain\Admin\AdminGrant\ValueObject\GrantAccountPermissionId $grant_account_permission_id
      * @param \App\Domain\Admin\AdminGrant\ValueObject\AdminAccountId $admin_account_id
      * @param \App\Domain\Admin\AdminGrant\ValueObject\GrantPermissionId $grant_permission_id
-     * @param \App\Domain\Shared\ValueObject\Created $created_at
-     * @param \App\Domain\Shared\ValueObject\Modified $modified_at
+     * @param \App\Domain\Shared\ValueObject\CreatedAt $created_at
+     * @param \App\Domain\Shared\ValueObject\ModifiedAt $modified_at
      */
     public function __construct(
         private readonly Vo\GrantAccountPermissionId $grant_account_permission_id,

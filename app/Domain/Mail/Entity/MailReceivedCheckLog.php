@@ -14,7 +14,7 @@ final class MailReceivedCheckLog
      * @param \App\Domain\Mail\ValueObject\MailReceivedCheckLogs\OriginalMessageId $original_message_id
      * @param \App\Domain\Mail\ValueObject\MailReceivedCheckLogs\CheckedAddress $checked_address
      * @param \App\Domain\Mail\ValueObject\MailReceivedCheckLogs\CheckedAt $checked_at
-     * @param \App\Domain\Shared\ValueObject\Created $created_at
+     * @param \App\Domain\Shared\ValueObject\CreatedAt $created_at
      * @param \App\Domain\Shared\ValueObject\CreatedBy $created_by
      * @param \App\Domain\Shared\ValueObject\CreatedIp $created_ip
      */
@@ -25,8 +25,8 @@ final class MailReceivedCheckLog
         private readonly Vo\CheckedAddress $checked_address,
         private readonly Vo\CheckedAt $checked_at,
         private readonly SVo\CreatedAt $created_at,
-        private readonly SVo\CreatedAtBy $created_by,
-        private readonly SVo\CreatedAtIp $created_ip,
+        private readonly SVo\CreatedBy $created_by,
+        private readonly SVo\CreatedIp $created_ip,
     ) {
     }
 
@@ -71,7 +71,7 @@ final class MailReceivedCheckLog
     }
 
     /**
-     * @return \App\Domain\Shared\ValueObject\Created
+     * @return \App\Domain\Shared\ValueObject\CreatedAt
      */
     public function createdAt(): SVo\CreatedAt
     {
@@ -81,7 +81,7 @@ final class MailReceivedCheckLog
     /**
      * @return \App\Domain\Shared\ValueObject\CreatedBy
      */
-    public function createdBy(): SVo\CreatedAtBy
+    public function createdBy(): SVo\CreatedBy
     {
         return $this->created_by;
     }
@@ -89,7 +89,7 @@ final class MailReceivedCheckLog
     /**
      * @return \App\Domain\Shared\ValueObject\CreatedIp
      */
-    public function createdIp(): SVo\CreatedAtIp
+    public function createdIp(): SVo\CreatedIp
     {
         return $this->created_ip;
     }

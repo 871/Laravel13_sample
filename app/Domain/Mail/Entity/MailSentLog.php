@@ -15,7 +15,7 @@ final class MailSentLog
      * @param \App\Domain\Mail\ValueObject\MailSentLogs\SendStatus $send_status
      * @param \App\Domain\Mail\ValueObject\MailSentLogs\ErrorMessage $error_message
      * @param \App\Domain\Mail\ValueObject\MailSentLogs\SentAt $sent_at
-     * @param \App\Domain\Shared\ValueObject\Created $created_at
+     * @param \App\Domain\Shared\ValueObject\CreatedAt $created_at
      * @param \App\Domain\Shared\ValueObject\CreatedBy $created_by
      * @param \App\Domain\Shared\ValueObject\CreatedIp $created_ip
      */
@@ -27,8 +27,8 @@ final class MailSentLog
         private readonly Vo\ErrorMessage $error_message,
         private readonly Vo\SentAt $sent_at,
         private readonly SVo\CreatedAt $created_at,
-        private readonly SVo\CreatedAtBy $created_by,
-        private readonly SVo\CreatedAtIp $created_ip,
+        private readonly SVo\CreatedBy $created_by,
+        private readonly SVo\CreatedIp $created_ip,
     ) {
     }
 
@@ -81,7 +81,7 @@ final class MailSentLog
     }
 
     /**
-     * @return \App\Domain\Shared\ValueObject\Created
+     * @return \App\Domain\Shared\ValueObject\CreatedAt
      */
     public function createdAt(): SVo\CreatedAt
     {
@@ -91,7 +91,7 @@ final class MailSentLog
     /**
      * @return \App\Domain\Shared\ValueObject\CreatedBy
      */
-    public function createdBy(): SVo\CreatedAtBy
+    public function createdBy(): SVo\CreatedBy
     {
         return $this->created_by;
     }
@@ -99,7 +99,7 @@ final class MailSentLog
     /**
      * @return \App\Domain\Shared\ValueObject\CreatedIp
      */
-    public function createdIp(): SVo\CreatedAtIp
+    public function createdIp(): SVo\CreatedIp
     {
         return $this->created_ip;
     }

@@ -3,7 +3,6 @@
 namespace App\Models\Admin;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Domain\Admin\AdminAccounts\Entity\AdminAccount as DomainAdminAccount;
 use App\Models\Shared\AccountStatusMaster;
 use App\Models\Admin\AdminAccountHistory;
 use App\Models\Grant\GrantAccountPermission;

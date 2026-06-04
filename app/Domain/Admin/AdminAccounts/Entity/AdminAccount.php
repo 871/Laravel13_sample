@@ -20,10 +20,10 @@ final class AdminAccount
      * @param \App\Domain\Admin\AdminAccounts\ValueObject\IsEmailVerified $is_email_verified
      * @param \App\Domain\Admin\AdminAccounts\ValueObject\PasswordChangedAt $password_changed_at
      * @param \App\Domain\Admin\AdminAccounts\ValueObject\PasswordExpiresAt $password_expires_at
-     * @param \App\Domain\Shared\ValueObject\Created $created_at
+     * @param \App\Domain\Shared\ValueObject\CreatedAt $created_at
      * @param \App\Domain\Shared\ValueObject\CreatedBy $created_by
      * @param \App\Domain\Shared\ValueObject\CreatedIp $created_ip
-     * @param \App\Domain\Shared\ValueObject\Modified $modified_at
+     * @param \App\Domain\Shared\ValueObject\ModifiedAt $modified_at
      * @param \App\Domain\Shared\ValueObject\ModifiedBy $modified_by
      * @param \App\Domain\Shared\ValueObject\ModifiedIp $modified_ip
      */
@@ -40,11 +40,11 @@ final class AdminAccount
         private readonly Vo\PasswordChangedAt $password_changed_at,
         private readonly Vo\PasswordExpiresAt $password_expires_at,
         private readonly SVo\CreatedAt $created_at,
-        private readonly SVo\CreatedAtBy $created_by,
-        private readonly SVo\CreatedAtIp $created_ip,
+        private readonly SVo\CreatedBy $created_by,
+        private readonly SVo\CreatedIp $created_ip,
         private readonly SVo\ModifiedAt $modified_at,
-        private readonly SVo\ModifiedAtBy $modified_by,
-        private readonly SVo\ModifiedAtIp $modified_ip,
+        private readonly SVo\ModifiedBy $modified_by,
+        private readonly SVo\ModifiedIp $modified_ip,
     ) {
     }
 
@@ -137,7 +137,7 @@ final class AdminAccount
     }
 
     /**
-     * @return \App\Domain\Shared\ValueObject\Created
+     * @return \App\Domain\Shared\ValueObject\CreatedAt
      */
     public function createdAt(): SVo\CreatedAt
     {
@@ -147,7 +147,7 @@ final class AdminAccount
     /**
      * @return \App\Domain\Shared\ValueObject\CreatedBy
      */
-    public function createdBy(): SVo\CreatedAtBy
+    public function createdBy(): SVo\CreatedBy
     {
         return $this->created_by;
     }
@@ -155,13 +155,13 @@ final class AdminAccount
     /**
      * @return \App\Domain\Shared\ValueObject\CreatedIp
      */
-    public function createdIp(): SVo\CreatedAtIp
+    public function createdIp(): SVo\CreatedIp
     {
         return $this->created_ip;
     }
 
     /**
-     * @return \App\Domain\Shared\ValueObject\Modified
+     * @return \App\Domain\Shared\ValueObject\ModifiedAt
      */
     public function modifiedAt(): SVo\ModifiedAt
     {
@@ -171,7 +171,7 @@ final class AdminAccount
     /**
      * @return \App\Domain\Shared\ValueObject\ModifiedBy
      */
-    public function modifiedBy(): SVo\ModifiedAtBy
+    public function modifiedBy(): SVo\ModifiedBy
     {
         return $this->modified_by;
     }
@@ -179,7 +179,7 @@ final class AdminAccount
     /**
      * @return \App\Domain\Shared\ValueObject\ModifiedIp
      */
-    public function modifiedIp(): SVo\ModifiedAtIp
+    public function modifiedIp(): SVo\ModifiedIp
     {
         return $this->modified_ip;
     }

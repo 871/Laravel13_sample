@@ -45,11 +45,6 @@ final class AdminAccountsRepository implements DomainRepository
         return (new AdminAccountsRepository\Update($this->datetime))->run($entity);
     }
 
-    public function delete(Vo\Id $id): DomainEntity
-    {
-        return (new AdminAccountsRepository\Delete($this->datetime))->run($id);
-    }
-
     public function readHistories(Vo\Id $adminAccountId): array
     {
         return (new AdminAccountsRepository\ReadHistories($this->datetime))->run($adminAccountId);

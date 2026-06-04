@@ -19,7 +19,7 @@ final class LoginLog
      * @param \App\Domain\Log\LoginLogs\ValueObject\UserAgent $user_agent
      * @param \App\Domain\Log\LoginLogs\ValueObject\FailureReasonCode $failure_reason_code
      * @param \App\Domain\Log\LoginLogs\ValueObject\LoggedInAt $logged_in_at
-     * @param \App\Domain\Shared\ValueObject\Created $created_at
+     * @param \App\Domain\Shared\ValueObject\CreatedAt $created_at
      */
     public function __construct(
         private readonly Vo\Id $id,
@@ -117,7 +117,7 @@ final class LoginLog
     }
 
     /**
-     * @return \App\Domain\Shared\ValueObject\Created
+     * @return \App\Domain\Shared\ValueObject\CreatedAt
      */
     public function createdAt(): SVo\CreatedAt
     {

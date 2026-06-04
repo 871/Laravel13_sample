@@ -5,8 +5,12 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\Eloquent\Admin\AdminAccountsRepository;
 
 use App\Domain\Admin\AdminAccounts\Entity\AdminAccount as DomainEntity;
-use App\Models\Admin\AdminAccount as EloquentModel;
+use App\Domain\Shared\Enum as SEnum;
+use App\Models\Admin\AdminAccount as MainModel;
+use App\Models\Admin\AdminAccountHistory as HistoryModel;
 use DateTimeInterface;
+use Ramsey\Uuid\Uuid;
+use Illuminate\Support\Facades\Hash;
 
 final class Create
 {
@@ -17,57 +21,44 @@ final class Create
 
     public function run(DomainEntity $entity): DomainEntity
     {
-        $model = EloquentModel::create([
-            'id' => null, // AUTO_INCREMENT
+        $mainModel = MainModel::create([
             'email' => $entity->email()->toString(),
-            'password' => $entity->password()->toString(),
+            'password' => Hash::make($entity->password()->toString()),
             'name' => $entity->name()->toString(),
             'admin_note' => $entity->adminNote()->toString(),
             'account_status_master_id' => $entity->accountStatusMasterId()->toString(),
             'is_email_verified' => $entity->isEmailVerified()->toIntOrNull() ?? 0,
             'password_changed_at' => $entity->passwordChangedAt()?->toString() ?? null,
             'password_expires_at' => $entity->passwordExpiresAt()?->toString() ?? null,
-            'created' => $entity->createdAt()?->format('Y-m-d\\TH:i:s') ?? null,
-            'created_by' => null, // TODO: 作成者管理者アカウントID
-            'created_ip' => null, // TODO: 作成時IPアドレス
-            'modified' => $this->datetime->format('Y-m-d\\TH:i:s'),
-            'modified_by' => null, // TODO: 更新者管理者アカウントID
-            'modified_ip' => null, // TODO: 更新時IPアドレス
+            'created_at' => $entity->createdAt()?->format('Y-m-d\\TH:i:s') ?? null,
+            'created_by' => $entity->createdBy()?->toString(), 
+            'created_ip' => $entity->createdIp()?->toString(),
+            'modified_at' => $entity->modifiedAt()?->format('Y-m-d\\TH:i:s') ?? null,
+            'modified_by' => $entity->modifiedBy()?->toString(),
+            'modified_ip' => $entity->modifiedIp()?->toString(),
         ]);
 
-        $model = new EloquentModel();
+        HistoryModel::create([
+            'id' => Uuid::uuid7()->toString(),
+            'admin_account_id' => $mainModel->id,
+            'email' => $mainModel->email,
+            'password' => $mainModel->password,
+            'name' => $mainModel->name,
+            'admin_note' => $mainModel->admin_note,
+            'account_status_master_id' => $mainModel->account_status_master_id,
+            'is_email_verified' => $mainModel->is_email_verified,
+            'password_changed_at' => $mainModel->password_changed_at,
+            'password_expires_at' => $mainModel->password_expires_at,
+            'created_at' => $mainModel->created_at,
+            'created_by' => $mainModel->created_by,
+            'created_ip' => $mainModel->created_ip,
+            'modified_at' => $mainModel->modified_at,
+            'modified_by' => $mainModel->modified_by,
+            'modified_ip' => $mainModel->modified_ip,
+            'operation_type' => SEnum\OperationType::INSERT,
+            'history_created' => $this->datetime->format('Y-m-d\\TH:i:s'),
+        ]);
 
-        $model->id = $entity->id()->toString();
-        $model->email = $entity->email()->toString();
-        $model->password = $entity->password()->toString();
-        $model->name = $entity->name()->toString();
-        $model->admin_note = $entity->adminNote()->toString();
-        $model->account_status_master_id = $entity->accountStatusMasterId()->toString();
-        $model->is_email_verified = $entity->isEmailVerified()->toIntOrNull() ?? 0;
-        $model->password_changed_at = $entity->passwordChangedAt()?->toString() ?? null;
-        $model->password_expires_at = $entity->passwordExpiresAt()?->toString() ?? null;
-
-/*
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '管理者アカウントID',
-  `email` varchar(255) NOT NULL COMMENT 'ログインメールアドレス',
-  `password` varchar(255) NOT NULL COMMENT 'ハッシュ化パスワード',
-  `name` varchar(100) NOT NULL COMMENT '表示名',
-  `admin_note` text COMMENT '管理者メモ（内部管理用）',
-  `account_status_master_id` int NOT NULL COMMENT 'アカウントステータスマスタID',
-  `is_email_verified` int NOT NULL DEFAULT '0' COMMENT 'メール確認済フラグ',
-  `password_changed_at` datetime NOT NULL COMMENT 'パスワード最終変更日時',
-  `password_expires_at` datetime NOT NULL COMMENT 'パスワード有効期限',
-
-  `created` datetime NOT NULL COMMENT '作成日時',
-  `created_by` bigint DEFAULT NULL COMMENT '作成者管理者アカウントID',
-  `created_ip` varchar(45) DEFAULT NULL COMMENT '作成時IPアドレス',
-  `modified` datetime NOT NULL COMMENT '更新日時',
-  `modified_by` bigint DEFAULT NULL COMMENT '更新者管理者アカウントID',
-  `modified_ip` varchar(45) DEFAULT NULL COMMENT '更新時IPアドレス',
-  */
-
-        $model->save();
-
-        return Mapper::mapModelToDomain($model->fresh());
+        return (new Read($this->datetime))->run($entity->id());
     }
 }

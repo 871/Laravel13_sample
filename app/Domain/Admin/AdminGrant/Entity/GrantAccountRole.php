@@ -13,8 +13,8 @@ final class GrantAccountRole
      * @param \App\Domain\Admin\AdminGrant\ValueObject\GrantAccountRoleId $grant_account_role_id
      * @param \App\Domain\Admin\AdminGrant\ValueObject\AdminAccountId $admin_account_id
      * @param \App\Domain\Admin\AdminGrant\ValueObject\GrantRoleId $grant_role_id
-     * @param \App\Domain\Shared\ValueObject\Created $created_at
-     * @param \App\Domain\Shared\ValueObject\Modified $modified_at
+     * @param \App\Domain\Shared\ValueObject\CreatedAt $created_at
+     * @param \App\Domain\Shared\ValueObject\ModifiedAt $modified_at
      * @param ?\App\Domain\Admin\AdminGrant\Entity\AdminAccountGrant $admin_account_grant
      * @param ?\App\Domain\Admin\AdminGrant\Entity\GrantRole $grant_role
      */

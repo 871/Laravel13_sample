@@ -16,8 +16,8 @@ final class GrantRole
      * @param \App\Domain\Admin\AdminGrant\ValueObject\Description $description
      * @param \App\Domain\Admin\AdminGrant\ValueObject\Sort $sort
      * @param \App\Domain\Admin\AdminGrant\ValueObject\IsActive $is_active
-     * @param \App\Domain\Shared\ValueObject\Created $created_at
-     * @param \App\Domain\Shared\ValueObject\Modified $modified_at
+     * @param \App\Domain\Shared\ValueObject\CreatedAt $created_at
+     * @param \App\Domain\Shared\ValueObject\ModifiedAt $modified_at
      * @param array<\App\Domain\Admin\AdminGrant\Entity\GrantAccountRole> $grant_account_roles
      * @param array<\App\Domain\Admin\AdminGrant\Entity\GrantRolePermission> $grant_role_permissions
      */
@@ -156,7 +156,7 @@ final class GrantRole
     }
 
     /**
-     * @return \App\Domain\Shared\ValueObject\Created
+     * @return \App\Domain\Shared\ValueObject\CreatedAt
      */
     public function createdAt(): SVo\CreatedAt
     {
@@ -164,7 +164,7 @@ final class GrantRole
     }
 
     /**
-     * @return \App\Domain\Shared\ValueObject\Modified
+     * @return \App\Domain\Shared\ValueObject\ModifiedAt
      */
     public function modifiedAt(): SVo\ModifiedAt
     {
