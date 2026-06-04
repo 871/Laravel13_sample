@@ -67,6 +67,20 @@ final class AdminAccountsRepositorySearchIntegrationTest extends TestCase
         ]);
     }
 
+    private function normalizeResult(mixed $result): array
+    {
+        if (is_array($result)) {
+            // paginator->toArray() returns ['data' => [...]]; handle both shapes
+            if (array_key_exists('data', $result)) {
+                return $result['data'];
+            }
+
+            return $result;
+        }
+
+        return $result->getCollection()->all();
+    }
+
     public function testFilterByAccountStatusAndIdAffectsResults(): void
     {
         $repo = new Repo(new \DateTimeImmutable());
@@ -82,16 +96,10 @@ final class AdminAccountsRepositorySearchIntegrationTest extends TestCase
         );
 
         $result = $repo->search($condition);
+        $collection = $this->normalizeResult($result);
 
-        // result may be paginator or array; normalize to array of domain entities
-        if (is_array($result)) {
-            $collection = $result;
-        } else {
-            $collection = $result->getCollection()->all();
-        }
-
-        $this->assertCount(2, $collection['data']);
-        $this->assertSame('Alice', $collection['data'][0]->name()->toString());
+        $this->assertCount(2, $collection);
+        $this->assertSame('Alice', $collection[0]->name()->toString());
 
         // filter by exact id (find Bob only)
         // find Bob's id via DB
@@ -107,9 +115,9 @@ final class AdminAccountsRepositorySearchIntegrationTest extends TestCase
         );
 
         $res2 = $repo->search($condition2);
-        $col2 = is_array($res2) ? $res2 : $res2->getCollection()->all();
-        $this->assertCount(1, $col2['data']);
-        $this->assertSame('Bob', $col2['data'][0]->name()->toString());
+        $col2 = $this->normalizeResult($res2);
+        $this->assertCount(1, $col2);
+        $this->assertSame('Bob', $col2[0]->name()->toString());
     }
 
     public function testOrderByAndPaginationAffectsResults(): void
@@ -127,9 +135,9 @@ final class AdminAccountsRepositorySearchIntegrationTest extends TestCase
         );
 
         $r1 = $repo->search($cond1);
-        $c1 = is_array($r1) ? $r1 : $r1->getCollection()->all();
-        $this->assertCount(2, $c1['data']);
-        $this->assertSame('Alice', $c1['data'][0]->name()->toString());
+        $c1 = $this->normalizeResult($r1);
+        $this->assertCount(2, $c1);
+        $this->assertSame('Alice', $c1[0]->name()->toString());
 
         // page 2 should have the third
         $cond2 = new SearchCondition(
@@ -142,8 +150,43 @@ final class AdminAccountsRepositorySearchIntegrationTest extends TestCase
         );
 
         $r2 = $repo->search($cond2);
-        $c2 = is_array($r2) ? $r2 : $r2->getCollection()->all();
-        $this->assertCount(1, $c2['data']);
-        $this->assertSame('Carol', $c2['data'][0]->name()->toString());
+        $c2 = $this->normalizeResult($r2);
+        $this->assertCount(1, $c2);
+        $this->assertSame('Carol', $c2[0]->name()->toString());
+    }
+
+    public function testKeywordSearchAffectsResults(): void
+    {
+        $repo = new Repo(new \DateTimeImmutable());
+
+        // keyword that matches name 'Alice'
+        $condName = new SearchCondition(
+            new Vo\Id(null),
+            new Vo\Search\Keyword('Ali'),
+            new Vo\AccountStatusMasterId(null),
+            new SVo\OrderBy('admin_accounts.id', SVo\OrderBy::ASC),
+            10,
+            1
+        );
+
+        $rName = $repo->search($condName);
+        $cName = $this->normalizeResult($rName);
+        $this->assertCount(1, $cName);
+        $this->assertSame('Alice', $cName[0]->name()->toString());
+
+        // keyword that matches email domain (all)
+        $condEmail = new SearchCondition(
+            new Vo\Id(null),
+            new Vo\Search\Keyword('example.com'),
+            new Vo\AccountStatusMasterId(null),
+            new SVo\OrderBy('admin_accounts.id', SVo\OrderBy::ASC),
+            10,
+            1
+        );
+
+        $rEmail = $repo->search($condEmail);
+        $cEmail = $this->normalizeResult($rEmail);
+        $this->assertCount(3, $cEmail);
     }
 }
+
