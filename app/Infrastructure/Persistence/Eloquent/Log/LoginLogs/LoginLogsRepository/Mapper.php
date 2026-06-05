@@ -23,8 +23,16 @@ final class Mapper
             new Vo\IpAddress((string)$m->ip_address),
             new Vo\UserAgent($m->user_agent ?? null),
             new Vo\FailureReasonCode($m->failure_reason_code ?? null),
-            new Vo\LoggedInAt($m->logged_in_at?->format('Y-m-d\\TH:i:s') ?? null),
-            new SVo\CreatedAt(($m->created_at?->format('Y-m-d\\TH:i:s') ?? null)),
+            new Vo\LoggedInAt((
+                $m->logged_in_at instanceof \DateTimeInterface
+                    ? $m->logged_in_at->format('Y-m-d\\TH:i:s')
+                    : ($m->logged_in_at ?? null)
+            )),
+            new SVo\CreatedAt((
+                $m->created_at instanceof \DateTimeInterface
+                    ? $m->created_at->format('Y-m-d\\TH:i:s')
+                    : ($m->created_at ?? null)
+            )),
         );
     }
 }
