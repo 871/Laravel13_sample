@@ -20,6 +20,7 @@ use App\Security\Auth\AuthContext\Fields\Type;
 use App\Security\Auth\AuthSession;
 use App\Security\Input\StrictCast;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 
 final class Login implements ApplicationInterface
@@ -237,12 +238,12 @@ final class Login implements ApplicationInterface
         // 例）/v1/ad/{account_id}/... → /v1/ad/{ログインしたアカウントのaccount_id}/...
         // オープンリダイレクト脆弱性対策もここで行う（リダイレクト先が特定のパターンにマッチしない場合は、リダイレクト先を管理画面トップに固定する）
         $redirect = $this->request->session()->get('url.intended');
-        if (preg_match('/^\/v1\/ad\/\d+\/.*$/', $redirect)) {
+        if (is_string($redirect) && preg_match('/^\/v1\/ad\/\d+\/.*$/', $redirect)) {
             /** @var string */
             return preg_replace('/^(\/v1\/ad)\/\d+\/(.*)$/', '$1/' . $this->account_id . '/$2', $redirect);
         }
 
-        return url('/v1/ad/' . StrictCast::toString($this->request->route('account_id')));
+        return url('/v1/ad/' . $this->account_id);
     }
 
     /**
@@ -253,6 +254,13 @@ final class Login implements ApplicationInterface
         if ($e->getFailureReasonCode() === AuthException::LOGIN_FAIL_COUNT_OVER) {
             return $this; // ログイン失敗回数超過の場合は、ログイン失敗ログの記録は行わない（すでにログイン失敗回数超過の状態であるため）
         }
+
+        Log::error('Login failed', [
+            'login_id' => $this->login_id,
+            'ip_address' => $this->request->ip(),
+            'user_agent' => $this->request->userAgent(),
+            'failure_reason_code' => $e->getFailureReasonCode(),
+        ]); 
 
         /* TODO 未実装
         (new LoginLogsRepository())->create(new LoginLogEntity(

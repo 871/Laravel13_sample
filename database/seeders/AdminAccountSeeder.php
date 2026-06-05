@@ -14,11 +14,11 @@ class AdminAccountSeeder extends Seeder
 
         // Create a default admin account for local/dev testing
         AdminAccount::create([
-            'email' => 'admin@example.local',
+            'email' => 'info@hanahubuki.jp',
             'password' => Hash::make('password'),
             'name' => 'Administrator',
             'admin_note' => 'Seeded admin account',
-            'account_status_master_id' => 1,
+            'account_status_master_id' => 200,
             'is_email_verified' => 1,
             'password_changed_at' => $now->format('Y-m-d H:i:s'),
             'password_expires_at' => $now->copy()->addYear()->format('Y-m-d H:i:s'),

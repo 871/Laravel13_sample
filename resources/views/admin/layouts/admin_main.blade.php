@@ -39,10 +39,9 @@
 
 <div class="wrapper">
     @includeIf('admin.shared.left_menu')
-
     <!-- Main Content -->
     <main class="main-content">
-        <?= $this->element('breadcrumb') ?>
+        @yield('breadcrumb')
         <!-- Message Area -->
         <div class="message-area mb-3">
             @includeIf('admin.shared.flash')

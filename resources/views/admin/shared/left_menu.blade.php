@@ -1,7 +1,4 @@
 <?php
-$request = $this->getRequest();
-$accountId = $request->getParam('account_id');
-$prefix = (string)$request->getParam('prefix');
 
 
 ?>
@@ -15,6 +12,7 @@ $prefix = (string)$request->getParam('prefix');
                 href="{{ url('/v1/ad/' . request()->route('account_id')) }}"
             >Top</a>
         </li>
+    @if(false) {{-- TODO 未実装 --}}
         <li class="nav-item">
             <details 
                 class="admin-menu-group" 
@@ -29,23 +27,17 @@ $prefix = (string)$request->getParam('prefix');
                     <li class="nav-item">
                         <a
                             class="nav-link text-white"
-                            href="<?= $this->Url->build([
-                                'prefix' => 'Admin/UserAccount',
-                                'controller' => 'Search',
-                                'action' => 'init',
-                                'account_id' => $accountId,
-                            ]) ?>"
+                            href="{{ route('admin.user-account.search.init', [
+                                'account_id' => request()->route('account_id'),
+                            ]); }}"
                         >ユーザアカウント</a>
                     </li>
                     <li class="nav-item">
                         <a
                             class="nav-link text-white"
-                            href="<?= $this->Url->build([
-                                'prefix' => 'Admin/UserGrant',
-                                'controller' => 'Search',
-                                'action' => 'init',
-                                'account_id' => $accountId,
-                            ]) ?>"
+                            href="{{ route('admin.user-agrant.search.init', [
+                                'account_id' => request()->route('account_id'),
+                            ]); }}"
                         >ユーザ権限</a>
                     </li>
                 </ul>
@@ -64,23 +56,17 @@ $prefix = (string)$request->getParam('prefix');
                     <li class="nav-item">
                         <a
                             class="nav-link text-white"
-                            href="<?= $this->Url->build([
-                                'prefix' => 'Admin/Log/LoginLog',
-                                'controller' => 'Search',
-                                'action' => 'init',
-                                'account_id' => $accountId,
-                            ]) ?>"
+                            href="{{ route('admin.log.login-log.search.init', [
+                                'account_id' => request()->route('account_id'),
+                            ]); }}"
                         >ログイン試行ログ</a>
                     </li>
                     <li class="nav-item">
                         <a
                             class="nav-link text-white"
-                            href="<?= $this->Url->build([
-                                'prefix' => 'Admin/Log/PageAccessLog',
-                                'controller' => 'Search',
-                                'action' => 'init',
-                                'account_id' => $accountId,
-                            ]) ?>"
+                            href="{{ route('admin.log.page-access-log.search.init', [
+                                'account_id' => request()->route('account_id'),
+                            ]); }}"
                         >ページアクセスログ</a>
                     </li>
                 </ul>
@@ -101,38 +87,30 @@ $prefix = (string)$request->getParam('prefix');
                     <li class="nav-item">
                         <a
                             class="nav-link text-white"
-                            href="<?= $this->Url->build([
-                                'prefix' => 'Admin/MailManage',
-                                'controller' => 'Search',
-                                'action' => 'init',
-                                'account_id' => $accountId,
-                            ]) ?>"
+                            href="{{ route('admin.mail-manage.search.init', [
+                                'account_id' => request()->route('account_id'),
+                            ]); }}"
                         >システムメール</a>
                     </li>
                     <li class="nav-item">
                         <a
                             class="nav-link text-white"
-                            href="<?= $this->Url->build([
-                                'prefix' => 'Admin/AdminAccount',
-                                'controller' => 'Search',
-                                'action' => 'init',
-                                'account_id' => $accountId,
-                            ]) ?>"
+                            href="{{ route('admin.admin-account.search.init', [
+                                'account_id' => request()->route('account_id'),
+                            ]); }}"
                         >管理者アカウント</a>
                     </li>
                     <li class="nav-item">
                         <a
                             class="nav-link text-white"
-                            href="<?= $this->Url->build([
-                                'prefix' => 'Admin/AdminGrant',
-                                'controller' => 'Search',
-                                'action' => 'init',
-                                'account_id' => $accountId,
-                            ]) ?>"
+                            href="{{ route('admin.admin-grant.search.init', [
+                                'account_id' => request()->route('account_id'),
+                            ]); }}"
                         >管理者権限</a>
                     </li>
                 </ul>
             </details>
         </li>
+    @endif
     </ul>
 </aside>
