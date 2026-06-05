@@ -21,5 +21,8 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
+
+        // Admin account seeder for management UI testing
+        $this->call(\Database\Seeders\AdminAccountSeeder::class);
     }
 }
