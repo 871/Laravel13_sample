@@ -112,10 +112,9 @@ final class Search
             page: $condition->getPage(),
         );
 
-        return $paginator->setCollection(
-            $paginator->getCollection()
-                ->map(fn ($model) => Mapper::mapModelToDomain($model))
-        )
-        ->toArray();
+        $collection = $paginator->getCollection()->map(fn ($model) => Mapper::mapModelToDomain($model));
+
+        // Return plain array of domain entities (not paginator metadata) to match repository contract
+        return $collection->all();
     }
 }
