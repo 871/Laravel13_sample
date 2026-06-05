@@ -3,20 +3,22 @@
 use Illuminate\Support\Facades\Route;
 
 // Admin area prefix: /v1/ad
-Route::prefix('ad')->group(function () {
-    // public error and login
-    Route::get('/error', [App\Http\Controllers\Admin\ErrorController::class, 'index']);
-    Route::get('/error/{message_id}', [App\Http\Controllers\Admin\ErrorController::class, 'index']);
+Route::prefix('ad')->as('admin.')->group(function () {
+    Route::get('/error/{message_id?}', [App\Http\Controllers\Admin\ErrorController::class, 'index'])->name('error.index');
 
-    Route::get('/login', [App\Http\Controllers\Admin\LoginController::class, 'index']);
+    Route::get('/login', [App\Http\Controllers\Admin\LoginController::class, 'index'])->name('login.index');
     Route::post('/login', [App\Http\Controllers\Admin\LoginController::class, 'indexPost']);
 
     // routes under /v1/ad/{account_id}
     Route::prefix('{account_id}')->group(function () {
         // logout routes (should be outside auth middleware per Cake comment)
-        Route::get('/logout', [App\Http\Controllers\Admin\LogoutController::class, 'index']);
+        Route::get('/logout', [App\Http\Controllers\Admin\LogoutController::class, 'index'])->name('logout.index');
         Route::post('/logout', [App\Http\Controllers\Admin\LogoutController::class, 'indexPost']);
 
+        // TODO　ミドルウェア実装前の表示確認用ルート。ミドルウェア実装後に削除予定。
+        Route::get('/', [App\Http\Controllers\Admin\TopController::class, 'index']);
+    
+    /*
         // Apply middleware names used in Cake (middleware implementations not required)
         Route::middleware(['adminAuth', 'pageAccessLog', 'adminGrant'])->group(function () {
             Route::get('/error', [App\Http\Controllers\Admin\ErrorController::class, 'index']);
@@ -25,7 +27,7 @@ Route::prefix('ad')->group(function () {
             Route::get('/error_test', [App\Http\Controllers\Admin\TopController::class, 'errorTest']);
 
             // UserAccount management (/v1/ad/{account_id}/user_account/...)
-            Route::prefix('user_account')->group(function () {
+            Route::prefix('user_account')->as('user_account.')->group(function () {
                 Route::get('/', [App\Http\Controllers\Admin\UserAccount\SearchController::class, 'init']);
                 Route::get('/search', [App\Http\Controllers\Admin\UserAccount\SearchController::class, 'index']);
                 Route::get('/detail/{user_account_id}', [App\Http\Controllers\Admin\UserAccount\DetailController::class, 'index']);
@@ -45,7 +47,7 @@ Route::prefix('ad')->group(function () {
             });
 
             // UserGrant management
-            Route::prefix('user_grant')->group(function () {
+            Route::prefix('user_grant')->as('user_grant.')->group(function () {
                 Route::get('/', [App\Http\Controllers\Admin\UserGrant\SearchController::class, 'init']);
                 Route::get('/search', [App\Http\Controllers\Admin\UserGrant\SearchController::class, 'index']);
                 Route::get('/detail/{user_account_id}', [App\Http\Controllers\Admin\UserGrant\DetailController::class, 'index']);
@@ -56,7 +58,7 @@ Route::prefix('ad')->group(function () {
                 Route::post('/edit/{process_id}/conf', [App\Http\Controllers\Admin\UserGrant\EditController::class, 'confPost']);
 
                 // Role subroutes
-                Route::prefix('role')->group(function () {
+                Route::prefix('role')->as('role.')->group(function () {
                     Route::get('/', [App\Http\Controllers\Admin\UserGrant\Role\SearchController::class, 'init']);
                     Route::get('/search', [App\Http\Controllers\Admin\UserGrant\Role\SearchController::class, 'index']);
                     Route::get('/create', [App\Http\Controllers\Admin\UserGrant\Role\CreateController::class, 'index']);
@@ -76,7 +78,7 @@ Route::prefix('ad')->group(function () {
             });
 
             // MailManage
-            Route::prefix('mail_manage')->group(function () {
+            Route::prefix('mail_manage')->as('mail_manage.')->group(function () {
                 Route::get('/check_mail_server', [App\Http\Controllers\Admin\MailManage\CheckMailServerController::class, 'index']);
                 Route::get('/check_mail_server/sent_smtp', [App\Http\Controllers\Admin\MailManage\CheckMailServerController::class, 'sentSmtp']);
                 Route::get('/check_mail_server/received_check_imap', [App\Http\Controllers\Admin\MailManage\CheckMailServerController::class, 'receivedCheckImap']);
@@ -95,7 +97,7 @@ Route::prefix('ad')->group(function () {
             });
 
             // AdminAccount management
-            Route::prefix('admin_account')->group(function () {
+            Route::prefix('admin_account')->as('admin_account.')->group(function () {
                 Route::get('/', [App\Http\Controllers\Admin\AdminAccount\SearchController::class, 'init']);
                 Route::get('/search', [App\Http\Controllers\Admin\AdminAccount\SearchController::class, 'index']);
                 Route::get('/detail/{admin_account_id}', [App\Http\Controllers\Admin\AdminAccount\DetailController::class, 'index']);
@@ -115,7 +117,7 @@ Route::prefix('ad')->group(function () {
             });
 
             // AdminGrant management
-            Route::prefix('admin_grant')->group(function () {
+            Route::prefix('admin_grant')->as('admin_grant.')->group(function () {
                 Route::get('/', [App\Http\Controllers\Admin\AdminGrant\SearchController::class, 'init']);
                 Route::get('/search', [App\Http\Controllers\Admin\AdminGrant\SearchController::class, 'index']);
                 Route::get('/detail/{admin_account_id}', [App\Http\Controllers\Admin\AdminGrant\DetailController::class, 'index']);
@@ -125,7 +127,7 @@ Route::prefix('ad')->group(function () {
                 Route::get('/edit/{process_id}/conf', [App\Http\Controllers\Admin\AdminGrant\EditController::class, 'conf']);
                 Route::post('/edit/{process_id}/conf', [App\Http\Controllers\Admin\AdminGrant\EditController::class, 'confPost']);
 
-                    Route::prefix('role')->group(function () {
+                    Route::prefix('role')->as('role.')->group(function () {
                     Route::get('/', [App\Http\Controllers\Admin\AdminGrant\Role\SearchController::class, 'init']);
                     Route::get('/search', [App\Http\Controllers\Admin\AdminGrant\Role\SearchController::class, 'index']);
                     Route::get('/create', [App\Http\Controllers\Admin\AdminGrant\Role\CreateController::class, 'index']);
@@ -144,8 +146,8 @@ Route::prefix('ad')->group(function () {
                 });
 
                 // Log prefixes
-                Route::prefix('log')->group(function () {
-                    Route::prefix('login_log')->group(function () {
+                Route::prefix('log')->as('log.')->group(function () {
+                    Route::prefix('login_log')->as('login_log.')->group(function () {
                         Route::get('/', [App\Http\Controllers\Admin\Log\LoginLog\SearchController::class, 'init']);
                         Route::get('/search', [App\Http\Controllers\Admin\Log\LoginLog\SearchController::class, 'index']);
                         Route::get('/detail/{login_log_id}', [App\Http\Controllers\Admin\Log\LoginLog\DetailController::class, 'index']);
@@ -158,5 +160,6 @@ Route::prefix('ad')->group(function () {
                 });
             });
         });
+    */
     });
 });

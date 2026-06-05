@@ -1,0 +1,67 @@
+
+/* ===== Search Toggle ===== */
+.search-toggle {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.search-toggle:hover {
+    background-color: #f1f3f5;
+}
+
+/* ===== Table Scroll Area ===== */
+.table-scroll {
+    overflow: auto;
+    resize: vertical;
+    /* min-height: 70vh; */
+    /* height: 70vh; */ /* 初期表示高さ：画面の約70% */
+    border: 1px solid #dee2e6;
+}
+
+/* ===== Sticky Table Header ===== */
+.table thead th {
+    position: sticky;
+    top: 0;
+    background: #f8f9fa;
+    color: #000;
+    z-index: 2;
+    border-bottom: 2px solid #dee2e6;
+    text-align: center;
+}
+
+/* ===== Fixed Column Width ===== */
+.table th, .table td {
+    white-space: nowrap;
+    width: auto;
+}
+
+/* ===== Sort Link Classes ===== */
+.sort-link {
+    color: #212529;
+    text-decoration: none;
+}
+.sort-link:hover {
+    text-decoration: underline;
+}
+.sort-link.asc::after {
+    content: " ▲";
+    font-size: 0.75em;
+}
+.sort-link.desc::after {
+    content: " ▼";
+    font-size: 0.75em;
+}
+
+/* ===== Alignment Classes ===== */
+.text-right { text-align: right; }
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+
+/* ===== Result TextBox Style ===== */
+.result-input {
+    border: none;
+    background: transparent;
+    width: 100%;
+    outline: none;
+}

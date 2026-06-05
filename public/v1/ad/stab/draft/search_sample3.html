@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>MySQL Type Samples Search</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+    /* ===== fixed header ===== */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 56px; /* header高さ */
+    z-index: 1000;
+    background: #212529;
+    color: #fff;
+    padding: 10px 20px;
+}
+
+/* body offset */
+body {
+    padding-top: 56px; /* header高さ分 */
+    background-color: #f8f9fa;
+}
+
+/* layout under header */
+.layout-wrapper {
+    display: flex;
+    height: calc(100vh - 56px);
+    overflow: hidden;
+}
+
+/* sidebar scrollable */
+.sidebar {
+    width: 240px;
+    background: #343a40;
+    color: #fff;
+    padding: 15px;
+    overflow-y: auto;
+}
+
+/* main content scrollable */
+.main-content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;   /* 縦スクロール */
+    overflow-x: auto;   /* 横は溢れたまま */
+}
+</style>
+</head>
+<body>
+
+<!-- ===== Header ===== -->
+ <header>
+    <h5 class="mb-0">MySQL Type Samples Search</h5>
+</header>
+
+<div class="layout-wrapper">
+
+    <aside class="sidebar">
+        <h6>Menu</h6>
+        <ul class="nav flex-column">
+            <li class="nav-item"><a href="#" class="nav-link text-white">Dashboard</a></li>
+            <li class="nav-item"><a href="#" class="nav-link text-white">Search</a></li>
+            <li class="nav-item"><a href="#" class="nav-link text-white">Settings</a></li>
+        </ul>
+    </aside>
+
+    <!-- ===== Main Content ===== -->
+    <main class="main-content">
+
+        <!-- ===== Search Form ===== -->
+        <div class="card mb-3">
+            <div class="card-header">検索条件</div>
+            <div class="card-body">
+                <form method="get">
+
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">INT 完全一致</label>
+                            <input type="number" name="int_col" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">BIGINT 完全一致</label>
+                            <input type="number" name="bigint_col" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">DECIMAL 範囲</label>
+                            <div class="d-flex gap-1">
+                                <input type="text" name="decimal_from" class="form-control" placeholder="from">
+                                <input type="text" name="decimal_to" class="form-control" placeholder="to">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">FLOAT 範囲</label>
+                            <div class="d-flex gap-1">
+                                <input type="text" name="float_from" class="form-control" placeholder="from">
+                                <input type="text" name="float_to" class="form-control" placeholder="to">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">DOUBLE 範囲</label>
+                            <div class="d-flex gap-1">
+                                <input type="text" name="double_from" class="form-control" placeholder="from">
+                                <input type="text" name="double_to" class="form-control" placeholder="to">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-md-3">
+                            <label class="form-label">DATE 範囲</label>
+                            <div class="d-flex gap-1">
+                                <input type="date" name="date_from" class="form-control">
+                                <input type="date" name="date_to" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">TIME 範囲</label>
+                            <div class="d-flex gap-1">
+                                <input type="time" name="time_from" class="form-control">
+                                <input type="time" name="time_to" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">DATETIME 範囲</label>
+                            <div class="d-flex gap-1">
+                                <input type="datetime-local" name="datetime_from" class="form-control">
+                                <input type="datetime-local" name="datetime_to" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">キーワード検索（search_text）</label>
+                            <input type="text" name="keyword" class="form-control">
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary">検索</button>
+                    <button type="reset" class="btn btn-secondary">クリア</button>
+
+                </form>
+            </div>
+        </div>
+
+        <!-- ===== Pagination (Top) ===== -->
+        <div class="pagination-area">
+            <nav>
+                <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item disabled"><a class="page-link">«</a></li>
+                    <li class="page-item active"><a class="page-link">1</a></li>
+                    <li class="page-item"><a class="page-link">2</a></li>
+                    <li class="page-item"><a class="page-link">3</a></li>
+                    <li class="page-item"><a class="page-link">»</a></li>
+                </ul>
+            </nav>
+            <div class="d-flex align-items-center gap-2">
+                <span>表示件数</span>
+                <select class="form-select form-select-sm" style="width:100px;">
+                    <option>10</option>
+                    <option selected>20</option>
+                    <option>50</option>
+                    <option>100</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- ===== Search Result ===== -->
+        <div class="card">
+        <div class="card-header">検索結果</div>
+        <div class="card-body p-0">
+
+        <div class="table-wrapper">
+        <table class="table table-bordered table-sm result-table mb-0">
+        <thead class="table-light">
+        <tr>
+        <th>ID</th>
+        <th>int_col</th>
+        <th>bigint_col</th>
+        <th>decimal_col</th>
+        <th>float_col</th>
+        <th>double_col</th>
+        <th>date_col</th>
+        <th>time_col</th>
+        <th>datetime_col</th>
+        <th>char_col</th>
+        <th>varchar_col</th>
+        <th>text_col</th>
+        <th>mediumtext_col</th>
+        <th>longtext_col</th>
+        <th>json_col</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        <!-- ===== sample rows (増加) ===== -->
+        <script>
+        for(let i=1;i<=30;i++){
+        document.write(`
+        <tr>
+        <td><input class="result-input" value="uuid-${i}" readonly></td>
+        <td><input class="result-input" value="${i}" readonly></td>
+        <td><input class="result-input" value="${1000+i}" readonly></td>
+        <td><input class="result-input" value="${(i*1.23).toFixed(2)}" readonly></td>
+        <td><input class="result-input" value="${(i*0.5).toFixed(2)}" readonly></td>
+        <td><input class="result-input" value="${(i*2.5).toFixed(2)}" readonly></td>
+        <td><input class="result-input" value="2026-02-08" readonly></td>
+        <td><input class="result-input" value="12:34:56" readonly></td>
+        <td><input class="result-input" value="2026-02-08 12:34:56" readonly></td>
+        <td><input class="result-input" value="ABC${i}" readonly></td>
+        <td><input class="result-input" value="Sample ${i}" readonly></td>
+        <td><input class="result-input" value="TEXT ${i}" readonly></td>
+        <td><input class="result-input" value="MEDIUMTEXT ${i}" readonly></td>
+        <td><input class="result-input" value="LONGTEXT ${i}" readonly></td>
+        <td><input class="result-input" value='{"n":${i}}' readonly></td>
+        </tr>
+        `);
+        }
+        </script>
+
+        </tbody>
+        </table>
+        </div>
+
+        </div>
+        </div>
+
+        <!-- ===== Pagination (Bottom) ===== -->
+        <div class="pagination-area">
+            <nav>
+                <ul class="pagination pagination-sm mb-0">
+                    <li class="page-item disabled"><a class="page-link">«</a></li>
+                    <li class="page-item active"><a class="page-link">1</a></li>
+                    <li class="page-item"><a class="page-link">2</a></li>
+                    <li class="page-item"><a class="page-link">3</a></li>
+                    <li class="page-item"><a class="page-link">»</a></li>
+                </ul>
+            </nav>
+            <div class="d-flex align-items-center gap-2">
+                <span>表示件数</span>
+                <select class="form-select form-select-sm" style="width:100px;">
+                    <option>10</option>
+                    <option selected>20</option>
+                    <option>50</option>
+                    <option>100</option>
+                </select>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<!-- ===== Footer ===== -->
+<footer class="text-center">
+    MySQL Type Samples © 2026
+</footer>
+
+</body>
+</html>

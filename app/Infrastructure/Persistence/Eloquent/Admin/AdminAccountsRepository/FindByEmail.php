@@ -15,9 +15,9 @@ final class FindByEmail
         // 処理なし
     }
 
-    public function run(Vo\Email $email): DomainEntity
+    public function run(Vo\Email $email): ?DomainEntity
     {
-        $adminAccountModel = AdminAccount::query()
+        $adminAccount = AdminAccount::query()
             ->join(
                 'account_status_masters', 
                 'account_status_masters.id', 
@@ -44,8 +44,8 @@ final class FindByEmail
                 'admin_accounts.modified_ip',
             )
             ->where('admin_accounts.email', $email->toString())
-            ->firstOrFail();
+            ->first();
 
-        return Mapper::mapModelToDomain($adminAccountModel);
+        return $adminAccount === null ? null : Mapper::mapModelToDomain($adminAccount);
     }
 }
