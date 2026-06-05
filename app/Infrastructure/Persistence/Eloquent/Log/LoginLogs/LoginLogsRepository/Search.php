@@ -22,41 +22,33 @@ final class Search
 
     public function run(SearchCondition $condition): array
     {
-        $types = $condition->getLoginActorType();
-        $accountId = $condition->getAccountId()->toStringOrNull();
-        $impersonatorId = $condition->getImpersonatorAccountId()->toStringOrNull();
-        $loginResult = $condition->getLoginResult();
-        $failureCodes = $condition->getFailureReasonCode();
-        $from = $condition->getLoggedInAtFrom()->toStringOrNull();
-        $to = $condition->getLoggedInAtTo()->toStringOrNull();
-        $keyword = $condition->getKeyword()->toQueryLikeOrNull();
-
         $query = EloquentModel::query()
-            ->when(!empty($types), function ($q) use ($types) {
-                $typeValues = array_map(fn($t) => (string)$t->toString(), $types);
+            ->when(!empty($condition->getLoginActorType()), function ($q) use ($condition) {
+                $typeValues = array_map(fn($t) => (string)$t->toString(), $condition->getLoginActorType());
                 $q->whereIn('login_actor_type', $typeValues);
             })
-            ->when($accountId !== null, function ($q) use ($accountId) {
-                $q->where('account_id', $accountId);
+            ->when($condition->getAccountId()->toStringOrNull() !== null, function ($q) use ($condition) {
+                $q->where('account_id', $condition->getAccountId()->toStringOrNull());
             })
-            ->when($impersonatorId !== null, function ($q) use ($impersonatorId) {
-                $q->where('impersonator_account_id', $impersonatorId);
+            ->when($condition->getImpersonatorAccountId()->toStringOrNull() !== null, function ($q) use ($condition) {
+                $q->where('impersonator_account_id', $condition->getImpersonatorAccountId()->toStringOrNull());
             })
-            ->when(!empty($loginResult), function ($q) use ($loginResult) {
-                $vals = array_map(fn($v) => (string)$v->toString(), $loginResult);
+            ->when(!empty($condition->getLoginResult()), function ($q) use ($condition) {
+                $vals = array_map(fn($v) => (string)$v->toString(), $condition->getLoginResult());
                 $q->whereIn('login_result', $vals);
             })
-            ->when(!empty($failureCodes), function ($q) use ($failureCodes) {
-                $vals = array_map(fn($v) => (string)$v->toString(), $failureCodes);
+            ->when(!empty($condition->getFailureReasonCode()), function ($q) use ($condition) {
+                $vals = array_map(fn($v) => (string)$v->toString(), $condition->getFailureReasonCode());
                 $q->whereIn('failure_reason_code', $vals);
             })
-            ->when($from !== null, function ($q) use ($from) {
-                $q->where('logged_in_at', '>=', Carbon::parse($from));
+            ->when($condition->getLoggedInAtFrom()->toDateTimeOrNull() !== null, function ($q) use ($condition) {
+                $q->where('logged_in_at', '>=', Carbon::parse($condition->getLoggedInAtFrom()->toDateTimeOrNull()));
             })
-            ->when($to !== null, function ($q) use ($to) {
-                $q->where('logged_in_at', '<=', Carbon::parse($to));
+            ->when($condition->getLoggedInAtTo()->toDateTimeOrNull() !== null, function ($q) use ($condition) {
+                $q->where('logged_in_at', '<=', Carbon::parse($condition->getLoggedInAtTo()->toDateTimeOrNull()));
             })
-            ->when($keyword !== null, function ($q) use ($keyword) {
+            ->when($condition->getKeyword()->toQueryLikeOrNull() !== null, function ($q) use ($condition) {
+                $keyword = $condition->getKeyword()->toQueryLikeOrNull();
                 $q->where(function ($qq) use ($keyword) {
                     $qq->where('login_id', 'like', $keyword)
                        ->orWhere('ip_address', 'like', $keyword)
