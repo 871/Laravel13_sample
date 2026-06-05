@@ -10,11 +10,10 @@ use App\Domain\Log\LoginLogs\ValueObject as Vo;
 interface LoginLogsRepository
 {
     /**
-     * Memo: Cake5のController::paginate()の仕様を優先した設計とするため、Cake\ORM\Queryを直接返す形にしています。 --- IGNORE ---
-     * 完全なDDDへ再設計する場合は、ドメインサービス内でページネーションやソートの処理も完結させる形にすることも検討してください。 --- IGNORE ---
+     * 検索
      *
      * @param \App\Domain\Log\LoginLogs\SearchCondition $condition
-     * @return \App\Domain\Log\LoginLogs\Entity\LoginLog[]
+     * @return array
      */
     public function search(SearchCondition $condition): array;
 

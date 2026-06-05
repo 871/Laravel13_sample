@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace App\Domain\Log\LoginLogs;
 
+use App\Domain\Shared\ValueObject as SVo;
+
 class SearchCondition
 {
     /**
@@ -14,6 +16,9 @@ class SearchCondition
      * @param \App\Domain\Log\LoginLogs\ValueObject\LoggedInAt $loggedInAtFrom
      * @param \App\Domain\Log\LoginLogs\ValueObject\LoggedInAt $loggedInAtTo
      * @param \App\Domain\Log\LoginLogs\ValueObject\Search\Keyword $keyword
+     * @param \App\Domain\Shared\ValueObject\OrderBy $orderBy
+     * @param int $perPage
+     * @param int $page
      */
     public function __construct(
         /** @var array<\App\Domain\Log\LoginLogs\ValueObject\LoginActorType> */
@@ -27,6 +32,9 @@ class SearchCondition
         private readonly ValueObject\LoggedInAt $loggedInAtFrom,
         private readonly ValueObject\LoggedInAt $loggedInAtTo,
         private readonly ValueObject\Search\Keyword $keyword,
+        private readonly SVo\OrderBy $orderBy = new SVo\OrderBy('login_logs.logged_in_at', SVo\OrderBy::DESC),
+        private readonly int $perPage = 20,
+        private readonly int $page = 1
     ) {
         // 処理なし
     }
@@ -93,5 +101,29 @@ class SearchCondition
     public function getKeyword(): ValueObject\Search\Keyword
     {
         return $this->keyword;
+    }
+
+    /**
+     * @return \App\Domain\Shared\ValueObject\OrderBy
+     */
+    public function getOrderBy(): SVo\OrderBy
+    {
+        return $this->orderBy;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPerPage(): int
+    {
+        return $this->perPage;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPage(): int
+    {
+        return $this->page;
     }
 }

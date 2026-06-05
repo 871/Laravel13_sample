@@ -7,14 +7,15 @@ use App\Models\Admin\AdminAccount;
 
 class LoginLog extends Model
 {
+    public $incrementing = false;
+    protected $keyType = 'string';
+    public $timestamps = false;
+
     protected $table = 'login_logs';
-    const CREATED_AT = 'logged_in_at';
-    const UPDATED_AT = null;
-    public $timestamps = true;
     protected $guarded = [];
 
     protected $casts = [
-        'id' => 'integer',
+        'id' => 'string',
         'account_id' => 'integer',
         'impersonator_account_id' => 'integer',
         'logged_in_at' => 'datetime',

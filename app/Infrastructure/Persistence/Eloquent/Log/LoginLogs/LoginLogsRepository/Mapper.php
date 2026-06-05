@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Persistence\Eloquent\Log\LoginLogs;
+namespace App\Infrastructure\Persistence\Eloquent\Log\LoginLogs\LoginLogsRepository;
 
 use App\Domain\Log\LoginLogs\Entity\LoginLog as DomainEntity;
 use App\Domain\Log\LoginLogs\ValueObject as Vo;
@@ -24,7 +24,7 @@ final class Mapper
             new Vo\UserAgent((string)($m->user_agent ?? null)),
             new Vo\FailureReasonCode((string)($m->failure_reason_code ?? null)),
             new Vo\LoggedInAt($m->logged_in_at?->format('Y-m-d\\TH:i:s') ?? null),
-            new SVo\Created(($m->created_at?->format('Y-m-d\\TH:i:s') ?? null)),
+            new SVo\CreatedAt(($m->created_at?->format('Y-m-d\\TH:i:s') ?? null)),
         );
     }
 }
