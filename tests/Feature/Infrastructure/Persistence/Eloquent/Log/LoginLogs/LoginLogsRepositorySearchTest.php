@@ -106,7 +106,7 @@ final class LoginLogsRepositorySearchTest extends TestCase
 
         // 2) Filter by failure reason code LOCKED -> only bob
         $cond2 = new SearchCondition([], new Vo\AccountId(null), new Vo\ImpersonatorAccountId(null), [], [
-            new Vo\FailureReasonCode('LOCKED'),
+            new Vo\FailureReasonCode(Vo\FailureReasonCode::ACCOUNT_LOCKED),
         ], new Vo\LoggedInAt(null), new Vo\LoggedInAt(null), new SearchKeyword(null));
 
         $r2 = $repo->search($cond2);
