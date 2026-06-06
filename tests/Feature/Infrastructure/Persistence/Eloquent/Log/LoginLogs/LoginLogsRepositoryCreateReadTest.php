@@ -19,8 +19,16 @@ final class LoginLogsRepositoryCreateReadTest extends TestCase
     {
         parent::setUp();
 
-        // Run migrations into the test database connection (expects 'testing' connection configured)
-        $this->artisan('migrate:fresh', ['--database' => 'testing']);
+        // Choose target testing connection: prefer TEST_DB_CONNECTION env, then DB_CONNECTION, then app default
+        $conn = env('TEST_DB_CONNECTION') ?: (env('DB_CONNECTION') ?: config('database.default'));
+
+        $available = array_keys(config('database.connections'));
+        if (!in_array($conn, $available, true)) {
+            $this->fail(sprintf('Database connection [%s] not configured. Available connections: %s', $conn, implode(', ', $available)));
+        }
+
+        // Run migrations into chosen test connection
+        $this->artisan('migrate:fresh', ['--database' => $conn]);
 
         // Verify migration created the table
         if (!Schema::hasTable('login_logs')) {
@@ -30,8 +38,9 @@ final class LoginLogsRepositoryCreateReadTest extends TestCase
 
     protected function tearDown(): void
     {
+        $conn = env('TEST_DB_CONNECTION') ?: (env('DB_CONNECTION') ?: config('database.default'));
         // Reset migrations on the testing database to clean up
-        $this->artisan('migrate:reset', ['--database' => 'testing']);
+        $this->artisan('migrate:reset', ['--database' => $conn]);
 
         parent::tearDown();
     }
