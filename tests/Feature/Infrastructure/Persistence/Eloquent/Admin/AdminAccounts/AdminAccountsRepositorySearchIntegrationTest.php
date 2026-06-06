@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Feature\Infrastructure\Persistence\Eloquent\Admin;
+namespace Tests\Feature\Infrastructure\Persistence\Eloquent\Admin\AdminAccounts;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
-use App\Infrastructure\Persistence\Eloquent\Admin\AdminAccountsRepository as Repo;
+use App\Infrastructure\Persistence\Eloquent\Admin\AdminAccounts\AdminAccountsRepository as Repo;
 use App\Models\Admin\AdminAccount;
 use App\Domain\Admin\AdminAccounts\SearchCondition;
 use App\Domain\Admin\AdminAccounts\ValueObject as Vo;
