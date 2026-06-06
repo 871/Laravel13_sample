@@ -8,14 +8,15 @@ use App\Models\User\UserAccount;
 
 class PageAccessLog extends Model
 {
+    public $incrementing = false;
+    protected $keyType = 'string';
+    public $timestamps = false;
+
     protected $table = 'page_access_logs';
-    const CREATED_AT = 'accessed';
-    const UPDATED_AT = null;
-    public $timestamps = true;
     protected $guarded = [];
 
     protected $casts = [
-        'id' => 'integer',
+        'id' => 'string',
         'account_id' => 'integer',
         'accessed' => 'datetime',
     ];

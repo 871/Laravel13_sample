@@ -18,31 +18,6 @@ final class LoginLogsRepositoryCreateReadTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        // Choose target testing connection: prefer TEST_DB_CONNECTION env, then DB_CONNECTION, then app default
-        $conn = env('TEST_DB_CONNECTION') ?: (env('DB_CONNECTION') ?: config('database.default'));
-
-        $available = array_keys(config('database.connections'));
-        if (!in_array($conn, $available, true)) {
-            $this->fail(sprintf('Database connection [%s] not configured. Available connections: %s', $conn, implode(', ', $available)));
-        }
-
-        // Run migrations into chosen test connection
-        $this->artisan('migrate:fresh', ['--database' => $conn]);
-
-        // Verify migration created the table
-        if (!Schema::hasTable('login_logs')) {
-            $this->fail('login_logs table not created by migrations in test database');
-        }
-    }
-
-    protected function tearDown(): void
-    {
-        $conn = env('TEST_DB_CONNECTION') ?: (env('DB_CONNECTION') ?: config('database.default'));
-        // Reset migrations on the testing database to clean up
-        $this->artisan('migrate:reset', ['--database' => $conn]);
-
-        parent::tearDown();
     }
 
     private function makeEntity(array $overrides = []): LoginLogEntity
@@ -76,12 +51,24 @@ final class LoginLogsRepositoryCreateReadTest extends TestCase
 
     public function test_create_and_read()
     {
-        $repo = new LoginLogsRepository(new \DateTimeImmutable());
+        $datetime = new \DateTimeImmutable();
+        $entity = new LoginLogEntity(
+            new Vo\Id(Str::uuid()->toString()),
+            new Vo\LoginId('testuser@test.test'),
+            new Vo\LoginActorType(Vo\LoginActorType::ADMIN),
+            new Vo\AccountId(null),
+            new Vo\ImpersonatorAccountId(null),
+            new Vo\LoginResult(Vo\LoginResult::FAILURE),
+            new Vo\IpAddress('127.0.0.1'),
+            new Vo\UserAgent('PHPUnit'),
+            new Vo\FailureReasonCode(Vo\FailureReasonCode::LOGIN_ID_NOT_FOUND),
+            new Vo\LoggedInAt($datetime->format('Y-m-d\TH:i:s')),
+            new CreatedAt($datetime->format('Y-m-d\TH:i:s')),
+        );
 
-        $entity = $this->makeEntity();
+        $repo = new LoginLogsRepository($datetime);
 
         $created = $repo->create($entity);
-
         $this->assertSame($entity->id()->toString(), $created->id()->toString());
         $this->assertSame($entity->loginId()->toString(), $created->loginId()->toString());
 

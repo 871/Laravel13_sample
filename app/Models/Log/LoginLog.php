@@ -19,6 +19,7 @@ class LoginLog extends Model
         'account_id' => 'integer',
         'impersonator_account_id' => 'integer',
         'logged_in_at' => 'datetime',
+        'created_at' => 'datetime',
     ];
 
     public function adminAccount()
