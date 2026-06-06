@@ -75,33 +75,37 @@ final class LoginLogsRepositoryCheckFailureLimitTest extends TestCase
         $this->app['config']->set('auth.login_failure_threshold', 3);
         $this->app['config']->set('auth.login_failure_minutes', 15);
 
-        $now = new \DateTimeImmutable();
-        $repo = new LoginLogsRepository($now);
+        $base = new \DateTimeImmutable();
+        $repo = new LoginLogsRepository($base);
         $loginId = 'attacker-checklimit';
 
         // Ensure initial allowed
         $this->assertTrue($repo->checkFailureLoginLimit(new Vo\LoginId($loginId)));
 
-        // Record failures up to threshold-1 and assert allowed
-        for ($i = 1; $i < 3; $i++) {
-            $e = $this->makeEntity(['login_id' => $loginId, 'login_result' => Vo\LoginResult::FAILURE, 'failure_reason_code' => Vo\FailureReasonCode::INVALID_PASSWORD, 'logged_in_at' => $now->format('Y-m-d\TH:i:s')]);
+        // Record failures up to threshold-1 and assert allowed (timestamps increasing)
+        for ($i = 0; $i < 2; $i++) {
+            $ts = $base->modify("+{$i} seconds");
+            $e = $this->makeEntity(['login_id' => $loginId, 'login_result' => Vo\LoginResult::FAILURE, 'failure_reason_code' => Vo\FailureReasonCode::INVALID_PASSWORD, 'logged_in_at' => $ts->format('Y-m-d\\TH:i:s')]);
             $repo->create($e);
-            $this->assertTrue($repo->checkFailureLoginLimit(new Vo\LoginId($loginId)), "Expected allowed after $i failures");
+            $this->assertTrue($repo->checkFailureLoginLimit(new Vo\LoginId($loginId)), "Expected allowed after " . ($i + 1) . " failures");
         }
 
         // Record the threshold-th failure -> should now be blocked (false)
-        $eThreshold = $this->makeEntity(['login_id' => $loginId, 'login_result' => Vo\LoginResult::FAILURE, 'failure_reason_code' => Vo\FailureReasonCode::INVALID_PASSWORD, 'logged_in_at' => $now->format('Y-m-d\TH:i:s')]);
+        $ts = $base->modify('+2 seconds');
+        $eThreshold = $this->makeEntity(['login_id' => $loginId, 'login_result' => Vo\LoginResult::FAILURE, 'failure_reason_code' => Vo\FailureReasonCode::INVALID_PASSWORD, 'logged_in_at' => $ts->format('Y-m-d\\TH:i:s')]);
         $repo->create($eThreshold);
         $this->assertFalse($repo->checkFailureLoginLimit(new Vo\LoginId($loginId)), 'Expected blocked when failures reach threshold');
 
-        // Record a success log -> should reset allow (true)
-        $eSuccess = $this->makeEntity(['login_id' => $loginId, 'login_result' => Vo\LoginResult::SUCCESS, 'failure_reason_code' => null, 'logged_in_at' => $now->format('Y-m-d\TH:i:s')]);
+        // Record a success log (later timestamp) -> should reset allow (true)
+        $tsSuccess = $base->modify('+3 seconds');
+        $eSuccess = $this->makeEntity(['login_id' => $loginId, 'login_result' => Vo\LoginResult::SUCCESS, 'failure_reason_code' => null, 'logged_in_at' => $tsSuccess->format('Y-m-d\\TH:i:s')]);
         $repo->create($eSuccess);
         $this->assertTrue($repo->checkFailureLoginLimit(new Vo\LoginId($loginId)), 'Expected allowed after a success log');
 
-        // Again record failures up to threshold to ensure blocking resumes
+        // Again record failures after success with newer timestamps to ensure blocking resumes
         for ($i = 1; $i <= 3; $i++) {
-            $e = $this->makeEntity(['login_id' => $loginId, 'login_result' => Vo\LoginResult::FAILURE, 'failure_reason_code' => Vo\FailureReasonCode::INVALID_PASSWORD, 'logged_in_at' => $now->format('Y-m-d\TH:i:s')]);
+            $ts2 = $base->modify('+' . (3 + $i) . ' seconds');
+            $e = $this->makeEntity(['login_id' => $loginId, 'login_result' => Vo\LoginResult::FAILURE, 'failure_reason_code' => Vo\FailureReasonCode::INVALID_PASSWORD, 'logged_in_at' => $ts2->format('Y-m-d\\TH:i:s')]);
             $repo->create($e);
         }
 
