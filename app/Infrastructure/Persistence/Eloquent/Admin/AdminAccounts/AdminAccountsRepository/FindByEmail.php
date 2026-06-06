@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Infrastructure\Persistence\Eloquent\Admin\AdminAccountsRepository;
+namespace App\Infrastructure\Persistence\Eloquent\Admin\AdminAccounts\AdminAccountsRepository;
 
 use App\Domain\Admin\AdminAccounts\ValueObject as Vo;
 use App\Domain\Admin\AdminAccounts\Entity\AdminAccount as DomainEntity;
