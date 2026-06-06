@@ -19,32 +19,19 @@ final class LoginLogsRepositoryCreateReadTest extends TestCase
     {
         parent::setUp();
 
-        // Force sqlite in-memory for reliable tests
-        $this->app['config']->set('database.default', 'sqlite');
-        $this->app['config']->set('database.connections.sqlite.database', ':memory:');
+        // Run migrations into the test database connection (expects 'testing' connection configured)
+        $this->artisan('migrate:fresh', ['--database' => 'testing']);
 
-        if (Schema::hasTable('login_logs')) {
-            Schema::drop('login_logs');
+        // Verify migration created the table
+        if (!Schema::hasTable('login_logs')) {
+            $this->fail('login_logs table not created by migrations in test database');
         }
-
-        Schema::create('login_logs', function (Blueprint $table) {
-            $table->char('id', 36)->primary();
-            $table->string('login_id', 255);
-            $table->string('login_actor_type', 20);
-            $table->unsignedBigInteger('account_id')->nullable();
-            $table->unsignedBigInteger('impersonator_account_id')->nullable();
-            $table->string('login_result', 20);
-            $table->string('ip_address', 45);
-            $table->text('user_agent')->nullable();
-            $table->string('failure_reason_code')->nullable();
-            $table->dateTime('logged_in_at');
-            $table->dateTime('created_at')->nullable();
-        });
     }
 
     protected function tearDown(): void
     {
-        Schema::dropIfExists('login_logs');
+        // Reset migrations on the testing database to clean up
+        $this->artisan('migrate:reset', ['--database' => 'testing']);
 
         parent::tearDown();
     }
