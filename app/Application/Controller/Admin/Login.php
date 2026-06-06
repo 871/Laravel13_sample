@@ -13,7 +13,7 @@ use App\Domain\Log\LoginLogs\ValueObject as LoginLogVo;
 use App\Domain\Shared\ValueObject as SVo;
 use App\Exception\AuthException;
 use App\Infrastructure\Persistence\Eloquent\Admin\AdminAccountsRepository;
-use App\Infrastructure\Persistence\Eloquent\Admin\AdminAccountsRepository\Mapper as AdminAccountMapper;
+use App\Infrastructure\Persistence\Eloquent\Admin\AdminAccounts\AdminAccountsRepository\Mapper as AdminAccountMapper;
 use App\Infrastructure\Persistence\Eloquent\Log\LoginLogs\LoginLogsRepository;
 use App\Lib\UUID\UUID;
 use App\Security\Auth\AuthContext\Fields\Type;
