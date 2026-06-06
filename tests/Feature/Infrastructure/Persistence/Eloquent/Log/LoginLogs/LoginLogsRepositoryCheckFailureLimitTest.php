@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Infrastructure\Persistence\Eloquent\Log\LoginLogs;
 
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use App\Infrastructure\Persistence\Eloquent\Log\LoginLogs\LoginLogsRepository;
@@ -12,24 +13,16 @@ use App\Domain\Log\LoginLogs\Entity\LoginLog as LoginLogEntity;
 use App\Domain\Log\LoginLogs\ValueObject as Vo;
 use App\Domain\Shared\ValueObject\CreatedAt as SCreatedAt;
 
+/**
+ * ./vendor/bin/sail artisan test --env=testing --filter=LoginLogsRepositoryCheckFailureLimitTest
+ */
 final class LoginLogsRepositoryCheckFailureLimitTest extends TestCase
 {
+    use RefreshDatabase;
+
     protected function setUp(): void
     {
         parent::setUp();
-
-        // Run migrations into the prepared test DB connection
-        $conn = env('TEST_DB_CONNECTION') ?: (env('DB_CONNECTION') ?: config('database.default'));
-        $available = array_keys(config('database.connections'));
-        if (!in_array($conn, $available, true)) {
-            $this->fail(sprintf('Database connection [%s] not configured. Available: %s', $conn, implode(', ', $available)));
-        }
-
-        $this->artisan('migrate:fresh', ['--database' => $conn]);
-
-        if (!Schema::hasTable('login_logs')) {
-            $this->fail('login_logs table not created by migrations in test database');
-        }
     }
 
     protected function tearDown(): void

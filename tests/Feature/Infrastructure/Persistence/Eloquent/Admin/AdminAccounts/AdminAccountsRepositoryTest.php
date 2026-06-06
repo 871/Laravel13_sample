@@ -11,6 +11,9 @@ use App\Domain\Admin\AdminAccounts\Entity\AdminAccount as DomainEntity;
 use App\Domain\Admin\AdminAccounts\ValueObject as Vo;
 use App\Domain\Shared\ValueObject as SVo;
 
+/**
+ * ./vendor/bin/sail artisan test --env=testing --filter=AdminAccountsRepositoryTest
+ */
 final class AdminAccountsRepositoryTest extends TestCase
 {
     use RefreshDatabase;

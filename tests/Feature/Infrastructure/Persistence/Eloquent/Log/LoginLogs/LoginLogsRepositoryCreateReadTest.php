@@ -5,19 +5,28 @@ declare(strict_types=1);
 namespace Tests\Feature\Infrastructure\Persistence\Eloquent\Log\LoginLogs;
 
 use Tests\TestCase;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use App\Infrastructure\Persistence\Eloquent\Log\LoginLogs\LoginLogsRepository;
 use App\Domain\Log\LoginLogs\Entity\LoginLog as LoginLogEntity;
 use App\Domain\Log\LoginLogs\ValueObject as Vo;
 use App\Domain\Shared\ValueObject\CreatedAt;
 
+/**
+ * ./vendor/bin/sail artisan test --env=testing --filter=LoginLogsRepositoryCreateReadTest
+ */
 final class LoginLogsRepositoryCreateReadTest extends TestCase
 {
+    use RefreshDatabase;
+
     protected function setUp(): void
     {
         parent::setUp();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
     }
 
     public function test_create_and_read()

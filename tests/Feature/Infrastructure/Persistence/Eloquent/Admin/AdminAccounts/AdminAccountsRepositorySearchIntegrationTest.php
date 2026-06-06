@@ -13,6 +13,9 @@ use App\Domain\Admin\AdminAccounts\SearchCondition;
 use App\Domain\Admin\AdminAccounts\ValueObject as Vo;
 use App\Domain\Shared\ValueObject as SVo;
 
+/**
+ * ./vendor/bin/sail artisan test --env=testing --filter=AdminAccountsRepositorySearchIntegrationTest
+ */
 final class AdminAccountsRepositorySearchIntegrationTest extends TestCase
 {
     use RefreshDatabase;
