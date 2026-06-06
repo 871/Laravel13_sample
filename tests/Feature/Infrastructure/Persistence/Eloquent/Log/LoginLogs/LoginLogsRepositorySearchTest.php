@@ -83,9 +83,9 @@ final class LoginLogsRepositorySearchTest extends TestCase
         $t3 = now()->format('Y-m-d\TH:i:s');
 
         $e1 = $this->makeEntity(['login_id' => 'alice', 'login_result' => Vo\LoginResult::SUCCESS, 'login_actor_type' => Vo\LoginActorType::ADMIN, 'ip_address' => '1.1.1.1', 'user_agent' => 'UA-alice', 'logged_in_at' => $t1]);
-        $e2 = $this->makeEntity(['login_id' => 'bob', 'login_result' => Vo\LoginResult::FAILURE, 'login_actor_type' => Vo\LoginActorType::ADMIN, 'ip_address' => '2.2.2.2', 'user_agent' => 'UA-bob', 'failure_reason_code' => 'LOCKED', 'logged_in_at' => $t2]);
+        $e2 = $this->makeEntity(['login_id' => 'bob', 'login_result' => Vo\LoginResult::FAILURE, 'login_actor_type' => Vo\LoginActorType::ADMIN, 'ip_address' => '2.2.2.2', 'user_agent' => 'UA-bob', 'failure_reason_code' => Vo\FailureReasonCode::ACCOUNT_LOCKED, 'logged_in_at' => $t2]);
         $e3 = $this->makeEntity(['login_id' => 'carol', 'login_result' => Vo\LoginResult::SUCCESS, 'login_actor_type' => Vo\LoginActorType::USER, 'ip_address' => '10.0.0.5', 'user_agent' => 'UA-carol', 'logged_in_at' => $t0]);
-        $e4 = $this->makeEntity(['login_id' => 'attacker', 'login_result' => Vo\LoginResult::FAILURE, 'login_actor_type' => Vo\LoginActorType::ADMIN, 'ip_address' => '9.9.9.9', 'user_agent' => 'BadAgent', 'failure_reason_code' => 'BAD_PW', 'logged_in_at' => $t3]);
+        $e4 = $this->makeEntity(['login_id' => 'attacker', 'login_result' => Vo\LoginResult::FAILURE, 'login_actor_type' => Vo\LoginActorType::ADMIN, 'ip_address' => '9.9.9.9', 'user_agent' => 'BadAgent', 'failure_reason_code' => Vo\FailureReasonCode::INVALID_PASSWORD, 'logged_in_at' => $t3]);
         $e5 = $this->makeEntity(['login_id' => 'keyword-user', 'login_result' => Vo\LoginResult::SUCCESS, 'login_actor_type' => Vo\LoginActorType::ADMIN, 'ip_address' => '192.0.2.5', 'user_agent' => 'SpecialAgent', 'logged_in_at' => $t2]);
 
         foreach ([$e1, $e2, $e3, $e4, $e5] as $e) {
