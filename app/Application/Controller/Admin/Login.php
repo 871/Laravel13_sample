@@ -8,12 +8,17 @@ use App\Application\Controller\Shared\ApplicationInterface;
 use App\Application\Controller\Shared\ApplicationTrait;
 use App\Domain\Admin\AdminAccounts\Entity\AdminAccount as AccountEntity;
 use App\Domain\Admin\AdminAccounts\ValueObject as Vo;
+use App\Domain\Shared\ValueObject as Svo;
+use App\Domain\Log\LoginLogs\Entity\LoginLog as LoginLogEntity;
+use App\Domain\Log\LoginLogs\ValueObject as LoginLogVo;
 use App\Exception\AuthException;
 use App\Infrastructure\Persistence\Eloquent\Admin\AdminAccounts\AdminAccountsRepository;
+use App\Infrastructure\Persistence\Eloquent\Log\LoginLogs\LoginLogsRepository;
 use App\Security\Auth\AuthContext\Fields\Type;
 use App\Security\Auth\AuthSession;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Ramsey\Uuid\Uuid;
 
 
 final class Login implements ApplicationInterface
@@ -71,14 +76,12 @@ final class Login implements ApplicationInterface
      */
     private function checkLoginFailureCount(): self
     {
-        /**  TODO 未実装
-        if (!(new LoginLogsRepository())->checkFailureLoginLimit(LoginLogVo\LoginId::fromString($this->login_id))) {
+        if (!(new LoginLogsRepository($this->datetime))->checkFailureLoginLimit(LoginLogVo\LoginId::fromString($this->login_id))) {
             throw new AuthException(
                 __('ログイン失敗回数が上限に達したため、アカウントがロックされました。しばらくしてから再度お試しください。'),
                 AuthException::LOGIN_FAIL_COUNT_OVER,
             );
         }
-        */
 
         return $this;
     }
@@ -201,9 +204,8 @@ final class Login implements ApplicationInterface
      */
     public function recordLoginSuccess(): self
     {
-        /** TODO 未実装
-        (new LoginLogsRepository())->create(new LoginLogEntity(
-            id: new LoginLogVo\Id(UUID::uuid7()),
+        (new LoginLogsRepository($this->datetime))->create(new LoginLogEntity(
+            id: new LoginLogVo\Id(Uuid::uuid7()->toString()),
             login_id: new LoginLogVo\LoginId($this->login_id),
             login_actor_type: new LoginLogVo\LoginActorType(LoginLogVo\LoginActorType::ADMIN),
             account_id: new LoginLogVo\AccountId(
@@ -211,13 +213,12 @@ final class Login implements ApplicationInterface
             ), // ログインIDをaccount_idとして記録
             impersonator_account_id: new LoginLogVo\ImpersonatorAccountId(null),
             login_result: new LoginLogVo\LoginResult(LoginLogVo\LoginResult::SUCCESS),
-            ip_address: LoginLogVo\IpAddress::fromString($this->request->clientIp()),
-            user_agent: LoginLogVo\UserAgent::fromString($this->request->getHeaderLine('User-Agent')),
+            ip_address: LoginLogVo\IpAddress::fromString($this->request->ip()),
+            user_agent: LoginLogVo\UserAgent::fromString($this->request->userAgent()),
             failure_reason_code: LoginLogVo\FailureReasonCode::fromString(null),
             logged_in_at: new LoginLogVo\LoggedInAt($this->datetime->format('Y-m-d\TH:i:s')),
-            created: new SVo\Created($this->datetime->format('Y-m-d\TH:i:s')),
+            created_at: new SVo\CreatedAt($this->datetime->format('Y-m-d\TH:i:s')),
         ));
-        */
 
         return $this;
     }
@@ -248,16 +249,8 @@ final class Login implements ApplicationInterface
             return $this; // ログイン失敗回数超過の場合は、ログイン失敗ログの記録は行わない（すでにログイン失敗回数超過の状態であるため）
         }
 
-        Log::error('Login failed', [
-            'login_id' => $this->login_id,
-            'ip_address' => $this->request->ip(),
-            'user_agent' => $this->request->userAgent(),
-            'failure_reason_code' => $e->getFailureReasonCode(),
-        ]); 
-
-        /* TODO 未実装
-        (new LoginLogsRepository())->create(new LoginLogEntity(
-            id: new LoginLogVo\Id(UUID::uuid7()),
+        (new LoginLogsRepository($this->datetime))->create(new LoginLogEntity(
+            id: new LoginLogVo\Id(Uuid::uuid7()->toString()),
             login_id: new LoginLogVo\LoginId($this->login_id),
             login_actor_type: new LoginLogVo\LoginActorType(LoginLogVo\LoginActorType::ADMIN),
             account_id: new LoginLogVo\AccountId(
@@ -265,13 +258,13 @@ final class Login implements ApplicationInterface
             ),
             impersonator_account_id: new LoginLogVo\ImpersonatorAccountId(null),
             login_result: new LoginLogVo\LoginResult(LoginLogVo\LoginResult::FAILURE),
-            ip_address: LoginLogVo\IpAddress::fromString($this->request->clientIp()),
-            user_agent: LoginLogVo\UserAgent::fromString($this->request->getHeaderLine('User-Agent')),
+            ip_address: LoginLogVo\IpAddress::fromString($this->request->ip()),
+            user_agent: LoginLogVo\UserAgent::fromString($this->request->userAgent()),
             failure_reason_code: LoginLogVo\FailureReasonCode::fromString($e->getFailureReasonCode()),
             logged_in_at: new LoginLogVo\LoggedInAt($this->datetime->format('Y-m-d\TH:i:s')),
-            created: new SVo\Created($this->datetime->format('Y-m-d\TH:i:s')),
+            created_at: new SVo\CreatedAt($this->datetime->format('Y-m-d\TH:i:s')),
         ));
-        */
+
         return $this;
     }
 }
