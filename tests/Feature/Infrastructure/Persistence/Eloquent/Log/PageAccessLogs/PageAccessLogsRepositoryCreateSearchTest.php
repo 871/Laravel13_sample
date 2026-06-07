@@ -20,7 +20,7 @@ final class PageAccessLogsRepositoryCreateSearchTest extends TestCase
     private function makeEntity(array $overrides = []): PageAccessLogEntity
     {
         $id = $overrides['id'] ?? Str::uuid()->toString();
-        $accessed = $overrides['accessed'] ?? now()->format('Y-m-d\TH:i:s');
+        $accessed = $overrides['accessed'] ?? now()->format('Y-m-d\\TH:i:s.u');
         $accountType = $overrides['account_type'] ?? Vo\AccountType::ADMIN;
         $accountId = array_key_exists('account_id', $overrides) ? $overrides['account_id'] : '900000';
         $method = $overrides['method'] ?? 'GET';
@@ -31,7 +31,7 @@ final class PageAccessLogsRepositoryCreateSearchTest extends TestCase
         $referer = array_key_exists('referer', $overrides) ? $overrides['referer'] : null;
         $ip = $overrides['ip_address'] ?? '127.0.0.1';
         $ua = $overrides['user_agent'] ?? 'PHPUnit';
-        $created = $overrides['created_at'] ?? now()->format('Y-m-d\TH:i:s');
+        $created = $overrides['created_at'] ?? now()->format('Y-m-d\\TH:i:s.u');
 
         return new PageAccessLogEntity(
             new Vo\Id($id),
@@ -69,7 +69,7 @@ final class PageAccessLogsRepositoryCreateSearchTest extends TestCase
 
         $repo = new PageAccessLogsRepository(new \DateTimeImmutable());
 
-        $t1 = now()->subMinutes(10)->format('Y-m-d\TH:i:s');
+        $t1 = now()->subMinutes(10)->format('Y-m-d\\TH:i:s.u');
 
         $e1 = $this->makeEntity([
             'accessed' => $t1,
@@ -86,8 +86,8 @@ final class PageAccessLogsRepositoryCreateSearchTest extends TestCase
 
         // Search by admin name keyword
         $cond = new \App\Domain\Log\PageAccessLogs\SearchCondition(
-            Vo\Accessed::fromString(now()->subHour()->format('Y-m-d\TH:i:s')),
-            Vo\Accessed::fromString(now()->addHour()->format('Y-m-d\TH:i:s')),
+            Vo\Accessed::fromString(now()->subHour()->format('Y-m-d\\TH:i:s.u')),
+            Vo\Accessed::fromString(now()->addHour()->format('Y-m-d\\TH:i:s.u')),
             new Vo\Search\AccountType(Vo\AccountType::ADMIN),
             new Vo\Search\AccountId(null),
             new Vo\Search\Keyword('Alice'),
@@ -105,10 +105,10 @@ final class PageAccessLogsRepositoryCreateSearchTest extends TestCase
     {
         $repo = new PageAccessLogsRepository(new \DateTimeImmutable());
 
-        $t0 = now()->subDays(3)->format('Y-m-d\TH:i:s');
-        $t1 = now()->subDays(2)->format('Y-m-d\TH:i:s');
-        $t2 = now()->subDay()->format('Y-m-d\TH:i:s');
-        $t3 = now()->format('Y-m-d\TH:i:s');
+        $t0 = now()->subDays(3)->format('Y-m-d\\TH:i:s.u');
+        $t1 = now()->subDays(2)->format('Y-m-d\\TH:i:s.u');
+        $t2 = now()->subDay()->format('Y-m-d\\TH:i:s.u');
+        $t3 = now()->format('Y-m-d\\TH:i:s.u');
 
         $a1 = $this->makeEntity(['accessed' => $t0, 'account_type' => Vo\AccountType::ADMIN, 'path' => '/p/0', 'ip_address' => '1.1.1.1']);
         $a2 = $this->makeEntity(['accessed' => $t1, 'account_type' => Vo\AccountType::ADMIN, 'path' => '/p/1', 'ip_address' => '2.2.2.2']);
