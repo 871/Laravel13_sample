@@ -35,7 +35,9 @@ final class PageAccessLogsRepositoryCreateSearchTest extends TestCase
 
         return new PageAccessLogEntity(
             new Vo\Id($id),
-            new Vo\Accessed($accessed, 'Y-m-d\\TH:i:s.u'),
+            (strpos($accessed, '.') !== false)
+                ? new Vo\Accessed($accessed, 'Y-m-d\\TH:i:s.u')
+                : new Vo\Accessed($accessed, 'Y-m-d\\TH:i:s'),
             new Vo\AccountType($accountType),
             new Vo\AccountId($accountId !== null ? (string)$accountId : null),
             new Vo\Method($method),
