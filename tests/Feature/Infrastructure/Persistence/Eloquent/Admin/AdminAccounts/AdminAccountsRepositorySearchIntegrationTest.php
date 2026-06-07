@@ -14,7 +14,7 @@ use App\Domain\Admin\AdminAccounts\ValueObject as Vo;
 use App\Domain\Shared\ValueObject as SVo;
 
 /**
- * ./vendor/bin/sail artisan test --env=testing --filter=AdminAccountsRepositorySearchIntegrationTest
+ * ./vendor/bin/sail artisan test --filter=AdminAccountsRepositorySearchIntegrationTest
  */
 final class AdminAccountsRepositorySearchIntegrationTest extends TestCase
 {
@@ -32,7 +32,7 @@ final class AdminAccountsRepositorySearchIntegrationTest extends TestCase
                 'Refusing to run tests against database: '
                 . config('database.connections.mysql.database')
             );
-        }        
+        }
 
         // rely on migrations to create account_status_masters (migration seeds some codes)
 

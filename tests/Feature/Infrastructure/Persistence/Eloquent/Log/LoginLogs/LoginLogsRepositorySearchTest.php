@@ -17,7 +17,7 @@ use App\Domain\Shared\ValueObject\OrderBy;
 use App\Domain\Shared\ValueObject\CreatedAt as SCreatedAt;
 
 /**
- * ./vendor/bin/sail artisan test --env=testing --filter=LoginLogsRepositorySearchTest
+ * ./vendor/bin/sail artisan test --filter=LoginLogsRepositorySearchTest
  */
 final class LoginLogsRepositorySearchTest extends TestCase
 {
@@ -26,6 +26,16 @@ final class LoginLogsRepositorySearchTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        if (! app()->environment('testing')) {
+            throw new \RuntimeException('Testing environment only.');
+        }
+
+        if (config('database.connections.mysql.database') !== 'testing') {
+            throw new \RuntimeException(
+                'Refusing to run tests against database: '
+                . config('database.connections.mysql.database')
+            );
+        }
     }
 
     protected function tearDown(): void

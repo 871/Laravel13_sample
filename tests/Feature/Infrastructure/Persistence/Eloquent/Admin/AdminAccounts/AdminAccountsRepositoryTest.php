@@ -21,6 +21,16 @@ final class AdminAccountsRepositoryTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        if (! app()->environment('testing')) {
+            throw new \RuntimeException('Testing environment only.');
+        }
+
+        if (config('database.connections.mysql.database') !== 'testing') {
+            throw new \RuntimeException(
+                'Refusing to run tests against database: '
+                . config('database.connections.mysql.database')
+            );
+        }
     }
 
     public function testCreateReadFindByEmailReadHistoriesAndUpdate(): void

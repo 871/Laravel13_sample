@@ -13,7 +13,7 @@ use App\Domain\Log\LoginLogs\ValueObject as Vo;
 use App\Domain\Shared\ValueObject\CreatedAt;
 
 /**
- * ./vendor/bin/sail artisan test --env=testing --filter=LoginLogsRepositoryCreateReadTest
+ * ./vendor/bin/sail artisan test --filter=LoginLogsRepositoryCreateReadTest
  */
 final class LoginLogsRepositoryCreateReadTest extends TestCase
 {
@@ -22,6 +22,16 @@ final class LoginLogsRepositoryCreateReadTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        if (! app()->environment('testing')) {
+            throw new \RuntimeException('Testing environment only.');
+        }
+
+        if (config('database.connections.mysql.database') !== 'testing') {
+            throw new \RuntimeException(
+                'Refusing to run tests against database: '
+                . config('database.connections.mysql.database')
+            );
+        }
     }
 
     protected function tearDown(): void

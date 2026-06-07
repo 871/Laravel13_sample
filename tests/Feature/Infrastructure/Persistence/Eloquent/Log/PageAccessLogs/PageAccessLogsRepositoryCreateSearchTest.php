@@ -17,6 +17,21 @@ final class PageAccessLogsRepositoryCreateSearchTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        if (! app()->environment('testing')) {
+            throw new \RuntimeException('Testing environment only.');
+        }
+
+        if (config('database.connections.mysql.database') !== 'testing') {
+            throw new \RuntimeException(
+                'Refusing to run tests against database: '
+                . config('database.connections.mysql.database')
+            );
+        }
+    }
+
     private function makeEntity(array $overrides = []): PageAccessLogEntity
     {
         $id = $overrides['id'] ?? Str::uuid()->toString();
