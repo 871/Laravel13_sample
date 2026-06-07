@@ -24,7 +24,7 @@ final class Create
             'id' => $entity->id()->toString(),
             'accessed' => $entity->accessed()->format('Y-m-d\TH:i:s'),
             'account_type' => $entity->accountType()->toString(),
-            'account_id' => $entity->accountId()->toIntOrNull(),
+            'account_id' => $entity->accountId()->toInt(),
             'method' => $entity->method()->toString(),
             'path' => $entity->path()->toString(),
             'query_string' => $entity->queryString()->toStringOrNull(),

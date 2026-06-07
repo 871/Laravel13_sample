@@ -22,7 +22,7 @@ final class PageAccessLogsRepositoryCreateSearchTest extends TestCase
         $id = $overrides['id'] ?? Str::uuid()->toString();
         $accessed = $overrides['accessed'] ?? now()->format('Y-m-d\TH:i:s');
         $accountType = $overrides['account_type'] ?? Vo\AccountType::ADMIN;
-        $accountId = array_key_exists('account_id', $overrides) ? $overrides['account_id'] : null;
+        $accountId = array_key_exists('account_id', $overrides) ? $overrides['account_id'] : '900000';
         $method = $overrides['method'] ?? 'GET';
         $path = $overrides['path'] ?? '/';
         $query = array_key_exists('query_string', $overrides) ? $overrides['query_string'] : null;
