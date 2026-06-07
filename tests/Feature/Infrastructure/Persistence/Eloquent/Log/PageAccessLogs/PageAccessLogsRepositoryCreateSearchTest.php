@@ -35,7 +35,7 @@ final class PageAccessLogsRepositoryCreateSearchTest extends TestCase
 
         return new PageAccessLogEntity(
             new Vo\Id($id),
-            Vo\Accessed::fromString($accessed),
+            new Vo\Accessed($accessed, 'Y-m-d\\TH:i:s.u'),
             new Vo\AccountType($accountType),
             new Vo\AccountId($accountId !== null ? (string)$accountId : null),
             new Vo\Method($method),
@@ -86,8 +86,8 @@ final class PageAccessLogsRepositoryCreateSearchTest extends TestCase
 
         // Search by admin name keyword
         $cond = new \App\Domain\Log\PageAccessLogs\SearchCondition(
-            Vo\Accessed::fromString(now()->subHour()->format('Y-m-d\\TH:i:s.u')),
-            Vo\Accessed::fromString(now()->addHour()->format('Y-m-d\\TH:i:s.u')),
+            new Vo\Accessed(now()->subHour()->format('Y-m-d\\TH:i:s.u'), 'Y-m-d\\TH:i:s.u'),
+            new Vo\Accessed(now()->addHour()->format('Y-m-d\\TH:i:s.u'), 'Y-m-d\\TH:i:s.u'),
             new Vo\Search\AccountType(Vo\AccountType::ADMIN),
             new Vo\Search\AccountId(null),
             new Vo\Search\Keyword('Alice'),
@@ -121,8 +121,8 @@ final class PageAccessLogsRepositoryCreateSearchTest extends TestCase
 
         // Filter by account_type ADMIN -> should return a1,a2,a4 (3 items)
         $condAdmin = new \App\Domain\Log\PageAccessLogs\SearchCondition(
-            Vo\Accessed::fromString(now()->subWeek()->format('Y-m-d\TH:i:s')),
-            Vo\Accessed::fromString(now()->addWeek()->format('Y-m-d\TH:i:s')),
+            new Vo\Accessed(now()->subWeek()->format('Y-m-d\\TH:i:s.u'), 'Y-m-d\\TH:i:s.u'),
+            new Vo\Accessed(now()->addWeek()->format('Y-m-d\\TH:i:s.u'), 'Y-m-d\\TH:i:s.u'),
             new Vo\Search\AccountType(Vo\AccountType::ADMIN),
             new Vo\Search\AccountId(null),
             new Vo\Search\Keyword(null),
@@ -136,8 +136,8 @@ final class PageAccessLogsRepositoryCreateSearchTest extends TestCase
 
         // Pagination: limit=2, FIRST -> should return earliest two (/p/0, /p/1)
         $condPage = new \App\Domain\Log\PageAccessLogs\SearchCondition(
-            Vo\Accessed::fromString(now()->subWeek()->format('Y-m-d\TH:i:s')),
-            Vo\Accessed::fromString(now()->addWeek()->format('Y-m-d\TH:i:s')),
+            new Vo\Accessed(now()->subWeek()->format('Y-m-d\\TH:i:s.u'), 'Y-m-d\\TH:i:s.u'),
+            new Vo\Accessed(now()->addWeek()->format('Y-m-d\\TH:i:s.u'), 'Y-m-d\\TH:i:s.u'),
             new Vo\Search\AccountType(null),
             new Vo\Search\AccountId(null),
             new Vo\Search\Keyword(null),
