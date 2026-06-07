@@ -19,10 +19,17 @@ class Accessed implements Stringable
      * @param string $value
      * @param string $format
      */
-    public function __construct(string $value, string $format = 'Y-m-d\TH:i:s.u')
+    public function __construct(string $value, string $format = 'Y-m-d\\TH:i:s.u')
     {
-        $dt = DateTimeImmutable::createFromFormat($format, $value)
-            ?: null;
+        // Try provided format first, then fall back to common variants without failing immediately
+        $formatsToTry = [$format, 'Y-m-d\\TH:i:s.u', 'Y-m-d\\TH:i:s'];
+        $dt = null;
+        foreach ($formatsToTry as $f) {
+            $dt = DateTimeImmutable::createFromFormat($f, $value) ?: null;
+            if ($dt !== null) {
+                break;
+            }
+        }
 
         if ($dt === null) {
             throw new DomainException(
