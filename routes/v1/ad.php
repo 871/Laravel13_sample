@@ -16,16 +16,19 @@ Route::prefix('ad')->as('admin.')->group(function () {
         Route::post('/logout', [App\Http\Controllers\Admin\LogoutController::class, 'indexPost']);
 
         // TODO　ミドルウェア実装前の表示確認用ルート。ミドルウェア実装後に削除予定。
-        Route::get('/', [App\Http\Controllers\Admin\TopController::class, 'index']);
-    
-    /*
+        // Route::get('/', [App\Http\Controllers\Admin\TopController::class, 'index']);
+
         // Apply middleware names used in Cake (middleware implementations not required)
-        Route::middleware(['adminAuth', 'pageAccessLog', 'adminGrant'])->group(function () {
+        Route::middleware([
+            \App\Http\Middleware\AdminAuthMiddleware::class,
+            /* 'pageAccessLog', 'adminGrant' */
+        ])->group(function () {
             Route::get('/error', [App\Http\Controllers\Admin\ErrorController::class, 'index']);
             Route::get('/error/{message_id}', [App\Http\Controllers\Admin\ErrorController::class, 'index']);
             Route::get('/', [App\Http\Controllers\Admin\TopController::class, 'index']);
             Route::get('/error_test', [App\Http\Controllers\Admin\TopController::class, 'errorTest']);
 
+        /*
             // UserAccount management (/v1/ad/{account_id}/user_account/...)
             Route::prefix('user_account')->as('user_account.')->group(function () {
                 Route::get('/', [App\Http\Controllers\Admin\UserAccount\SearchController::class, 'init']);
@@ -159,7 +162,7 @@ Route::prefix('ad')->as('admin.')->group(function () {
                     });
                 });
             });
-        });
     */
+        });
     });
 });

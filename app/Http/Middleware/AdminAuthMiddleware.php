@@ -32,10 +32,6 @@ class AdminAuthMiddleware
         );
 
         if (!$authSession->check()) {
-            $currentPath = '/' . ltrim($request->path(), '/');
-            $currentQuery = $request->getQueryString() ?? '';
-            $currentUrl = $currentQuery !== '' ? $currentPath . '?' . $currentQuery : $currentPath;
-
             // Keep CakePHP flash structure so existing code reading it stays compatible
             $request->session()->put('Flash.flash', [
                 [
@@ -46,7 +42,7 @@ class AdminAuthMiddleware
                 ],
             ]);
 
-            return redirect()->to('/v1/ad/login?redirect=' . urlencode($currentUrl));
+            return redirect()->to('/v1/ad/login?redirect=' . urlencode($request->getRequestUri()));
         }
 
         return $next($request);

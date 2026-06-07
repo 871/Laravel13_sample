@@ -12,7 +12,7 @@ interface PageAccessLogsRepository
      * 検索（カーソルベースページネーション、COUNTなし）
      *
      * @param \App\Domain\Log\PageAccessLogs\SearchCondition $condition
-     * @return array<\App\Domain\Log\PageAccessLogs\Entity\PageAccessLog>
+     * @return array
      */
     public function search(SearchCondition $condition): array;
 
