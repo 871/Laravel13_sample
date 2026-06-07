@@ -23,6 +23,16 @@ final class AdminAccountsRepositorySearchIntegrationTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        if (! app()->environment('testing')) {
+            throw new \RuntimeException('Testing environment only.');
+        }
+
+        if (config('database.connections.mysql.database') !== 'testing') {
+            throw new \RuntimeException(
+                'Refusing to run tests against database: '
+                . config('database.connections.mysql.database')
+            );
+        }        
 
         // rely on migrations to create account_status_masters (migration seeds some codes)
 
