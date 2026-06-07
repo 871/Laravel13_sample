@@ -46,7 +46,7 @@ final class PageAccessLogsRepositoryCreateSearchTest extends TestCase
             new Vo\Referer($referer),
             new Vo\IpAddress($ip),
             new Vo\UserAgent($ua),
-            new SCreatedAt($created),
+            new SCreatedAt($created, 'Y-m-d\\TH:i:s.u'),
             new Vo\SearchKey(null),
         );
     }
