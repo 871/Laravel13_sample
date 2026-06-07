@@ -22,7 +22,7 @@ final class Create
     {
         $m = EloquentModel::create([
             'id' => $entity->id()->toString(),
-            'accessed' => $entity->accessed()->format('Y-m-d\TH:i:s'),
+            'accessed' => $entity->accessed()->format('Y-m-d\\TH:i:s.u'),
             'account_type' => $entity->accountType()->toString(),
             'account_id' => $entity->accountId()->toInt(),
             'method' => $entity->method()->toString(),

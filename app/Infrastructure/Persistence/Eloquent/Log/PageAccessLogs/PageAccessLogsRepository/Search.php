@@ -40,15 +40,21 @@ final class Search
      */
     private function searchFirst(SearchCondition $condition): array
     {
-        $q = EloquentModel::query()->leftJoin('admin_accounts', function ($join) {
-            $join->on('admin_accounts.id', '=', 'page_access_logs.account_id')
-                 ->where('page_access_logs.account_type', 'ADMIN');
-        })->select('page_access_logs.*');
+        $q = EloquentModel::query()
+            ->leftJoin('admin_accounts', function ($join) {
+                $join->on('admin_accounts.id', '=', 'page_access_logs.account_id')
+                    ->where('page_access_logs.account_type', 'ADMIN');
+            })
+            ->leftJoin('user_accounts', function ($join) {
+                $join->on('user_accounts.id', '=', 'page_access_logs.account_id')
+                    ->where('page_access_logs.account_type', 'USER');
+            })
+            ->select('page_access_logs.*');
 
         $this->applyCommonWhere($q, $condition);
 
-        $orm = $q->orderBy('page_access_logs.accessed', 'asc')
-            ->orderBy('page_access_logs.account_id', 'asc')
+        $orm = $q->orderBy('page_access_logs.accessed', 'ASC')
+            ->orderBy('page_access_logs.account_id', 'ASC')
             ->limit($condition->getLimit())
             ->get();
 
@@ -60,15 +66,21 @@ final class Search
      */
     private function searchLast(SearchCondition $condition): array
     {
-        $q = EloquentModel::query()->leftJoin('admin_accounts', function ($join) {
-            $join->on('admin_accounts.id', '=', 'page_access_logs.account_id')
-                 ->where('page_access_logs.account_type', 'ADMIN');
-        })->select('page_access_logs.*');
+        $q = EloquentModel::query()
+            ->leftJoin('admin_accounts', function ($join) {
+                $join->on('admin_accounts.id', '=', 'page_access_logs.account_id')
+                    ->where('page_access_logs.account_type', 'ADMIN');
+            })
+            ->leftJoin('user_accounts', function ($join) {
+                $join->on('user_accounts.id', '=', 'page_access_logs.account_id')
+                    ->where('page_access_logs.account_type', 'USER');
+            })
+            ->select('page_access_logs.*');
 
         $this->applyCommonWhere($q, $condition);
 
-        $orm = $q->orderBy('page_access_logs.accessed', 'desc')
-            ->orderBy('page_access_logs.account_id', 'desc')
+        $orm = $q->orderBy('page_access_logs.accessed', 'DESC')
+            ->orderBy('page_access_logs.account_id', 'DESC')
             ->limit($condition->getLimit())
             ->get();
 
@@ -82,17 +94,23 @@ final class Search
      */
     private function searchNext(SearchCondition $condition): array
     {
-        $q = EloquentModel::query()->leftJoin('admin_accounts', function ($join) {
-            $join->on('admin_accounts.id', '=', 'page_access_logs.account_id')
-                 ->where('page_access_logs.account_type', 'ADMIN');
-        })->select('page_access_logs.*');
+        $q = EloquentModel::query()
+            ->leftJoin('admin_accounts', function ($join) {
+                $join->on('admin_accounts.id', '=', 'page_access_logs.account_id')
+                    ->where('page_access_logs.account_type', 'ADMIN');
+            })
+            ->leftJoin('user_accounts', function ($join) {
+                $join->on('user_accounts.id', '=', 'page_access_logs.account_id')
+                    ->where('page_access_logs.account_type', 'USER');
+            })
+            ->select('page_access_logs.*');
 
         $q->where('page_access_logs.search_key', '>', $condition->getSearchKey()->toString());
 
         $this->applyCommonWhere($q, $condition);
 
-        $orm = $q->orderBy('page_access_logs.accessed', 'asc')
-            ->orderBy('page_access_logs.account_id', 'asc')
+        $orm = $q->orderBy('page_access_logs.accessed', 'ASC')
+            ->orderBy('page_access_logs.account_id', 'ASC')
             ->limit($condition->getLimit())
             ->get();
 
@@ -104,17 +122,23 @@ final class Search
      */
     private function searchPrev(SearchCondition $condition): array
     {
-        $q = EloquentModel::query()->leftJoin('admin_accounts', function ($join) {
-            $join->on('admin_accounts.id', '=', 'page_access_logs.account_id')
-                 ->where('page_access_logs.account_type', 'ADMIN');
-        })->select('page_access_logs.*');
+        $q = EloquentModel::query()
+            ->leftJoin('admin_accounts', function ($join) {
+                $join->on('admin_accounts.id', '=', 'page_access_logs.account_id')
+                    ->where('page_access_logs.account_type', 'ADMIN');
+            })
+            ->leftJoin('user_accounts', function ($join) {
+                $join->on('user_accounts.id', '=', 'page_access_logs.account_id')
+                    ->where('page_access_logs.account_type', 'USER');
+            })
+            ->select('page_access_logs.*');
 
         $q->where('page_access_logs.search_key', '<', $condition->getSearchKey()->toString());
 
         $this->applyCommonWhere($q, $condition);
 
-        $orm = $q->orderBy('page_access_logs.accessed', 'desc')
-            ->orderBy('page_access_logs.account_id', 'desc')
+        $orm = $q->orderBy('page_access_logs.accessed', 'DESC')
+            ->orderBy('page_access_logs.account_id', 'DESC')
             ->limit($condition->getLimit())
             ->get();
 
@@ -125,8 +149,8 @@ final class Search
 
     private function applyCommonWhere($q, SearchCondition $condition): void
     {
-        $from = $condition->getAccessedFrom()->format('Y-m-d\\TH:i:s');
-        $to = $condition->getAccessedTo()->format('Y-m-d\\TH:i:s');
+        $from = $condition->getAccessedFrom()->format('Y-m-d\\TH:i:s.u');
+        $to = $condition->getAccessedTo()->format('Y-m-d\\TH:i:s.u');
 
         $q->whereBetween('page_access_logs.accessed', [$from, $to]);
 
@@ -146,11 +170,12 @@ final class Search
             $q->where(function ($sub) use ($likes) {
                 foreach ($likes as $like) {
                     $sub->orWhere(function ($inner) use ($like) {
-                        $inner->orWhere('page_access_logs.path', 'like', $like)
-                              ->orWhere('page_access_logs.route_name', 'like', $like)
-                              ->orWhere('page_access_logs.ip_address', 'like', $like)
-                              ->orWhere('page_access_logs.user_agent', 'like', $like)
-                              ->orWhere('admin_accounts.name', 'like', $like);
+                        $inner->orWhere('page_access_logs.path', 'LIKE', $like)
+                              ->orWhere('page_access_logs.route_name', 'LIKE', $like)
+                              ->orWhere('page_access_logs.ip_address', 'LIKE', $like)
+                              ->orWhere('page_access_logs.user_agent', 'LIKE', $like)
+                              ->orWhere('admin_accounts.name', 'LIKE', $like)
+                              ->orWhere('user_accounts.name', 'LIKE', $like);
                     });
                 }
             });
