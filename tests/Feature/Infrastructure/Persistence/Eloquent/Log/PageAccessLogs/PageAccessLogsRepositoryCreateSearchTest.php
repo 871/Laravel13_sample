@@ -153,4 +153,114 @@ final class PageAccessLogsRepositoryCreateSearchTest extends TestCase
         $this->assertSame('/p/0', $paged[0]->path()->toString());
         $this->assertSame('/p/1', $paged[1]->path()->toString());
     }
+
+    public function test_search_next_prev_and_keyword_fields()
+    {
+        $repo = new PageAccessLogsRepository(new \DateTimeImmutable());
+
+        // create 5 entries with distinct tokens
+        $entries = [];
+        for ($i = 1; $i <= 5; $i++) {
+            $t = now()->subMinutes(6 - $i)->format('Y-m-d\\TH:i:s.u');
+            $entries[] = $this->makeEntity([
+                'accessed' => $t,
+                'account_type' => Vo\AccountType::ADMIN,
+                'account_id' => '900000',
+                'path' => '/items/' . $i,
+                'route_name' => 'Items.show.' . $i,
+                'ip_address' => "10.0.0." . $i,
+                'user_agent' => 'agent-' . $i,
+                'referer' => 'https://example.test/ref-' . $i,
+            ]);
+        }
+
+        $created = [];
+        foreach ($entries as $e) {
+            $created[] = $repo->create($e);
+        }
+
+        // FIRST page limit=2 -> earliest two
+        $condFirst = new \App\Domain\Log\PageAccessLogs\SearchCondition(
+            new Vo\Accessed(now()->subHour()->format('Y-m-d\\TH:i:s.u'), 'Y-m-d\\TH:i:s.u'),
+            new Vo\Accessed(now()->addHour()->format('Y-m-d\\TH:i:s.u'), 'Y-m-d\\TH:i:s.u'),
+            new Vo\Search\AccountType(null),
+            new Vo\Search\AccountId(null),
+            new Vo\Search\Keyword(null),
+            new Vo\Search\NavigationType(\App\Domain\Log\PageAccessLogs\ValueObject\Search\NavigationType::FIRST),
+            new Vo\SearchKey(null),
+            2,
+        );
+
+        $first = $repo->search($condFirst);
+        $this->assertCount(2, $first);
+
+        // NEXT from last of first page
+        $lastOfFirst = $first[1];
+        $sk = $lastOfFirst->searchKey()->toString();
+
+        $condNext = new \App\Domain\Log\PageAccessLogs\SearchCondition(
+            new Vo\Accessed(now()->subHour()->format('Y-m-d\\TH:i:s.u'), 'Y-m-d\\TH:i:s.u'),
+            new Vo\Accessed(now()->addHour()->format('Y-m-d\\TH:i:s.u'), 'Y-m-d\\TH:i:s.u'),
+            new Vo\Search\AccountType(null),
+            new Vo\Search\AccountId(null),
+            new Vo\Search\Keyword(null),
+            new Vo\Search\NavigationType(\App\Domain\Log\PageAccessLogs\ValueObject\Search\NavigationType::NEXT),
+            new Vo\SearchKey($sk),
+            2,
+        );
+
+        $next = $repo->search($condNext);
+        $this->assertCount(2, $next);
+        $this->assertSame('/items/3', $next[0]->path()->toString());
+
+        // PREV from first of next page should return back to first page items
+        $skPrev = $next[0]->searchKey()->toString();
+        $condPrev = new \App\Domain\Log\PageAccessLogs\SearchCondition(
+            new Vo\Accessed(now()->subHour()->format('Y-m-d\\TH:i:s.u'), 'Y-m-d\\TH:i:s.u'),
+            new Vo\Accessed(now()->addHour()->format('Y-m-d\\TH:i:s.u'), 'Y-m-d\\TH:i:s.u'),
+            new Vo\Search\AccountType(null),
+            new Vo\Search\AccountId(null),
+            new Vo\Search\Keyword(null),
+            new Vo\Search\NavigationType(\App\Domain\Log\PageAccessLogs\ValueObject\Search\NavigationType::PREV),
+            new Vo\SearchKey($skPrev),
+            2,
+        );
+
+        $prev = $repo->search($condPrev);
+        $this->assertCount(2, $prev);
+        $this->assertSame('/items/1', $prev[0]->path()->toString());
+
+        // Keyword search across multiple fields (route_name, user_agent, referer, ip, path)
+        $k1 = new Vo\Search\Keyword('Items.show.4');
+        $condK = new \App\Domain\Log\PageAccessLogs\SearchCondition(
+            new Vo\Accessed(now()->subDay()->format('Y-m-d\\TH:i:s.u'), 'Y-m-d\\TH:i:s.u'),
+            new Vo\Accessed(now()->addDay()->format('Y-m-d\\TH:i:s.u'), 'Y-m-d\\TH:i:s.u'),
+            new Vo\Search\AccountType(null),
+            new Vo\Search\AccountId(null),
+            $k1,
+            new Vo\Search\NavigationType(\App\Domain\Log\PageAccessLogs\ValueObject\Search\NavigationType::FIRST),
+            new Vo\SearchKey(null),
+            100,
+        );
+
+        $rK = $repo->search($condK);
+        $this->assertCount(1, $rK);
+        $this->assertSame('/items/4', $rK[0]->path()->toString());
+
+        $k2 = new Vo\Search\Keyword('agent-2');
+        $condK2 = new \App\Domain\Log\PageAccessLogs\SearchCondition(
+            new Vo\Accessed(now()->subDay()->format('Y-m-d\\TH:i:s.u'), 'Y-m-d\\TH:i:s.u'),
+            new Vo\Accessed(now()->addDay()->format('Y-m-d\\TH:i:s.u'), 'Y-m-d\\TH:i:s.u'),
+            new Vo\Search\AccountType(null),
+            new Vo\Search\AccountId(null),
+            $k2,
+            new Vo\Search\NavigationType(\App\Domain\Log\PageAccessLogs\ValueObject\Search\NavigationType::FIRST),
+            new Vo\SearchKey(null),
+            100,
+        );
+
+        $rK2 = $repo->search($condK2);
+        $this->assertCount(1, $rK2);
+        $this->assertSame('/items/2', $rK2[0]->path()->toString());
+    }
 }
