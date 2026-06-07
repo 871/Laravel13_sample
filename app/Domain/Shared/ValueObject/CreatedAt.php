@@ -21,7 +21,7 @@ class CreatedAt implements Stringable
     /**
      * @param ?string $value
      */
-    public function __construct(?string $value, string $format = 'Y-m-d\TH:i:s')
+    public function __construct(?string $value, string $format = 'Y-m-d\\TH:i:s')
     {
         if ($value === null) {
             $this->value = null;
@@ -29,7 +29,18 @@ class CreatedAt implements Stringable
             return;
         }
 
-        if (!static::checkFormat($value, $format)) {
+        // Try primary format first, then some common DB formats
+        $formatsToTry = [$format, 'Y-m-d H:i:s', 'Y-m-d\\TH:i:s.u', 'Y-m-d H:i:s.u'];
+        $ok = false;
+        foreach ($formatsToTry as $f) {
+            if (static::checkFormat($value, $f)) {
+                $format = $f;
+                $ok = true;
+                break;
+            }
+        }
+
+        if (!$ok) {
             throw new DomainException(
                 self::class . ' value datetime format Error'
                 . '[value: ' . $value . ']'
