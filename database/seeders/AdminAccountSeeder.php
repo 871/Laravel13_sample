@@ -25,5 +25,22 @@ class AdminAccountSeeder extends Seeder
             'created_at' => $now->format('Y-m-d H:i:s'),
             'modified_at' => $now->format('Y-m-d H:i:s'),
         ]);
+
+        // Create 200 test admin accounts (info_001@hanahubuki.jp ... info_200@hanahubuki.jp)
+        for ($i = 1; $i <= 200; $i++) {
+            $num = str_pad((string)$i, 3, '0', STR_PAD_LEFT);
+            AdminAccount::create([
+                'email' => "info_{$num}@hanahubuki.jp",
+                'password' => Hash::make('password'),
+                'name' => "管理者{$num}",
+                'admin_note' => 'Seeded test admin account',
+                'account_status_master_id' => 200,
+                'is_email_verified' => 1,
+                'password_changed_at' => $now->format('Y-m-d H:i:s'),
+                'password_expires_at' => $now->copy()->addYear()->format('Y-m-d H:i:s'),
+                'created_at' => $now->format('Y-m-d H:i:s'),
+                'modified_at' => $now->format('Y-m-d H:i:s'),
+            ]);
+        }
     }
 }
