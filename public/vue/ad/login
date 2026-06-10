@@ -1,4 +1,0 @@
-<?php
-// Serve the static login.html for servers that don't map .html or use Laravel routing
-header('Content-Type: text/html; charset=utf-8');
-echo file_get_contents(__DIR__ . '/login.html');
