@@ -1,0 +1,11 @@
+# Redirect directory root access to the SPA login route
+# Placed in public/vue/ad/.htaccess
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # If the requested path under this directory is empty (i.e. /vue/ad or /vue/ad/), redirect to /vue/ad/login
+  RewriteRule ^$ /vue/ad/login [R=302,L]
+</IfModule>
+
+# Fallback: if RedirectMatch is available, ensure exact matches are redirected
+RedirectMatch 302 ^/vue/ad/?$ /vue/ad/login
