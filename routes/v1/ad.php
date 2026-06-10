@@ -9,6 +9,9 @@ Route::prefix('ad')->as('admin.')->group(function () {
     Route::get('/login', [App\Http\Controllers\Admin\LoginController::class, 'index'])->name('login.index');
     Route::post('/login', [App\Http\Controllers\Admin\LoginController::class, 'indexPost']);
 
+    // API login for SPA clients
+    Route::post('/api/login', [App\Http\Controllers\Admin\Api\LoginController::class, 'index']);
+
     // routes under /v1/ad/{account_id}
     Route::prefix('{account_id}')->group(function () {
         // logout routes (should be outside auth middleware per Cake comment)

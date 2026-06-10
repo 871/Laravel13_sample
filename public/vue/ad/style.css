@@ -1,0 +1,9 @@
+body { font-family: system-ui, -apple-system, "Hiragino Kaku Gothic ProN", "メイリオ", sans-serif; margin: 2rem; background:#f7f7f8; color:#222; }
+.container { max-width: 420px; margin: 0 auto; }
+.card { background:#fff; padding:1rem; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
+.mb { margin-bottom: 0.75rem; }
+label { display:block; font-weight:600; margin-bottom:0.25rem; }
+input[type="email"], input[type="password"] { width:100%; padding:0.5rem; border:1px solid #ddd; border-radius:6px }
+button { padding:0.5rem 0.75rem; border-radius:6px; border:1px solid #2b6cb0; background:#3182ce; color:#fff; cursor:pointer }
+.alert { background:#fee2e2; color:#b91c1c; padding:0.5rem; border-radius:6px; margin-bottom:0.75rem }
+.hint { font-size:0.9rem; color:#666; margin-top:0.75rem }
