@@ -4,18 +4,18 @@ use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/v1/cs');
 
-// Serve the same SPA file at /vue/ad, /vue/ad/ and /vue/ad/login
-$serveVueAd = function () {
+// Redirect /vue/ad and /vue/ad/ to the SPA login path
+Route::redirect('/vue/ad', '/vue/ad/login');
+Route::redirect('/vue/ad/', '/vue/ad/login');
+
+// Serve static Vue admin login without .html extension
+Route::get('/vue/ad/login', function () {
     $path = public_path('vue/ad/login.html');
     if (!file_exists($path)) {
         abort(404);
     }
     return response()->file($path);
-};
-
-Route::get('/vue/ad', $serveVueAd);
-Route::get('/vue/ad/', $serveVueAd);
-Route::get('/vue/ad/login', $serveVueAd);
+});
 
 Route::prefix('v1')->group(function () {
     // include per-service route definitions
