@@ -31,7 +31,8 @@ createApp({
 
         const json = await res.json().catch(() => ({ ok:false, message: 'Invalid response' }));
         if (res.ok && json.ok) {
-          window.location.href = json.redirect || '/v1/ad/1';
+          // SPA flow: always go to the Vue admin top page
+          window.location.href = '/vue/ad/top.html';
           return;
         }
 
