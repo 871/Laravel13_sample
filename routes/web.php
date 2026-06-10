@@ -4,6 +4,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/v1/cs');
 
+// Redirect /vue/ad and /vue/ad/ to the SPA login path
+Route::redirect('/vue/ad', '/vue/ad/login');
+Route::redirect('/vue/ad/', '/vue/ad/login');
+
 // Serve static Vue admin login without .html extension
 Route::get('/vue/ad/login', function () {
     $path = public_path('vue/ad/login.html');
