@@ -21,6 +21,7 @@ Route::prefix('ad')->as('admin.')->group(function () {
         // Apply middleware names used in Cake (middleware implementations not required)
         Route::middleware([
             \App\Http\Middleware\Admin\AdminAuthMiddleware::class,
+            \App\Http\Middleware\Admin\PageAccessLogMiddleware::class,
             /* 'pageAccessLog', 'adminGrant' */
         ])->group(function () {
             Route::get('/error', [App\Http\Controllers\Admin\ErrorController::class, 'index']);
