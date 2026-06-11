@@ -5,9 +5,15 @@ namespace App\Domain\Log\PageAccessLogs\Repository;
 
 use App\Domain\Log\PageAccessLogs\Entity\PageAccessLog;
 use App\Domain\Log\PageAccessLogs\SearchCondition;
+use DateTimeInterface;
 
 interface PageAccessLogsRepository
 {
+    /**
+     * @param \DateTimeInterface $datetime
+     */
+    public function __construct(DateTimeInterface $datetime);
+
     /**
      * 検索（カーソルベースページネーション、COUNTなし）
      *
