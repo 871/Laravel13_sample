@@ -20,7 +20,10 @@ final class AdminAccountsRepository implements DomainRepository
         // 処理なし
     }
 
-    public function search(SearchCondition $condition): array
+    /**
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|array
+     */
+    public function search(SearchCondition $condition)
     {
         return (new AdminAccountsRepository\Search($this->datetime))->run($condition);
     }

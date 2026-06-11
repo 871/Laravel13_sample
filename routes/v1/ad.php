@@ -99,7 +99,7 @@ Route::prefix('ad')->as('admin.')->group(function () {
                 Route::get('/create/{process_id}/conf', [App\Http\Controllers\Admin\MailManage\CreateController::class, 'conf']);
                 Route::post('/create/{process_id}/conf', [App\Http\Controllers\Admin\MailManage\CreateController::class, 'confPost']);
             });
-
+        */
             // AdminAccount management
             Route::prefix('admin_account')->as('admin_account.')->group(function () {
                 Route::get('/', [App\Http\Controllers\Admin\AdminAccount\SearchController::class, 'init']);
@@ -119,7 +119,7 @@ Route::prefix('ad')->as('admin.')->group(function () {
                 Route::get('/delete/{admin_account_id}', [App\Http\Controllers\Admin\AdminAccount\DeleteController::class, 'index']);
                 Route::post('/delete/{admin_account_id}', [App\Http\Controllers\Admin\AdminAccount\DeleteController::class, 'indexPost']);
             });
-
+        /*
             // AdminGrant management
             Route::prefix('admin_grant')->as('admin_grant.')->group(function () {
                 Route::get('/', [App\Http\Controllers\Admin\AdminGrant\SearchController::class, 'init']);

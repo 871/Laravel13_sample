@@ -42,7 +42,7 @@ class CreateController extends Controller
         return view('admin.AdminAccount.input', $data);
     }
 
-    public function inputPost(Request $request, $process_id)
+    public function inputPost(Request $request, string $process_id)
     {
         $service = new CtlService(new DateTimeImmutable(), $request, AuthContextResolver::resolve($request));
 

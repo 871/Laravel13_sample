@@ -79,7 +79,6 @@ final class Search
         return $paginator->setCollection(
             $paginator->getCollection()
                 ->map(fn ($model) => Mapper::mapModelToDomain($model))
-        )
-        ->toArray();
+        );
     }
 }

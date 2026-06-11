@@ -8,14 +8,12 @@ use App\Application\Controller\Shared\ApplicationInterface;
 use App\Application\Controller\Shared\ApplicationTrait;
 use App\Domain\Admin\AdminAccounts\SearchCondition;
 use App\Domain\Admin\AdminAccounts\ValueObject;
-use App\Infrastructure\Persistence\Cake\Admin\AdminAccountsRepository;
-use Cake\ORM\Locator\LocatorAwareTrait;
-use Cake\ORM\Query\SelectQuery;
+use App\Infrastructure\Persistence\Eloquent\Admin\AdminAccounts\AdminAccountsRepository as EloquentAdminAccountsRepository;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 final class Search implements ApplicationInterface
 {
     use ApplicationTrait;
-    use LocatorAwareTrait;
 
     /**
      * @return array<string, mixed>
@@ -26,18 +24,24 @@ final class Search implements ApplicationInterface
     }
 
     /**
-     * @return \Cake\ORM\Query\SelectQuery<\App\Model\Entity\Admin\AdminAccount>
+     * Build search condition and run Eloquent repository search.
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|array
      */
-    public function getSearchQuery(): SelectQuery
+    public function getSearchQuery(): LengthAwarePaginator|array
     {
         /** @var array<string, string> $data */
         $data = $this->request->getQuery();
 
-        return (new AdminAccountsRepository($this->datetime))->search(new SearchCondition(
+        $condition = new SearchCondition(
             id: new ValueObject\Id($data['id'] ?? null),
             keyword: ValueObject\Search\Keyword::fromString($data['keyword'] ?? null),
             accountStatusMasterId: new ValueObject\AccountStatusMasterId($data['account_status_master_id'] ?? null),
-        ));
+            orderBy: new \App\Domain\Shared\ValueObject\OrderBy($data['order_column'] ?? 'admin_accounts.created_at', $data['order_dir'] ?? 'DESC'),
+            perPage: isset($data['per_page']) ? (int)$data['per_page'] : 20,
+            page: isset($data['page']) ? (int)$data['page'] : 1,
+        );
+
+        return (new EloquentAdminAccountsRepository($this->datetime))->search($condition);
     }
 
     /**

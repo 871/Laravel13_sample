@@ -28,11 +28,22 @@ class SearchController extends Controller
     {
         $service = new CtlService(new \DateTimeImmutable(), $request, AuthContextResolver::resolve($request));
 
-        $rows = $service->getSearchQuery();
+        $paginator = $service->getSearchQuery();
         $paginateSettings = $service->getPaginateSettings();
+
+        // If repository returned array (legacy), extract rows and build simple paginator data
+        if (is_array($paginator) && array_key_exists('data', $paginator)) {
+            $rows = $paginator['data'];
+            $meta = $paginator;
+        } else {
+            $rows = $paginator; // LengthAwarePaginator is iterable
+            $meta = null;
+        }
 
         return view('admin.AdminAccount.search', [
             'rows' => $rows,
+            'meta' => $meta,
+            'paginator' => $paginator,
             'paginateSettings' => $paginateSettings,
             'accountStatusOptions' => $service->getAccountStatusOptions(),
         ]);
