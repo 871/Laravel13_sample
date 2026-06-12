@@ -21,6 +21,8 @@ class OrderBy
         'admin_accounts.account_status_master_id',
         'admin_accounts.is_email_verified',
         'admin_accounts.password_changed_at',
+        'admin_accounts.created_at',
+        'admin_accounts.updated_at',
     ];
 
     /**

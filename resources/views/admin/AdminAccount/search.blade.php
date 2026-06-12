@@ -16,6 +16,9 @@
     </div>
     <div class="card-body">
         <form method="get">
+            <input type="hidden" name="sort" value="{{ request('sort') }}">
+            <input type="hidden" name="direction" value="{{ request('direction') }}">
+
             <div class="row g-3">
                 <div class="col-md-3">
                     <label class="form-label">ID</label>
@@ -121,10 +124,9 @@
                     <td>{{ e($row->id()) }}</td>
                     <td>{{ e($row->email()) }}</td>
                     <td>{{ e($row->name()) }}</td>
-                    <td>{{ e($row->accountStatusMasterId()) }}</td>
+                    <td>{{ e($row->accountStatusMasterName()) }}</td>
                     <td>{{ $row->isEmailVerified()->toInt() ? '確認済み' : '未確認' }}</td>
                     <td>{{ e($row->passwordChangedAt()->format('Y/m/d H:i:s')) }}</td>
-
                     <td class="text-nowrap">
                         <a href="{{ route(
                             'admin.admin_account.detail.index',
