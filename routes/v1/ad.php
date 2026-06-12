@@ -24,10 +24,9 @@ Route::prefix('ad')->as('admin.')->group(function () {
             \App\Http\Middleware\Admin\PageAccessLogMiddleware::class,
             /* 'pageAccessLog', 'adminGrant' */
         ])->group(function () {
-            Route::get('/error', [App\Http\Controllers\Admin\ErrorController::class, 'index']);
-            Route::get('/error/{message_id}', [App\Http\Controllers\Admin\ErrorController::class, 'index']);
-            Route::get('/', [App\Http\Controllers\Admin\TopController::class, 'index']);
-            Route::get('/error_test', [App\Http\Controllers\Admin\TopController::class, 'errorTest']);
+            Route::get('/error/{message_id?}', [App\Http\Controllers\Admin\ErrorController::class, 'index'])->name('error.index');
+            Route::get('/', [App\Http\Controllers\Admin\TopController::class, 'index'])->name('top.index');
+            Route::get('/error_test', [App\Http\Controllers\Admin\TopController::class, 'errorTest'])->name('error.test');
 
         /*
             // UserAccount management (/v1/ad/{account_id}/user_account/...)
@@ -102,22 +101,22 @@ Route::prefix('ad')->as('admin.')->group(function () {
         */
             // AdminAccount management
             Route::prefix('admin_account')->as('admin_account.')->group(function () {
-                Route::get('/', [App\Http\Controllers\Admin\AdminAccount\SearchController::class, 'init']);
-                Route::get('/search', [App\Http\Controllers\Admin\AdminAccount\SearchController::class, 'index']);
-                Route::get('/detail/{admin_account_id}', [App\Http\Controllers\Admin\AdminAccount\DetailController::class, 'index']);
-                Route::get('/create', [App\Http\Controllers\Admin\AdminAccount\CreateController::class, 'index']);
-                Route::get('/create/{process_id}/input', [App\Http\Controllers\Admin\AdminAccount\CreateController::class, 'input']);
-                Route::post('/create/{process_id}/input', [App\Http\Controllers\Admin\AdminAccount\CreateController::class, 'inputPost']);
-                Route::get('/create/{process_id}/conf', [App\Http\Controllers\Admin\AdminAccount\CreateController::class, 'conf']);
-                Route::post('/create/{process_id}/conf', [App\Http\Controllers\Admin\AdminAccount\CreateController::class, 'confPost']);
-                Route::get('/create/{admin_account_id}/copy', [App\Http\Controllers\Admin\AdminAccount\CreateController::class, 'copy']);
-                Route::get('/edit/{admin_account_id}', [App\Http\Controllers\Admin\AdminAccount\EditController::class, 'index']);
-                Route::get('/edit/{process_id}/input', [App\Http\Controllers\Admin\AdminAccount\EditController::class, 'input']);
-                Route::post('/edit/{process_id}/input', [App\Http\Controllers\Admin\AdminAccount\EditController::class, 'inputPost']);
-                Route::get('/edit/{process_id}/conf', [App\Http\Controllers\Admin\AdminAccount\EditController::class, 'conf']);
-                Route::post('/edit/{process_id}/conf', [App\Http\Controllers\Admin\AdminAccount\EditController::class, 'confPost']);
-                Route::get('/delete/{admin_account_id}', [App\Http\Controllers\Admin\AdminAccount\DeleteController::class, 'index']);
-                Route::post('/delete/{admin_account_id}', [App\Http\Controllers\Admin\AdminAccount\DeleteController::class, 'indexPost']);
+                Route::get('/', [App\Http\Controllers\Admin\AdminAccount\SearchController::class, 'init'])->name('search.init');
+                Route::get('/search', [App\Http\Controllers\Admin\AdminAccount\SearchController::class, 'index'])->name('search.index');
+                Route::get('/detail/{admin_account_id}', [App\Http\Controllers\Admin\AdminAccount\DetailController::class, 'index'])->name('detail.index');
+                Route::get('/create', [App\Http\Controllers\Admin\AdminAccount\CreateController::class, 'index'])->name('create.index');
+                Route::get('/create/{process_id}/input', [App\Http\Controllers\Admin\AdminAccount\CreateController::class, 'input'])->name('create.input');
+                Route::post('/create/{process_id}/input', [App\Http\Controllers\Admin\AdminAccount\CreateController::class, 'inputPost'])->name('create.inputPost');
+                Route::get('/create/{process_id}/conf', [App\Http\Controllers\Admin\AdminAccount\CreateController::class, 'conf'])->name('create.conf');
+                Route::post('/create/{process_id}/conf', [App\Http\Controllers\Admin\AdminAccount\CreateController::class, 'confPost'])->name('create.confPost');
+                Route::get('/create/{admin_account_id}/copy', [App\Http\Controllers\Admin\AdminAccount\CreateController::class, 'copy'])->name('create.copy');
+                Route::get('/edit/{admin_account_id}', [App\Http\Controllers\Admin\AdminAccount\EditController::class, 'index'])->name('edit.index');
+                Route::get('/edit/{process_id}/input', [App\Http\Controllers\Admin\AdminAccount\EditController::class, 'input'])->name('edit.input');
+                Route::post('/edit/{process_id}/input', [App\Http\Controllers\Admin\AdminAccount\EditController::class, 'inputPost'])->name('edit.inputPost');
+                Route::get('/edit/{process_id}/conf', [App\Http\Controllers\Admin\AdminAccount\EditController::class, 'conf'])->name('edit.conf');
+                Route::post('/edit/{process_id}/conf', [App\Http\Controllers\Admin\AdminAccount\EditController::class, 'confPost'])->name('edit.confPost');
+                Route::get('/delete/{admin_account_id}', [App\Http\Controllers\Admin\AdminAccount\DeleteController::class, 'index'])->name('delete.index');
+                Route::post('/delete/{admin_account_id}', [App\Http\Controllers\Admin\AdminAccount\DeleteController::class, 'indexPost'])->name('delete.indexPost');
             });
         /*
             // AdminGrant management

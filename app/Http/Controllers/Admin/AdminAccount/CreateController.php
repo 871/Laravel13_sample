@@ -30,7 +30,7 @@ class CreateController extends Controller
         return redirect()->to(sprintf('%s/create/%s/input', $request->path(), $inputProcess->getId()));
     }
 
-    public function input(Request $request, $process_id)
+    public function input(Request $request, string $process_id)
     {
         $service = new CtlService(new DateTimeImmutable(), $request, AuthContextResolver::resolve($request));
 
@@ -57,7 +57,7 @@ class CreateController extends Controller
         }
     }
 
-    public function conf(Request $request, $process_id)
+    public function conf(Request $request, string $process_id)
     {
         $service = new CtlService(new DateTimeImmutable(), $request, AuthContextResolver::resolve($request));
 
@@ -69,7 +69,7 @@ class CreateController extends Controller
         return view('admin.AdminAccount.conf', $data);
     }
 
-    public function confPost(Request $request, $process_id)
+    public function confPost(Request $request, string $process_id)
     {
         $service = new CtlService(new DateTimeImmutable(), $request, AuthContextResolver::resolve($request));
 

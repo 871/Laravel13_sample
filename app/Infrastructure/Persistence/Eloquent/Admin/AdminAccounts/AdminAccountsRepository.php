@@ -21,9 +21,9 @@ final class AdminAccountsRepository implements DomainRepository
     }
 
     /**
-     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|array
+     * @return array
      */
-    public function search(SearchCondition $condition)
+    public function search(SearchCondition $condition): array
     {
         return (new AdminAccountsRepository\Search($this->datetime))->run($condition);
     }
@@ -51,5 +51,10 @@ final class AdminAccountsRepository implements DomainRepository
     public function findByEmail(Vo\Email $email): ?DomainEntity
     {
         return (new AdminAccountsRepository\FindByEmail($this->datetime))->run($email);
+    }
+
+    public function getAccountStatusOptions(): array
+    {
+        return (new AdminAccountsRepository\GetAccountStatusOptions($this->datetime))->run();
     }
 }

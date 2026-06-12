@@ -9,6 +9,46 @@ use App\Models\Admin\AdminAccount;
 use DateTimeInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
+/**
+ * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+ * 
+ * ページネーションの返却例
+ * [
+ *    "current_page" => 1,
+ *    "data" => [
+ *       [
+ *             "id" => 1,
+ *             "name" => "Taro",
+ *             "email" => "taro@example.com",
+ *        ...
+ *       ],
+ *       [
+ *           "id" => 2,
+ *           "name" => "Jiro",
+ *           "email" => "jiro@example.com",
+ *           ...
+ *       ],
+ *   ],
+ *   "first_page_url" => "http://localhost/users?page=1",
+ *   "from" => 1,
+ *   "last_page" => 5,
+ *   "last_page_url" => "http://localhost/users?page=5",
+ *   "links" => [
+ *       [
+ *           "url" => null,
+ *           "label" => "&laquo; Previous",
+ *           "active" => false
+ *       ],
+ *       ...
+ *   ],
+ *   "next_page_url" => "http://localhost/users?page=2",
+ *   "path" => "http://localhost/users",
+ *   "per_page" => 2,
+ *   "prev_page_url" => null,
+ *   "to" => 2,
+ *   "total" => 10
+ * ]
+ */ 
 final class Search
 {
     public function __construct(private readonly DateTimeInterface $datetime)
@@ -79,6 +119,6 @@ final class Search
         return $paginator->setCollection(
             $paginator->getCollection()
                 ->map(fn ($model) => Mapper::mapModelToDomain($model))
-        );
+        )->toArray();
     }
 }

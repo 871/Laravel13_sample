@@ -44,4 +44,9 @@ interface AdminAccountsRepository
      * @return ?\App\Domain\Admin\AdminAccounts\Entity\AdminAccount
      */
     public function findByEmail(Vo\Email $email): ?AdminAccount;
+
+    /**
+     * @return array
+     */
+    public function getAccountStatusOptions(): array;
 }

@@ -11,7 +11,7 @@ class SearchCondition
      * @param \App\Domain\Admin\AdminAccounts\ValueObject\Id $id
      * @param \App\Domain\Admin\AdminAccounts\ValueObject\Search\Keyword $keyword
      * @param \App\Domain\Admin\AdminAccounts\ValueObject\AccountStatusMasterId $accountStatusMasterId
-     * @param \App\Domain\Shared\ValueObject\OrderBy $orderBy
+     * @param \App\Domain\Admin\AdminAccounts\ValueObject\Search\OrderBy $orderBy
      * @param int $perPage
      * @param int $page
      */
@@ -19,7 +19,7 @@ class SearchCondition
         private readonly ValueObject\Id $id,
         private readonly ValueObject\Search\Keyword $keyword,
         private readonly ValueObject\AccountStatusMasterId $accountStatusMasterId,
-        private readonly SVo\OrderBy $orderBy = new SVo\OrderBy('admin_accounts.created_at', SVo\OrderBy::DESC),
+        private readonly ValueObject\Search\OrderBy $orderBy = new ValueObject\Search\OrderBy('admin_accounts.created_at', ValueObject\Search\OrderBy::DESC),
         private readonly int $perPage = 20,
         private readonly int $page = 1
     ) {
@@ -51,9 +51,9 @@ class SearchCondition
     }
 
     /**
-     * @return \App\Domain\Shared\ValueObject\OrderBy
+     * @return \App\Domain\Admin\AdminAccounts\ValueObject\Search\OrderBy
      */
-    public function getOrderBy(): SVo\OrderBy
+    public function getOrderBy(): ValueObject\Search\OrderBy
     {
         return $this->orderBy;
     }
