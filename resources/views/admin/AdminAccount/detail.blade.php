@@ -2,6 +2,10 @@
 
 @section('title','管理者アカウント 詳細')
 
+@section('breadcrumb')
+    @includeIf('admin.AdminAccount.breadcrumb')
+@endsection
+
 @section('content')
 @includeIf('admin.shared.flash')
 

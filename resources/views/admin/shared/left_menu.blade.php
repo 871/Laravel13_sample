@@ -72,6 +72,7 @@
                 </ul>
             </details>
         </li>
+    @endif
         <li class="nav-item">
             <details 
                 class="admin-menu-group"
@@ -84,33 +85,36 @@
             >
                 <summary class="nav-link text-white">システム管理</summary>
                 <ul class="nav flex-column admin-submenu">
+                @if(false) {{-- TODO 未実装 --}}
                     <li class="nav-item">
                         <a
                             class="nav-link text-white"
-                            href="{{ route('admin.mail-manage.search.init', [
+                            href="{{ route('admin.mail_manage.search.init', [
                                 'account_id' => request()->route('account_id'),
                             ]); }}"
                         >システムメール</a>
                     </li>
+                @endif
                     <li class="nav-item">
                         <a
                             class="nav-link text-white"
-                            href="{{ route('admin.admin-account.search.init', [
+                            href="{{ route('admin.admin_account.search.init', [
                                 'account_id' => request()->route('account_id'),
                             ]); }}"
                         >管理者アカウント</a>
                     </li>
+                @if(false) {{-- TODO 未実装 --}}
                     <li class="nav-item">
                         <a
                             class="nav-link text-white"
-                            href="{{ route('admin.admin-grant.search.init', [
+                            href="{{ route('admin.admin_grant.search.init', [
                                 'account_id' => request()->route('account_id'),
                             ]); }}"
                         >管理者権限</a>
                     </li>
+                @endif
                 </ul>
             </details>
         </li>
-    @endif
     </ul>
 </aside>

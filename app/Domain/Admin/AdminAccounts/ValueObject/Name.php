@@ -13,6 +13,8 @@ class Name implements Stringable
 
     public const MAX_LENGTH = 100;
 
+    public const ERROR_CODE_TOO_LONG = 1001;
+
     /**
      * @param ?string $value
      */
@@ -24,6 +26,7 @@ class Name implements Stringable
                 self::class . ' value too long'
                 . '[maxLength: ' . (string)self::MAX_LENGTH . ']'
                 . '[value: ' . mb_strimwidth($value, 0, 200, '...') . ']',
+                self::ERROR_CODE_TOO_LONG,
             );
         }
     }

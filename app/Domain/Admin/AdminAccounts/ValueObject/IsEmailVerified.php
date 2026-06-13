@@ -11,6 +11,8 @@ class IsEmailVerified implements Stringable
 {
     use IntTrait;
 
+    public const ERROR_CODE_OUT_OF_RANGE = 1001;
+
     public const VALUES = [0, 1];
 
     private ?int $value;
@@ -31,6 +33,7 @@ class IsEmailVerified implements Stringable
                 self::class . ' value out of range Error'
                 . '[value: ' . $value . ']'
                 . '[allowed: 0, 1]',
+                self::ERROR_CODE_OUT_OF_RANGE,
             );
         }
 

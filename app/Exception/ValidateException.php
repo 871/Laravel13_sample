@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Exception;
 
-use Cake\Utility\Hash;
+use Illuminate\Support\Arr;
 use Exception;
 
 class ValidateException extends Exception
@@ -23,7 +23,7 @@ class ValidateException extends Exception
      */
     public function getErrorMessages(): array
     {
-        $flatten = Hash::flatten($this->errorInfos);
+        $flatten = Arr::dot($this->errorInfos);
 
         /** @var list<string> $strings */
         $strings = array_values(array_filter(

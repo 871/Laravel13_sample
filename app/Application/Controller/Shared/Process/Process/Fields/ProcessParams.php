@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace App\Application\Controller\Shared\Process\Process\Fields;
 
 use ArrayIterator;
-use Cake\Utility\Hash;
 use DomainException;
 use IteratorAggregate;
 use JsonSerializable;
+use Illuminate\Support\Arr;
 
 /**
  * @implements \IteratorAggregate<string, mixed>
@@ -82,7 +82,10 @@ final class ProcessParams implements IteratorAggregate, JsonSerializable
             );
         }
 
-        return new self(Hash::insert($this->values, $path, $value));
+        $ther = clone $this;
+        Arr::set($ther->values, $path, $value);
+
+        return $ther;
     }
 
     /**
@@ -91,7 +94,7 @@ final class ProcessParams implements IteratorAggregate, JsonSerializable
      */
     public function getParam(string $path): mixed
     {
-        return Hash::get($this->values, $path)
+        return Arr::get($this->values, $path)
             ?? throw new DomainException(
                 'Process Param not fund'
                 . '[path: ' . $path . ' ]'
@@ -106,6 +109,6 @@ final class ProcessParams implements IteratorAggregate, JsonSerializable
      */
     public function hasParam(string $path, mixed $samValue): bool
     {
-        return Hash::get($this->values, $path) === $samValue;
+        return Arr::get($this->values, $path) === $samValue;
     }
 }

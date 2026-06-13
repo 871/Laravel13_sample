@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace App\Application\Controller\Shared\Process;
 
-use App\Application\Controller\Shared\ServiceInterface;
-use App\Application\Controller\Shared\ServiceTrait;
+use App\Application\Controller\Shared\ApplicationInterface;
+use App\Application\Controller\Shared\ApplicationTrait;
 use DomainException;
 
-final class ProcessDeleter implements ServiceInterface
+final class ProcessDeleter implements ApplicationInterface
 {
-    use ServiceTrait;
+    use ApplicationTrait;
 
     /**
      * Sessionに保存されたProcess Instance の内容を削除する
@@ -26,8 +26,8 @@ final class ProcessDeleter implements ServiceInterface
             processId: $process->getId(),
         );
 
-        $this->request->getSession()->check((string)$sessionKey)
-            ? $this->request->getSession()->delete((string)$sessionKey)
+        session()->has((string)$sessionKey)
+            ? session()->forget((string)$sessionKey)
             : throw new DomainException(
                 'An invalid Process Instance was set'
                 . '[ProcessId: ' . $process->getId()->toString() . ']',

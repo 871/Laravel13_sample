@@ -2,28 +2,100 @@
 
 @section('title','管理者アカウント 確認')
 
+@section('breadcrumb')
+    @includeIf('admin.AdminAccount.breadcrumb')
+@endsection
+
 @section('content')
 @php
-    $p = method_exists($input, 'getProcessParams') ? $input->getProcessParams()->toArray() : (is_array($input) ? $input : []);
+    $p = $input->getProcessParams()->toArray();
 @endphp
 
-<h4>管理者アカウント 確認</h4>
-@includeIf('admin.shared.flash')
-<form method="post" action="{{ url()->current() }}">
-    @csrf
-    <input type="hidden" name="_process_key" value="{{ $p['_process_key'] ?? '' }}">
-
-    <table class="table">
-        <tr><th>メールアドレス</th><td>{{ $p['email'] ?? '' }}</td></tr>
-        <tr><th>名前</th><td>{{ $p['name'] ?? '' }}</td></tr>
-        <tr><th>管理者メモ</th><td>{{ $p['admin_note'] ?? '' }}</td></tr>
-        <tr><th>アカウント状態</th><td>{{ collect($accountStatusOptions)->firstWhere('id', $p['account_status_master_id'] ?? '')['name'] ?? '' }}</td></tr>
-        <tr><th>メール確認済み</th><td>{{ (!empty($p['is_email_verified']) && $p['is_email_verified']!='0') ? 'はい' : 'いいえ' }}</td></tr>
-    </table>
-
-    <div class="d-flex gap-2">
-        <button type="submit" class="btn btn-primary">登録する</button>
-        <a href="javascript:history.back()" class="btn btn-secondary">入力に戻る</a>
+<div class="card shadow-sm">
+    <div class="card-header bg-success text-white">
+        {{ $p['id'] ?? '' ? '更新' : '新規登録' }}
+        （入力内容確認）
     </div>
-</form>
+
+    <div class="card-body">
+        <form method="post">
+            @csrf
+        @if (($p['id'] ?? '') !== '')
+            <input type="hidden" name="id" value="{{ $p['id'] ?? '' }}">
+            <input type="hidden" name="modified_at" value="{{ $p['modified_at'] ?? '' }}">
+        @endif
+            <input type="hidden" name="_process_key" value="{{ $p['_process_key'] ?? '' }}">
+            <table class="table table-bordered">
+                <tr>
+                    <th style="width:30%">ID</th>
+                    <td>{{ $p['id'] ?? '（新規作成）' }}</td>
+                </tr>
+            </table>
+
+            <h6 class="border-bottom pb-2 mb-3">アカウント情報</h6>
+            <table class="table table-bordered">
+                <tr>
+                    <th style="width:30%">メールアドレス</th>
+                    <td>{{ $p['email'] ?? '' }}</td>
+                </tr>
+                <tr>
+                    <th>パスワード</th>
+                    <td>{{ $p['password'] !== '' ? '（変更あり）' : ($p['id'] ? '（変更なし）' : '（入力済み）') }}</td>
+                </tr>
+                <tr>
+                    <th>名前</th>
+                    <td>{{ $p['name'] ?? '' }}</td>
+                </tr>
+                <tr>
+                    <th>管理者メモ</th>
+                    <td style="white-space:pre-wrap">{!! nl2br(e($p['admin_note'] ?? '')) !!}</td>
+                </tr>
+            </table>
+
+            <h6 class="border-bottom pb-2 mb-3">ステータス・権限</h6>
+            <table class="table table-bordered">
+                <tr>
+                    <th style="width:30%">アカウントステータス</th>
+                    <td>
+                @foreach ($accountStatusOptions as $option)
+                    @if (($p['account_status_master_id'] ?? '') === $option->accountStatusMasterId()->toString())
+                        {{ $option->accountStatusMasterName()->toString() }}
+                    @endif
+                @endforeach
+                    </td>
+                </tr>
+                <tr>
+                    <th>メール確認</th>
+                    <td>{{ $p['is_email_verified']!== '0' ? 'はい' : 'いいえ' }}</td>
+                </tr>
+            </table>
+
+            <h6 class="border-bottom pb-2 mb-3">パスワード管理</h6>
+            <table class="table table-bordered">
+                <tr>
+                    <th style="width:30%">パスワード変更日時</th>
+                    <td>{{ $p['password_changed_at'] }}</td>
+                </tr>
+                <tr>
+                    <th>パスワード有効期限</th>
+                    <td>{{ $p['password_expires_at'] }}</td>
+                </tr>
+            </table>
+
+            <div class="text-center mt-4">
+                <a 
+                    href="{{ route('admin.admin_account.create.input', [
+                        'account_id' => request()->route('account_id'), 
+                        'process_id' => request()->route('process_id'), 
+                        ...request()->query(),
+                    ]) }}" 
+                    class="btn btn-secondary px-5"
+                >修正する</a>
+                <button type="submit" name="_process_action" value="complete" class="btn btn-success px-5 me-3">
+                    登録する
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 @endsection

@@ -5,13 +5,13 @@ namespace App\Application\Controller\Shared\Process;
 
 use App\Application\Controller\Shared\Process\Process\Fields\ProcessId;
 use App\Application\Controller\Shared\Process\Process\Fields\ProcessParams;
-use App\Application\Controller\Shared\ServiceInterface;
-use App\Application\Controller\Shared\ServiceTrait;
+use App\Application\Controller\Shared\ApplicationInterface;
+use App\Application\Controller\Shared\ApplicationTrait;
 use DomainException;
 
-final class ProcessProvider implements ServiceInterface
+final class ProcessProvider implements ApplicationInterface
 {
-    use ServiceTrait;
+    use ApplicationTrait;
 
     /**
      * Sessionに保存されたProcessInstanceの内容からProcessInstanceを取得する
@@ -50,8 +50,8 @@ final class ProcessProvider implements ServiceInterface
             processId: $processId,
         );
 
-        return $this->request->getSession()->check((string)$sessionKey)
-            ? new ProcessParams((array)$this->request->getSession()->read((string)$sessionKey))
+        return session()->has((string)$sessionKey)
+            ? new ProcessParams((array)session()->get((string)$sessionKey))
             : null;
     }
 }

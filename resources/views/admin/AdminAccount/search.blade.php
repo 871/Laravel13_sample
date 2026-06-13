@@ -2,6 +2,10 @@
 
 @section('title','管理者アカウント 一覧')
 
+@section('breadcrumb')
+    @includeIf('admin.AdminAccount.breadcrumb')
+@endsection
+
 @section('content')
 
 <?php

@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace App\Application\Controller\Shared\Process;
 
-use App\Application\Controller\Shared\ServiceInterface;
-use App\Application\Controller\Shared\ServiceTrait;
+use App\Application\Controller\Shared\ApplicationInterface;
+use App\Application\Controller\Shared\ApplicationTrait;
 use DomainException;
 
-final class ProcessRepository implements ServiceInterface
+final class ProcessRepository implements ApplicationInterface
 {
-    use ServiceTrait;
+    use ApplicationTrait;
 
     /**
      * Process Instance の内容をSessionに保存する
@@ -26,8 +26,8 @@ final class ProcessRepository implements ServiceInterface
             processId: $process->getId(),
         );
 
-        $this->request->getSession()->check((string)$sessionKey)
-            ? $this->request->getSession()->write((string)$sessionKey, $process->getProcessParams()->toArray())
+        session()->has((string)$sessionKey)
+            ? session()->put((string)$sessionKey, $process->getProcessParams()->toArray())
             : throw new DomainException(
                 'An invalid Process Instance was set'
                 . '[ProcessId: ' . $process->getId()->toString() . ']'

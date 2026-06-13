@@ -7,7 +7,6 @@ use App\Application\Controller\Shared\ApplicationInterface;
 use App\Application\Controller\Shared\ApplicationTrait;
 use App\Domain\Admin\AdminAccounts\SearchCondition;
 use App\Domain\Admin\AdminAccounts\ValueObject as Vo;
-use App\Domain\Shared\ValueObject as Svo;
 use App\Infrastructure\Persistence\Eloquent\Admin\AdminAccounts\AdminAccountsRepository as EloquentAdminAccountsRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 

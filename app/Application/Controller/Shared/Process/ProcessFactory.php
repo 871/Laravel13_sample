@@ -4,13 +4,13 @@ declare(strict_types=1);
 namespace App\Application\Controller\Shared\Process;
 
 use App\Application\Controller\Shared\Process\Process\Fields\ProcessParams;
-use App\Application\Controller\Shared\ServiceInterface;
-use App\Application\Controller\Shared\ServiceTrait;
+use App\Application\Controller\Shared\ApplicationInterface;
+use App\Application\Controller\Shared\ApplicationTrait;
 use DomainException;
 
-final class ProcessFactory implements ServiceInterface
+final class ProcessFactory implements ApplicationInterface
 {
-    use ServiceTrait;
+    use ApplicationTrait;
 
     /**
      * ProcessInstanceの内容（ProcessParams）をSessionに保存してからProcessInstanceを作成する
@@ -51,12 +51,11 @@ final class ProcessFactory implements ServiceInterface
             processId: $processId,
         );
 
-        return $this->request->getSession()->check((string)$sessionKey)
+        return session()->has((string)$sessionKey)
             ? $this->storeAndGenerateId($processParams)
             : (function () use ($processId, $sessionKey, $processParams): Process\Fields\ProcessId {
 
-                $this->request->getSession()->write((string)$sessionKey, $processParams->toArray());
-
+                session()->put((string)$sessionKey, $processParams->toArray());
                 return $processId;
             })();
     }

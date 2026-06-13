@@ -13,6 +13,8 @@ class Password implements Stringable
 
     public const MAX_LENGTH = 255;
 
+    public const ERROR_CODE_TOO_LONG = 1001;
+
     /**
      * @param ?string $value
      */
@@ -23,6 +25,7 @@ class Password implements Stringable
             throw new DomainException(
                 self::class . ' value too long'
                 . '[maxLength: ' . (string)self::MAX_LENGTH . ']',
+                self::ERROR_CODE_TOO_LONG
             );
         }
     }
