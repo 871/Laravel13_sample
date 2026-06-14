@@ -8,6 +8,7 @@ use App\Domain\Admin\AdminAccounts\Entity\AdminAccount as DomainEntity;
 use App\Domain\Admin\AdminAccounts\Repository\AdminAccountsRepository as DomainRepository;
 use App\Domain\Admin\AdminAccounts\SearchCondition;
 use App\Domain\Admin\AdminAccounts\ValueObject as Vo;
+use App\Domain\Shared\ValueObject as Svo;
 use DateTimeInterface;
 
 final class AdminAccountsRepository implements DomainRepository
@@ -33,14 +34,19 @@ final class AdminAccountsRepository implements DomainRepository
         return (new AdminAccountsRepository\Create($this->datetime))->run($entity);
     }
 
-    public function read(Vo\Id $id): DomainEntity
+    public function read(Vo\Id $id, ?Svo\ModifiedAt $modifiedAt = null): DomainEntity
     {
-        return (new AdminAccountsRepository\Read($this->datetime))->run($id);
+        return (new AdminAccountsRepository\Read($this->datetime))->run($id, $modifiedAt);
     }
 
     public function update(DomainEntity $entity): DomainEntity
     {
         return (new AdminAccountsRepository\Update($this->datetime))->run($entity);
+    }
+
+    public function delete(Vo\Id $id): DomainEntity
+    {
+        return (new AdminAccountsRepository\Delete($this->datetime))->run($id);
     }
 
     public function readHistories(Vo\Id $adminAccountId): array

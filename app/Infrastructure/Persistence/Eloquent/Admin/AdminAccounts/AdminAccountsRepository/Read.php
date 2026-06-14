@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Infrastructure\Persistence\Eloquent\Admin\AdminAccounts\AdminAccountsRepository;
 
 use App\Domain\Admin\AdminAccounts\ValueObject as Vo;
+use App\Domain\Shared\ValueObject as Svo;
 use App\Domain\Admin\AdminAccounts\Entity\AdminAccount as DomainEntity;
 use App\Models\Admin\AdminAccount;
 
@@ -15,7 +16,7 @@ final class Read
         // 処理なし
     }
 
-    public function run(Vo\Id $id): DomainEntity
+    public function run(Vo\Id $id, ?Svo\ModifiedAt $modifiedAt = null): DomainEntity
     {
         $adminAccountModel = AdminAccount::query()
             ->join(
@@ -44,6 +45,11 @@ final class Read
                 'admin_accounts.modified_ip',
             )
             ->where('admin_accounts.id', $id->toString())
+            ->where(function ($query) use ($modifiedAt) {
+                if ($modifiedAt !== null) {
+                    $query->where('admin_accounts.modified_at', $modifiedAt->toString());
+                }
+            })
             ->firstOrFail();
 
         return Mapper::mapModelToDomain($adminAccountModel);

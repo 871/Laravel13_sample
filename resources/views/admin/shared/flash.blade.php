@@ -1,33 +1,23 @@
 @if(session('success'))
-    <div style="background:#e6ffed;border:1px solid #c6f6d5;padding:10px;border-radius:6px;margin-bottom:12px;color:#065f46">
+    <div class="alert alert-success-custom" onclick="this.style.display='none'">
         {{ session('success') }}
     </div>
 @endif
 
 @if(session('error'))
-    <div style="background:#fff1f2;border:1px solid #fecaca;padding:10px;border-radius:6px;margin-bottom:12px;color:#991b1b">
+    <div class="alert alert-error-custom" onclick="this.style.display='none'">
         {{ session('error') }}
     </div>
 @endif
 
 @if(session('warning'))
-    <div style="background:#fffbeb;border:1px solid #fef3c7;padding:10px;border-radius:6px;margin-bottom:12px;color:#92400e">
+    <div class="alert alert-warning-custom" onclick="this.style.display='none'">
         {{ session('warning') }}
     </div>
 @endif
 
 @if(session('info'))
-    <div style="background:#eff6ff;border:1px solid #bfdbfe;padding:10px;border-radius:6px;margin-bottom:12px;color:#1e3a8a">
-        {{ session('info') }}
-    </div>
-@endif
-
-@if(isset($errors) && $errors->any())
-    <div style="background:#fff1f2;border:1px solid #fecaca;padding:10px;border-radius:6px;margin-bottom:12px;color:#991b1b">
-        <ul style="margin:0;padding-left:18px">
-            @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
+    <div class="alert alert-notice" onclick="this.style.display='none'">
+    {{ session('info') }}
     </div>
 @endif

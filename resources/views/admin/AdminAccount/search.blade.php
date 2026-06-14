@@ -188,7 +188,7 @@
                             class="d-inline">
 
                             @csrf
-                            @method('DELETE')
+                            @method('POST')
 
                             <button type="submit"
                                     class="btn btn-danger btn-sm"

@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Application\Controller\Admin\AdminAccount;
 
-use App\Application\Controller\Admin\AdminAccount\Shared\ValidatorSetting;
 use App\Application\Controller\Shared\Process\Process\Fields\ProcessId;
 use App\Application\Controller\Shared\Process\Process\Fields\ProcessParams;
 use App\Application\Controller\Shared\Process\Process\InputProcess;
@@ -22,7 +21,7 @@ use App\Infrastructure\Persistence\Eloquent\Admin\AdminAccounts\AdminAccountsRep
 use App\Security\Input\Cast;
 use App\Security\Input\StrictCast;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
 use DomainException;
 
@@ -177,10 +176,109 @@ final class Create implements ApplicationInterface
     public function inputProcessValidation(): self
     {
         $validator = Validator::make(
-            data: $this->getInputProcess()
+            $this->getInputProcess()
                 ->getProcessParams()
-                ->toArray(), 
-            rules: [
+                ->toArray(),
+            ...$this->validatorSetting(),
+        );
+
+        if ($validator->fails()) {
+            throw new ValidateException($validator->errors()->toArray());
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return self
+     */
+    public function saveInputProcess(): self
+    {
+        /** @var array<string, mixed> $input */
+        $input = $this->getInputProcess()
+            ->getProcessParams()
+            ->toArray();
+
+        DB::transaction(function () use ($input) {
+            (new AdminAccountsRepository($this->datetime))->create(new AdminAccount(
+                id: new Vo\Id(null),
+                email: Vo\Email::fromString(Cast::toStringOrNull($input['email'])),
+                password: Vo\Password::fromString(Cast::toStringOrNull($input['password'])),
+                name: Vo\Name::fromString(Cast::toStringOrNull($input['name'])),
+                admin_note: Vo\AdminNote::fromString(Cast::toStringOrNull($input['admin_note'])),
+                account_status_master_id: new Vo\AccountStatusMasterId(
+                    Cast::toStringOrNull($input['account_status_master_id']),
+                ),
+                account_status_master_code: new Vo\AccountStatusMasterCode(null),
+                account_status_master_name: new Vo\AccountStatusMasterName(null),
+                is_email_verified: new Vo\IsEmailVerified(Cast::toStringOrNull($input['is_email_verified'])),
+                password_changed_at: new Vo\PasswordChangedAt(Cast::toStringOrNull($input['password_changed_at'])),
+                password_expires_at: new Vo\PasswordExpiresAt(Cast::toStringOrNull($input['password_expires_at'])),
+                created_at: new SVo\CreatedAt(Cast::toStringOrNull($this->datetime->format('Y-m-d\\TH:i:s'))),
+                created_by: new SVo\CreatedBy(Cast::toStringOrNull($this->authContext->getAccountId())),
+                created_ip: new SVo\CreatedIp(Cast::toStringOrNull($this->request->ip())),
+                modified_at: new SVo\ModifiedAt(Cast::toStringOrNull($this->datetime->format('Y-m-d\\TH:i:s'))),
+                modified_by: new SVo\ModifiedBy(Cast::toStringOrNull($this->authContext->getAccountId())),
+                modified_ip: new SVo\ModifiedIp(Cast::toStringOrNull($this->request->ip())),
+            ));
+        });
+
+        return $this;
+    }
+
+    /**
+     * @return self
+     */
+    public function endInputProcess(): self
+    {
+        /** @var \App\Application\Controller\Shared\Process\ProcessDeleter $processDeleter */
+        $processDeleter = $this->createApplication(ProcessDeleter::class);
+        $processDeleter->delete(
+            process: $this->getInputProcess(),
+        );
+
+        return $this;
+    }
+
+    /**
+     * @param \App\Exception\ValidateException $ex
+     * @return self
+     */
+    public function inputProcessErrorUpdate(ValidateException $ex): self
+    {
+        $inputProcess = $this->getInputProcess();
+        $inputProcessParams = $inputProcess->getProcessParams();
+        /** @var \App\Application\Controller\Shared\Process\ProcessRepository $processRepository */
+        $processRepository = $this->createApplication(ProcessRepository::class);
+        $processRepository->save(
+            process: $inputProcess->setProcessParams(
+                processParams: $inputProcessParams->with(
+                    overrides: [
+                        '_errorMessages' => $ex->getErrorMessages(),
+                        '_errorFields' => $ex->getErrorFields(),
+                    ],
+                ),
+            ),
+        );
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAccountStatusOptions(): array
+    {
+        return (new AdminAccountsRepository($this->datetime))->getAccountStatusOptions();
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function validatorSetting() : array
+    {
+        return [
+            'rules' => [
                 'email' => [
                     'required',
                     function ($attribute, $value, $fail) {
@@ -307,7 +405,7 @@ final class Create implements ApplicationInterface
                     },
                 ],
             ], 
-            messages: [
+            'messages' => [
                 'email.required' => 'メールアドレスは必須です。',
                 'password.required' => 'パスワードは必須です。',
                 'name.required' => '表示名は必須です。',
@@ -316,7 +414,7 @@ final class Create implements ApplicationInterface
                 'password_changed_at.required' => 'パスワード変更日時は必須です。',
                 'password_expires_at.required' => 'パスワード有効期限は必須です。',
             ],
-            attributes: [
+            'attributes' => [
                 'email' => 'メールアドレス',
                 'password' => 'パスワード',
                 'name' => '表示名',
@@ -326,93 +424,6 @@ final class Create implements ApplicationInterface
                 'password_changed_at' => 'パスワード変更日時',
                 'password_expires_at' => 'パスワード有効期限',
             ],
-        );
-
-        if ($validator->fails()) {
-            throw new ValidateException($validator->errors()->toArray());
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return self
-     */
-    public function saveInputProcess(): self
-    {
-        /** @var array<string, mixed> $input */
-        $input = $this->getInputProcess()
-            ->getProcessParams()
-            ->toArray();
-
-        (new AdminAccountsRepository($this->datetime))->create(new AdminAccount(
-            id: new Vo\Id(null),
-            email: Vo\Email::fromString(Cast::toStringOrNull($input['email'])),
-            password: Vo\Password::fromString(Cast::toStringOrNull($input['password'])),
-            name: Vo\Name::fromString(Cast::toStringOrNull($input['name'])),
-            admin_note: Vo\AdminNote::fromString(Cast::toStringOrNull($input['admin_note'])),
-            account_status_master_id: new Vo\AccountStatusMasterId(
-                Cast::toStringOrNull($input['account_status_master_id']),
-            ),
-            account_status_master_code: new Vo\AccountStatusMasterCode(null),
-            account_status_master_name: new Vo\AccountStatusMasterName(null),
-            is_email_verified: new Vo\IsEmailVerified(Cast::toStringOrNull($input['is_email_verified'])),
-            password_changed_at: new Vo\PasswordChangedAt(Cast::toStringOrNull($input['password_changed_at'])),
-            password_expires_at: new Vo\PasswordExpiresAt(Cast::toStringOrNull($input['password_expires_at'])),
-            created_at: new SVo\CreatedAt(Cast::toStringOrNull($this->datetime->format('Y-m-d\\TH:i:s'))),
-            created_by: new SVo\CreatedBy(Cast::toStringOrNull($this->authContext->getAccountId())),
-            created_ip: new SVo\CreatedIp(Cast::toStringOrNull($this->request->ip())),
-            modified_at: new SVo\ModifiedAt(Cast::toStringOrNull($this->datetime->format('Y-m-d\\TH:i:s'))),
-            modified_by: new SVo\ModifiedBy(Cast::toStringOrNull($this->authContext->getAccountId())),
-            modified_ip: new SVo\ModifiedIp(Cast::toStringOrNull($this->request->ip())),
-        ));
-
-        return $this;
-    }
-
-    /**
-     * @return self
-     */
-    public function endInputProcess(): self
-    {
-        /** @var \App\Application\Controller\Shared\Process\ProcessDeleter $processDeleter */
-        $processDeleter = $this->createApplication(ProcessDeleter::class);
-        $processDeleter->delete(
-            process: $this->getInputProcess(),
-        );
-
-        return $this;
-    }
-
-    /**
-     * @param \App\Exception\ValidateException $ex
-     * @return self
-     */
-    public function inputProcessErrorUpdate(ValidateException $ex): self
-    {
-        $inputProcess = $this->getInputProcess();
-        $inputProcessParams = $inputProcess->getProcessParams();
-        /** @var \App\Application\Controller\Shared\Process\ProcessRepository $processRepository */
-        $processRepository = $this->createApplication(ProcessRepository::class);
-        $processRepository->save(
-            process: $inputProcess->setProcessParams(
-                processParams: $inputProcessParams->with(
-                    overrides: [
-                        '_errorMessages' => $ex->getErrorMessages(),
-                        '_errorFields' => $ex->getErrorFields(),
-                    ],
-                ),
-            ),
-        );
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getAccountStatusOptions(): array
-    {
-        return (new AdminAccountsRepository($this->datetime))->getAccountStatusOptions();
+        ];
     }
 }

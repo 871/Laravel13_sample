@@ -40,7 +40,13 @@
                 </tr>
                 <tr>
                     <th>パスワード</th>
-                    <td>{{ $p['password'] !== '' ? '（変更あり）' : ($p['id'] ? '（変更なし）' : '（入力済み）') }}</td>
+                    <td>
+                    @if (($p['id'] ?? '') === '')
+                        **（セキュリティのため表示されません）**
+                    @else
+                        {{ ($p['password']?? '') !== '' ? '（変更あり）' : '（変更なし）' }} 
+                    @endif
+                    </td>
                 </tr>
                 <tr>
                     <th>名前</th>
@@ -48,7 +54,7 @@
                 </tr>
                 <tr>
                     <th>管理者メモ</th>
-                    <td style="white-space:pre-wrap">{!! nl2br(e($p['admin_note'] ?? '')) !!}</td>
+                    <td style="white-space:pre-wrap">{{ $p['admin_note'] ?? '' }}</td>
                 </tr>
             </table>
 
@@ -83,6 +89,7 @@
             </table>
 
             <div class="text-center mt-4">
+            @if (($p['id'] ?? '') === '')
                 <a 
                     href="{{ route('admin.admin_account.create.input', [
                         'account_id' => request()->route('account_id'), 
@@ -91,6 +98,17 @@
                     ]) }}" 
                     class="btn btn-secondary px-5"
                 >修正する</a>
+            @endif
+            @if (($p['id'] ?? '') !== '')
+                <a 
+                    href="{{ route('admin.admin_account.edit.input', [
+                        'account_id' => request()->route('account_id'), 
+                        'process_id' => request()->route('process_id'), 
+                        ...request()->query(),
+                    ]) }}" 
+                    class="btn btn-secondary px-5"
+                >修正する</a>
+            @endif
                 <button type="submit" name="_process_action" value="complete" class="btn btn-success px-5 me-3">
                     登録する
                 </button>

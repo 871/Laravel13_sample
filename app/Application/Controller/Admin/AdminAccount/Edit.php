@@ -6,19 +6,24 @@ namespace App\Application\Controller\Admin\AdminAccount;
 use App\Application\Controller\Admin\AdminAccount\Shared\ValidatorSetting;
 use App\Application\Controller\Shared\Process\Process\Fields\ProcessId;
 use App\Application\Controller\Shared\Process\Process\Fields\ProcessParams;
-use App\Application\Controller\Shared\Process\InputProcess;
+use App\Application\Controller\Shared\Process\Process\InputProcess;
 use App\Application\Controller\Shared\Process\ProcessDeleter;
 use App\Application\Controller\Shared\Process\ProcessFactory;
 use App\Application\Controller\Shared\Process\ProcessProvider;
 use App\Application\Controller\Shared\Process\ProcessRepository;
+use App\Application\Controller\Shared\Process\ProcessNotFoundException;
 use App\Application\Controller\Shared\ApplicationInterface;
 use App\Application\Controller\Shared\ApplicationTrait;
 use App\Exception\ValidateException;
-use App\Infrastructure\Persistence\Cake\Admin\AdminAccountsRepository;
-use App\Lib\UUID\UUID;
+use App\Infrastructure\Persistence\Eloquent\Admin\AdminAccounts\AdminAccountsRepository;
+use App\Domain\Admin\AdminAccounts\ValueObject as Vo;
+use App\Domain\Shared\ValueObject as SVo;
 use App\Security\Input\Cast;
 use App\Security\Input\StrictCast;
-use Cake\Validation\Validator;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use Ramsey\Uuid\Uuid;
+use DomainException;
 
 final class Edit implements ApplicationInterface
 {
@@ -29,6 +34,11 @@ final class Edit implements ApplicationInterface
      */
     public function startInputProcess(): InputProcess
     {
+        $adminAccount = (new AdminAccountsRepository($this->datetime))->read(
+            new Vo\Id(
+                StrictCast::toString($this->request->route('admin_account_id')),
+            ),
+        );
         /** @var \App\Application\Controller\Shared\Process\ProcessFactory $processFactory */
         $processFactory = $this->createApplication(ProcessFactory::class);
         /** @var \App\Application\Controller\Shared\Process\Process\InputProcess $process */
@@ -37,15 +47,17 @@ final class Edit implements ApplicationInterface
             processParams: new ProcessParams([
                 '_errorMessages' => [],
                 '_errorFields' => [],
-                '_process_key' => UUID::uuid4(),
-                'email' => '',
+                '_process_key' => Uuid::uuid4()->toString(),
+                'id' => $adminAccount->id()->toString(),
+                'modified_at' => $adminAccount->modifiedAt()->toString(),
+                'email' => $adminAccount->email()->toString(),
                 'password' => '',
-                'name' => '',
-                'admin_note' => '',
-                'account_status_master_id' => '',
-                'is_email_verified' => '0',
-                'password_changed_at' => '',
-                'password_expires_at' => '',
+                'name' => $adminAccount->name()->toString(),
+                'admin_note' => $adminAccount->adminNote()->toString(),
+                'account_status_master_id' => $adminAccount->accountStatusMasterId()->toString(),
+                'is_email_verified' => $adminAccount->isEmailVerified() ? '1' : '0',
+                'password_changed_at' => $adminAccount->passwordChangedAt()->toString(),
+                'password_expires_at' => $adminAccount->passwordExpiresAt()->toString(),
             ]),
         );
 
@@ -63,8 +75,10 @@ final class Edit implements ApplicationInterface
         $inputProcess = $processProvider->provide(
             processClassName: InputProcess::class,
             processId: new ProcessId(
-                StrictCast::toString($this->request->getParam('process_id')),
+                StrictCast::toString($this->request->route('process_id')),
             ),
+        ) ?? throw new ProcessNotFoundException(
+            StrictCast::toString($this->request->route('process_id'))
         );
 
         return $inputProcess;
@@ -105,7 +119,7 @@ final class Edit implements ApplicationInterface
     {
         return $inputProcess->getProcessParams()->hasParam(
             path: '_process_key',
-            samValue: $this->request->getData('_process_key'),
+            samValue: $this->request->input('_process_key'),
         );
     }
 
@@ -118,14 +132,14 @@ final class Edit implements ApplicationInterface
             '_errorMessages' => [],
             '_errorFields' => [],
             '_process_key' => UUID::uuid4(),
-            'email' => $this->request->getData('email'),
-            'password' => $this->request->getData('password'),
-            'name' => $this->request->getData('name'),
-            'admin_note' => $this->request->getData('admin_note'),
-            'account_status_master_id' => $this->request->getData('account_status_master_id'),
-            'is_email_verified' => $this->request->getData('is_email_verified') ?? '0',
-            'password_changed_at' => $this->request->getData('password_changed_at'),
-            'password_expires_at' => $this->request->getData('password_expires_at'),
+            'email' => $this->request->input('email'),
+            'password' => $this->request->input('password'),
+            'name' => $this->request->input('name'),
+            'admin_note' => $this->request->input('admin_note'),
+            'account_status_master_id' => $this->request->input('account_status_master_id'),
+            'is_email_verified' => $this->request->input('is_email_verified') ?? '0',
+            'password_changed_at' => $this->request->input('password_changed_at'),
+            'password_expires_at' => $this->request->input('password_expires_at'),
         ];
     }
 
@@ -134,38 +148,20 @@ final class Edit implements ApplicationInterface
      */
     public function inputProcessValidation(): self
     {
-        /** @var array<string, mixed> $input */
-        $input = $this->getInputProcess()
+        $data = $this->getInputProcess()
             ->getProcessParams()
             ->toArray();
-        /** @var array<string, array<string, string|array<int|string, mixed>>> $errorInfos */
-        $errorInfos = $this->getValidator()->validate($input);
-        if ($errorInfos !== []) {
-            throw new ValidateException($errorInfos);
+
+        $validator = Validator::make(
+            $data,
+            ...$this->validatorSetting($data),
+        );
+
+        if ($validator->fails()) {
+            throw new ValidateException($validator->errors()->toArray());
         }
 
         return $this;
-    }
-
-    /**
-     * @return \Cake\Validation\Validator
-     */
-    private function getValidator(): Validator
-    {
-        $validator = new Validator();
-        /** @var \App\Application\Controller\Admin\AdminAccount\Shared\ValidatorSetting $validatorSetting */
-        $validatorSetting = $this->createApplication(ValidatorSetting::class);
-        $validatorSetting
-            ->email($validator)
-            ->password($validator, required: true)
-            ->name($validator)
-            ->adminNote($validator)
-            ->accountStatusMasterId($validator)
-            ->isEmailVerified($validator)
-            ->passwordChangedAt($validator)
-            ->passwordExpiresAt($validator);
-
-        return $validator;
     }
 
     /**
@@ -178,27 +174,29 @@ final class Edit implements ApplicationInterface
             ->getProcessParams()
             ->toArray();
 
-        (new AdminAccountsRepository($this->datetime))->create(new \App\Domain\Admin\AdminAccounts\Entity\AdminAccount(
-            id: new Vo\Id(null),
-            email: Vo\Email::fromString(Cast::toStringOrNull($input['email'])),
-            password: Vo\Password::fromString(Cast::toStringOrNull($input['password'])),
-            name: Vo\Name::fromString(Cast::toStringOrNull($input['name'])),
-            admin_note: Vo\AdminNote::fromString(Cast::toStringOrNull($input['admin_note'])),
-            account_status_master_id: new Vo\AccountStatusMasterId(
-                Cast::toStringOrNull($input['account_status_master_id']),
-            ),
-            account_status_master_code: new Vo\AccountStatusMasterCode(null),
-            account_status_master_name: new Vo\AccountStatusMasterName(null),
-            is_email_verified: new Vo\IsEmailVerified(Cast::toStringOrNull($input['is_email_verified'])),
-            password_changed_at: new Vo\PasswordChangedAt(Cast::toStringOrNull($input['password_changed_at'])),
-            password_expires_at: new Vo\PasswordExpiresAt(Cast::toStringOrNull($input['password_expires_at'])),
-            created: new SVo\Created(Cast::toStringOrNull($this->datetime->format('Y-m-d\\TH:i:s'))),
-            created_by: new SVo\CreatedBy(Cast::toStringOrNull($this->authContext->getAccountId())),
-            created_ip: new SVo\CreatedIp(Cast::toStringOrNull($this->request->clientIp())),
-            modified: new SVo\Modified(Cast::toStringOrNull($this->datetime->format('Y-m-d\\TH:i:s'))),
-            modified_by: new SVo\ModifiedBy(Cast::toStringOrNull($this->authContext->getAccountId())),
-            modified_ip: new SVo\ModifiedIp(Cast::toStringOrNull($this->request->clientIp())),
-        ));
+        DB::transaction(function () use ($input) {
+            (new AdminAccountsRepository($this->datetime))->update(new \App\Domain\Admin\AdminAccounts\Entity\AdminAccount(
+                id: new Vo\Id($input['id']),
+                email: Vo\Email::fromString(Cast::toStringOrNull($input['email'])),
+                password: Vo\Password::fromString(Cast::toStringOrNull($input['password'])),
+                name: Vo\Name::fromString(Cast::toStringOrNull($input['name'])),
+                admin_note: Vo\AdminNote::fromString(Cast::toStringOrNull($input['admin_note'])),
+                account_status_master_id: new Vo\AccountStatusMasterId(
+                    Cast::toStringOrNull($input['account_status_master_id']),
+                ),
+                account_status_master_code: new Vo\AccountStatusMasterCode(null),
+                account_status_master_name: new Vo\AccountStatusMasterName(null),
+                is_email_verified: new Vo\IsEmailVerified(Cast::toStringOrNull($input['is_email_verified'])),
+                password_changed_at: new Vo\PasswordChangedAt(Cast::toStringOrNull($input['password_changed_at'])),
+                password_expires_at: new Vo\PasswordExpiresAt(Cast::toStringOrNull($input['password_expires_at'])),
+                created_at: new SVo\CreatedAt(null),
+                created_by: new SVo\CreatedBy(null),
+                created_ip: new SVo\CreatedIp(null),
+                modified_at: new SVo\ModifiedAt(Cast::toStringOrNull($this->datetime->format('Y-m-d\\TH:i:s'))),
+                modified_by: new SVo\ModifiedBy(Cast::toStringOrNull($this->authContext->getAccountId())),
+                modified_ip: new SVo\ModifiedIp(Cast::toStringOrNull($this->request->ip())),
+            ));
+        });
 
         return $this;
     }
@@ -239,5 +237,196 @@ final class Edit implements ApplicationInterface
         );
 
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAccountStatusOptions(): array
+    {
+        return (new AdminAccountsRepository($this->datetime))->getAccountStatusOptions();
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
+     */
+    private function validatorSetting(array $data) : array
+    {
+        return [
+            'rules' => [
+                'id' => [
+                    'required',
+                    function ($attribute, $value, $fail) {
+                        try {
+                            (new AdminAccountsRepository($this->datetime))->read(
+                                id: new Vo\Id($value),
+                            );
+                        } catch (\Throwable $e) {
+                            $fail('更新対象のデータが見つかりませんでした。');
+                        }
+                    }
+                ],
+                'modified_at' => [
+                    'required',
+                    function ($attribute, $value, $fail) use ($data) {
+                        try {
+                            (new AdminAccountsRepository($this->datetime))->read(
+                                id: new Vo\Id($data['id']),
+                                modifiedAt: new SVo\ModifiedAt($value),
+                            );
+                        } catch (\Throwable $e) {
+                            $fail('更新対象のデータが別のプロセスで更新されました。');
+                        }
+                    },
+                ],
+                'email' => [
+                    'required',
+                    function ($attribute, $value, $fail) use ($data) {
+                        $adminAccount = (new AdminAccountsRepository($this->datetime))->findByEmail(
+                            email: new Vo\Email($value),
+                        );
+                        $adminAccount !== null 
+                        && $adminAccount->id()->toString() !== (string)$data['id'] 
+                        && $fail('入力されたメールアドレスは既に使用されています。');
+                    },
+                    function ($attribute, $value, $fail) {
+                        try {
+                            new Vo\Email($value);
+                        } catch (DomainException $e) {
+                            $message = match ($e->getCode()) {
+                                Vo\Email::ERROR_CODE_INVALID_FORMAT => 'メールアドレスの形式が正しくありません。',
+                                Vo\Email::ERROR_CODE_TOO_LONG => sprintf('メールアドレスは%s文字以内で入力してください。', Vo\Email::MAX_LENGTH),
+                                default => 'メールアドレスの入力が不正です。',
+                            };
+                            $fail($message);
+                        }
+                    },
+                ],
+                'password' => [
+                    function ($attribute, $value, $fail) {
+                        try {
+                            new Vo\Password($value);
+                        } catch (DomainException $e) {
+                            $message = match ($e->getCode()) {
+                                Vo\Password::ERROR_CODE_TOO_LONG => sprintf('パスワードは%s文字以内で入力してください。', Vo\Password::MAX_LENGTH),
+                                default => 'パスワードの入力が不正です。',
+                            };
+                            $fail($message);
+                        }
+                    },
+                ],
+                'name' => [
+                    'required',
+                    function ($attribute, $value, $fail) {
+                        try {
+                            new Vo\Name($value);
+                        } catch (DomainException $e) {
+                            $message = match ($e->getCode()) {
+                                Vo\Name::ERROR_CODE_TOO_LONG => sprintf('表示名は%s文字以内で入力してください。', Vo\Name::MAX_LENGTH),
+                                default => '表示名の入力が不正です。',
+                            };
+                            $fail($message);
+                        }
+                    },
+                ],
+                'admin_note' => [
+                    function ($attribute, $value, $fail) {
+                        try {
+                            new Vo\AdminNote($value);
+                        } catch (DomainException $e) {
+                            $message = match ($e->getCode()) {
+                                Vo\AdminNote::ERROR_CODE_TOO_LONG => sprintf('管理者メモは%s文字以内で入力してください。', Vo\AdminNote::MAX_LENGTH),
+                                default => '管理者メモの入力が不正です。',
+                            };
+                            $fail($message);
+                        }
+                    },
+                ],
+                'account_status_master_id' => [
+                    'required',
+                    function ($attribute, $value, $fail) {
+                        array_filter(
+                            (new AdminAccountsRepository($this->datetime))->getAccountStatusOptions(), 
+                            function ($option) use ($value) {
+                                return $option->accountStatusMasterId()->toString() === (string)$value;
+                            },
+                        ) === [] && $fail('選択されたアカウントステータスは存在しません。');
+                    },
+                    function ($attribute, $value, $fail) {
+                        try {
+                            new Vo\AccountStatusMasterId($value);
+                        } catch (DomainException $e) {
+                            $message = match ($e->getCode()) {
+                                Vo\AccountStatusMasterId::ERROR_CODE_INVALID_FORMAT => 'アカウントステータスの形式が正しくありません。',
+                                default => 'アカウントステータスの入力が不正です。',
+                            };
+                            $fail($message);
+                        }
+                    },
+                ],
+                'is_email_verified' => [
+                    'required',
+                    function ($attribute, $value, $fail) {
+                        try {
+                            new Vo\IsEmailVerified($value);
+                        } catch (DomainException $e) {
+                            $message = match ($e->getCode()) {
+                                Vo\IsEmailVerified::ERROR_CODE_OUT_OF_RANGE => 'メールアドレス確認済みの形式が正しくありません。',
+                                default => 'メールアドレス確認済みの入力が不正です。',
+                            };
+                            $fail($message);
+                        }
+                    },
+                ],
+                'password_changed_at' => [
+                    'required',
+                    function ($attribute, $value, $fail) {
+                        try {
+                            new Vo\PasswordChangedAt($value);
+                        } catch (DomainException $e) {
+                            $message = match ($e->getCode()) {
+                                Vo\PasswordChangedAt::ERROR_CODE_INVALID_FORMAT => 'パスワード変更日時は正しい日時形式で入力してください。',
+                                default => 'パスワード変更日時の入力が不正です。',
+                            };
+                            $fail($message);
+                        }
+                    },
+                ],
+                'password_expires_at' => [
+                    'required',
+                    function ($attribute, $value, $fail) {
+                        try {
+                            new Vo\PasswordExpiresAt($value);
+                        } catch (DomainException $e) {
+                            $message = match ($e->getCode()) {
+                                Vo\PasswordExpiresAt::ERROR_CODE_INVALID_FORMAT => 'パスワード有効期限は正しい日時形式で入力してください。',
+                                default => 'パスワード有効期限の入力が不正です。',
+                            };
+                            $fail($message);
+                        }
+                    },
+                ],
+            ], 
+            'messages' => [
+                'email.required' => 'メールアドレスは必須です。',
+                'password.required' => 'パスワードは必須です。',
+                'name.required' => '表示名は必須です。',
+                'account_status_master_id.required' => 'アカウントステータスは必須です。',
+                'is_email_verified.required' => 'メールアドレス確認済みは必須です。',
+                'password_changed_at.required' => 'パスワード変更日時は必須です。',
+                'password_expires_at.required' => 'パスワード有効期限は必須です。',
+            ],
+            'attributes' => [
+                'email' => 'メールアドレス',
+                'password' => 'パスワード',
+                'name' => '表示名',
+                'admin_note' => '管理者メモ',
+                'account_status_master_id' => 'アカウントステータス',
+                'is_email_verified' => 'メールアドレス確認済み',
+                'password_changed_at' => 'パスワード変更日時',
+                'password_expires_at' => 'パスワード有効期限',
+            ],
+        ];
     }
 }

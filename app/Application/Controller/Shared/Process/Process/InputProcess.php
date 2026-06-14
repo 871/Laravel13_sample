@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Application\Controller\Shared\Process\Process;
 
 use App\Application\Controller\Shared\Process\ProcessInterface;
-use Cake\Utility\Hash;
+use Illuminate\Support\Arr;
 
 final class InputProcess implements ProcessInterface
 {
@@ -49,13 +49,17 @@ final class InputProcess implements ProcessInterface
      */
     public function getInputs(): array
     {
-        /** @var array<string, mixed> */
-        return Hash::expand(
-            array_map(
-                fn($v) => is_string($v) ? (string)$v : $v,
-                Hash::flatten($this->processParams->toArray()),
-            ),
-        );
+        $fnc = function($value) use (&$fnc) {
+            if ($value === []) {
+                return [];
+            }
+            if (is_array($value)) {
+                return array_map($fnc, $value);
+            }
+            return (string)$value;
+        };
+
+        return array_map($fnc, $this->processParams->toArray());
     }
 
     /**
@@ -65,6 +69,6 @@ final class InputProcess implements ProcessInterface
      */
     public function getInput(string $path, ?string $default = null): mixed
     {
-        return Hash::get($this->getInputs(), $path, $default);
+        return Arr::get($this->getInputs(), $path, $default);
     }
 }

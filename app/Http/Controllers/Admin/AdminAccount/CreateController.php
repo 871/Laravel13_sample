@@ -145,7 +145,8 @@ class CreateController extends Controller
             return redirect()->route(
                 'admin.admin_account.search.index',
                 [
-                    'account_id' => $request->route('account_id')
+                    'account_id' => $request->route('account_id'),
+                    ...$request->query(),
                 ]
             )->with('success', '管理者アカウントの作成が完了しました。');
         } catch (ValidateException $ex) {
