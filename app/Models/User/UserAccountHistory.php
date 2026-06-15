@@ -8,10 +8,11 @@ use App\Models\Shared\AccountStatusMaster;
 
 class UserAccountHistory extends Model
 {
+    public $incrementing = false;
+    protected $keyType = 'string';
+    public $timestamps = false;
+
     protected $table = 'user_account_histories';
-    const CREATED_AT = 'history_created';
-    const UPDATED_AT = null;
-    public $timestamps = true;
     protected $guarded = [];
 
     protected $casts = [
