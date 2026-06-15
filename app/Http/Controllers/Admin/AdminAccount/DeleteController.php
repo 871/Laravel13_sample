@@ -18,18 +18,17 @@ class DeleteController extends Controller
 
     public function indexPost(Request $request, $admin_account_id)
     {
-        $delete = new Delete(
+        (new Delete(
             datetime: new \DateTimeImmutable(), 
             request: $request, 
             authContext: AuthContextResolver::resolve($request)    
-        );
-        $delete->delete();
+        ))->delete();
 
         return redirect()->route(
             'admin.admin_account.search.index',
             [
-                'account_id' => $request->route('account_id'),
                 ...$request->query(),
+                'account_id' => $request->route('account_id'),
             ]
         )->with('success', '管理者アカウントの削除が完了しました。');
     }

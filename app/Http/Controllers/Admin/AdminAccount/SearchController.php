@@ -13,7 +13,7 @@ class SearchController extends Controller
 {
     public function init(Request $request)
     {
-        $service = new Search(
+        $search = new Search(
             datetime: new \DateTimeImmutable(), 
             request: $request, 
             authContext: AuthContextResolver::resolve($request)
@@ -24,7 +24,8 @@ class SearchController extends Controller
                 'index',
             ], [
                 'account_id' => $request->route('account_id'),
-            ] + $service->getInitParams(),
+                ...$search->getInitParams()
+            ],
         );
     }
 

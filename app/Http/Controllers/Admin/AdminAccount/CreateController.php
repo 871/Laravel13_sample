@@ -25,9 +25,9 @@ class CreateController extends Controller
         return redirect()->route(
             'admin.admin_account.create.input',
             [
+                ...$request->query(),
                 'account_id' => $request->route('account_id'),
                 'process_id' => $create->startInputProcess()->getId(),
-                ...$request->query(),
             ],
         );
     }
@@ -43,9 +43,9 @@ class CreateController extends Controller
         return redirect()->route(
             'admin.admin_account.create.input',
             [
+                ...$request->query(),
                 'account_id' => $request->route('account_id'),
                 'process_id' => $create->startInputProcessForCopy()->getId(),
-                ...$request->query(),
             ],
         );
     }
@@ -88,9 +88,9 @@ class CreateController extends Controller
             return redirect()->route(
                 'admin.admin_account.create.conf',
                 [
+                    ...$request->query(),
                     'account_id' => $request->route('account_id'),
                     'process_id' => $request->route('process_id'),
-                    ...$request->query(),
                 ],
             );
         } catch (ValidateException $ex) {
@@ -98,9 +98,9 @@ class CreateController extends Controller
             return redirect()->route(
                 'admin.admin_account.create.input',
                 [
+                    ...$request->query(),
                     'account_id' => $request->route('account_id'),
                     'process_id' => $request->route('process_id'),
-                    ...$request->query(),
                 ],
             );
         } catch (ProcessNotFoundException $ex) {
@@ -145,13 +145,20 @@ class CreateController extends Controller
             return redirect()->route(
                 'admin.admin_account.search.index',
                 [
-                    'account_id' => $request->route('account_id'),
                     ...$request->query(),
+                    'account_id' => $request->route('account_id'),
                 ]
             )->with('success', '管理者アカウントの作成が完了しました。');
         } catch (ValidateException $ex) {
             $create->inputProcessErrorUpdate($ex);
-            return redirect()->back();
+            return redirect()->route(
+                'admin.admin_account.create.input',
+                [
+                    ...$request->query(),
+                    'account_id' => $request->route('account_id'),
+                    'process_id' => $create->startInputProcess()->getId(),
+                ],
+            );
         } catch (ProcessNotFoundException $ex) {
             logger()->warning('Input process not found', ['exception' => $ex]);
             return $this->redirectToIndex($request);
@@ -163,8 +170,8 @@ class CreateController extends Controller
         return redirect()->route(
             'admin.admin_account.create.index',
             [
-                'account_id' => $request->route('account_id'),
                 ...$request->query(),
+                'account_id' => $request->route('account_id'),
             ],
         );
     }

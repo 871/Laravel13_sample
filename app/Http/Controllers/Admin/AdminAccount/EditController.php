@@ -25,9 +25,9 @@ class EditController extends Controller
         return redirect()->route(
             'admin.admin_account.edit.input',
             [
+                ...$request->query(),
                 'account_id' => $request->route('account_id'),
                 'process_id' => $edit->startInputProcess()->getId(),
-                ...$request->query(),
             ],
         );
    }
@@ -70,9 +70,9 @@ class EditController extends Controller
             return redirect()->route(
                 'admin.admin_account.edit.conf',
                 [
+                    ...$request->query(),
                     'account_id' => $request->route('account_id'),
                     'process_id' => $request->route('process_id'),
-                    ...$request->query(),
                 ],
             );
         } catch (ValidateException $ex) {
@@ -80,9 +80,9 @@ class EditController extends Controller
             return redirect()->route(
                 'admin.admin_account.edit.input',
                 [
+                    ...$request->query(),
                     'account_id' => $request->route('account_id'),
                     'process_id' => $request->route('process_id'),
-                    ...$request->query(),
                 ],
             );
         } catch (ProcessNotFoundException $ex) {
@@ -127,8 +127,8 @@ class EditController extends Controller
             return redirect()->route(
                 'admin.admin_account.search.index',
                 [
-                    'account_id' => $request->route('account_id'),
                     ...$request->query(),
+                    'account_id' => $request->route('account_id'),
                 ]
             )->with('success', '管理者アカウントの更新が完了しました。');
         } catch (ValidateException $ex) {
@@ -145,8 +145,8 @@ class EditController extends Controller
         return redirect()->route(
             'admin.admin_account.search.index',
             [
-                'account_id' => $request->route('account_id'),
                 ...$request->query(),
+                'account_id' => $request->route('account_id'),
             ],
         )->with('error', '入力プロセスが見つかりませんでした。もう一度最初から操作してください。');
     }
