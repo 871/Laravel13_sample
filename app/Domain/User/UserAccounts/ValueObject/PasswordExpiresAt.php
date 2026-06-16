@@ -13,6 +13,8 @@ class PasswordExpiresAt implements Stringable
 {
     use DateTimeTrait;
 
+    const ERROR_CODE_INVALID_FORMAT = 1001;
+
     /**
      * @var ?\DateTimeInterface
      */
@@ -34,6 +36,7 @@ class PasswordExpiresAt implements Stringable
                 self::class . ' value datetime format Error'
                 . '[value: ' . $value . ']'
                 . '[format: ' . $format . ']',
+                self::ERROR_CODE_INVALID_FORMAT
             );
         }
 
