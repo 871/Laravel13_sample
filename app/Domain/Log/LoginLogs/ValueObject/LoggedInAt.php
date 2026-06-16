@@ -23,21 +23,27 @@ class LoggedInAt implements Stringable
      */
     public function __construct(?string $value, string $format = 'Y-m-d\TH:i:s')
     {
-        if ($value === null || $value === '') {
+        if ($value === null) {
             $this->value = null;
 
             return;
         }
-
-        if (!static::checkFormat($value, $format)) {
-            throw new DomainException(
-                self::class . ' value datetime format Error'
-                . '[value: ' . $value . ']'
-                . '[format: ' . $format . ']',
-            );
+        if (static::checkFormat($value, $format)) {
+            $resultValue = DateTimeImmutable::createFromFormat($format, $value);
+            $this->value = $resultValue ?: null;
+            return;
         }
 
-        $resultValue = DateTimeImmutable::createFromFormat($format, $value);
-        $this->value = $resultValue ?: null;
+        if (static::checkFormat($value . ':00', $format)) {
+            $resultValue = DateTimeImmutable::createFromFormat($format, $value . ':00');
+            $this->value = $resultValue ?: null;
+            return;
+        }
+
+        throw new DomainException(
+            self::class . ' value datetime format Error'
+            . '[value: ' . $value . ']'
+            . '[format: ' . $format . ']',
+        );
     }
 }

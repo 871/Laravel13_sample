@@ -88,9 +88,9 @@
             @if (($p['id'] ?? '') === '')
                 <a 
                     href="{{ route('admin.user_account.create.input', [
+                        ...request()->query(),
                         'account_id' => request()->route('account_id'), 
                         'process_id' => request()->route('process_id'), 
-                        ...request()->query(),
                     ]) }}" 
                     class="btn btn-secondary px-5"
                 >修正する</a>
@@ -98,9 +98,9 @@
             @if (($p['id'] ?? '') !== '')
                 <a 
                     href="{{ route('admin.user_account.edit.input', [
+                        ...request()->query(),
                         'account_id' => request()->route('account_id'), 
                         'process_id' => request()->route('process_id'), 
-                        ...request()->query(),
                     ]) }}" 
                     class="btn btn-secondary px-5"
                 >修正する</a>

@@ -6,9 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class RefreshToken extends Model
 {
+    public $timestamps = false;
     protected $table = 'refresh_tokens';
-    const CREATED_AT = 'created';
-    const UPDATED_AT = 'modified';
     protected $guarded = [];
 
     // UUID primary key

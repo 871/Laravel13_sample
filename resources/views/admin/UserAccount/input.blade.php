@@ -21,7 +21,7 @@
         {{ ($p['id'] ?? '') ? '更新' : '新規登録' }}
     </div>
     <div class="card-body">
-        <form method="post" action="{{ route($routeName, array_merge(request()->query(), ['account_id' => request()->route('account_id')] )) }}">
+        <form method="post">
             @csrf
             <input type="hidden" name="_process_key" value="{{ $p['_process_key'] ?? '' }}">
         @if (($p['id'] ?? '') !== '')
@@ -147,8 +147,8 @@
             <div class="text-center mt-4">
                 <a 
                     href="{{ route('admin.user_account.search.index', [
-                        'account_id' => request()->route('account_id'), 
                         ...request()->query(),
+                        'account_id' => request()->route('account_id'), 
                     ]) }}" class="btn btn-secondary px-5"
                 >戻る</a>
                 <button type="submit" class="btn btn-primary px-5 me-3">確認へ</button>

@@ -30,17 +30,22 @@ class PasswordExpiresAt implements Stringable
 
             return;
         }
-
-        if (!static::checkFormat($value, $format)) {
-            throw new DomainException(
-                self::class . ' value datetime format Error'
-                . '[value: ' . $value . ']'
-                . '[format: ' . $format . ']',
-                self::ERROR_CODE_INVALID_FORMAT
-            );
+        if (static::checkFormat($value, $format)) {
+            $resultValue = DateTimeImmutable::createFromFormat($format, $value);
+            $this->value = $resultValue ?: null;
+            return;
         }
 
-        $resultValue = DateTimeImmutable::createFromFormat($format, $value);
-        $this->value = $resultValue ?: null;
+        if (static::checkFormat($value . ':00', $format)) {
+            $resultValue = DateTimeImmutable::createFromFormat($format, $value . ':00');
+            $this->value = $resultValue ?: null;
+            return;
+        }
+
+        throw new DomainException(
+            self::class . ' value datetime format Error'
+            . '[value: ' . $value . ']'
+            . '[format: ' . $format . ']',
+        );
     }
 }

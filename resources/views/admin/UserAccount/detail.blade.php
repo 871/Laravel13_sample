@@ -50,32 +50,32 @@
         <div class="text-center mt-4">
             <a 
                 href="{{ route('admin.user_account.search.index', [
-                    'account_id' => request()->route('account_id'), 
                     ...request()->query(),
+                    'account_id' => request()->route('account_id'), 
                 ]) }}" 
                 class="btn btn-secondary px-5"
             >戻る</a>
             <a 
                 href="{{ route('admin.user_account.edit.index', [
+                    ...request()->query(),
                     'account_id' => request()->route('account_id'),
                     'user_account_id' => request()->route('user_account_id'),
-                    ...request()->query(),
                 ]) }}"
                 class="btn btn-primary px-5"
             >更新</a>
             <a 
                 href="{{ route('admin.user_account.create.copy', [
+                    ...request()->query(),
                     'account_id' => request()->route('account_id'),
                     'user_account_id' => request()->route('user_account_id'),
-                    ...request()->query(),
                 ]) }}"
                 class="btn btn-primary px-5"
             >複製</a>
             <form method="POST"
                 action="{{ route('admin.user_account.delete.index', [
+                    ...request()->query(),
                     'account_id' => request()->route('account_id'),
                     'user_account_id' => request()->route('user_account_id'),
-                    ...request()->query(),
                 ]) }}"
                 class="d-inline"
             >
