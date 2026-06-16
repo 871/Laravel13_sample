@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Application\Controller\Admin\AdminAccount;
 
-use App\Application\Controller\Admin\AdminAccount\Shared\ValidatorSetting;
 use App\Application\Controller\Shared\Process\Process\Fields\ProcessId;
 use App\Application\Controller\Shared\Process\Process\Fields\ProcessParams;
 use App\Application\Controller\Shared\Process\Process\InputProcess;

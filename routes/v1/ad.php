@@ -28,27 +28,27 @@ Route::prefix('ad')->as('admin.')->group(function () {
             Route::get('/', [App\Http\Controllers\Admin\TopController::class, 'index'])->name('top.index');
             Route::get('/error_test', [App\Http\Controllers\Admin\TopController::class, 'errorTest'])->name('error.test');
 
-        /*
+        
             // UserAccount management (/v1/ad/{account_id}/user_account/...)
             Route::prefix('user_account')->as('user_account.')->group(function () {
-                Route::get('/', [App\Http\Controllers\Admin\UserAccount\SearchController::class, 'init']);
-                Route::get('/search', [App\Http\Controllers\Admin\UserAccount\SearchController::class, 'index']);
-                Route::get('/detail/{user_account_id}', [App\Http\Controllers\Admin\UserAccount\DetailController::class, 'index']);
-                Route::get('/create', [App\Http\Controllers\Admin\UserAccount\CreateController::class, 'index']);
-                Route::get('/create/{process_id}/input', [App\Http\Controllers\Admin\UserAccount\CreateController::class, 'input']);
-                Route::post('/create/{process_id}/input', [App\Http\Controllers\Admin\UserAccount\CreateController::class, 'inputPost']);
-                Route::get('/create/{process_id}/conf', [App\Http\Controllers\Admin\UserAccount\CreateController::class, 'conf']);
-                Route::post('/create/{process_id}/conf', [App\Http\Controllers\Admin\UserAccount\CreateController::class, 'confPost']);
-                Route::get('/create/{user_account_id}/copy', [App\Http\Controllers\Admin\UserAccount\CreateController::class, 'copy']);
-                Route::get('/edit/{user_account_id}', [App\Http\Controllers\Admin\UserAccount\EditController::class, 'index']);
-                Route::get('/edit/{process_id}/input', [App\Http\Controllers\Admin\UserAccount\EditController::class, 'input']);
-                Route::post('/edit/{process_id}/input', [App\Http\Controllers\Admin\UserAccount\EditController::class, 'inputPost']);
-                Route::get('/edit/{process_id}/conf', [App\Http\Controllers\Admin\UserAccount\EditController::class, 'conf']);
-                Route::post('/edit/{process_id}/conf', [App\Http\Controllers\Admin\UserAccount\EditController::class, 'confPost']);
-                Route::get('/delete/{user_account_id}', [App\Http\Controllers\Admin\UserAccount\DeleteController::class, 'index']);
-                Route::post('/delete/{user_account_id}', [App\Http\Controllers\Admin\UserAccount\DeleteController::class, 'indexPost']);
+                Route::get('/', [App\Http\Controllers\Admin\UserAccount\SearchController::class, 'init'])->name('search.init');
+                Route::get('/search', [App\Http\Controllers\Admin\UserAccount\SearchController::class, 'index'])->name('search.index');
+                Route::get('/detail/{user_account_id}', [App\Http\Controllers\Admin\UserAccount\DetailController::class, 'index'])->name('detail.index');
+                Route::get('/create', [App\Http\Controllers\Admin\UserAccount\CreateController::class, 'index'])->name('create.index');
+                Route::get('/create/{process_id}/input', [App\Http\Controllers\Admin\UserAccount\CreateController::class, 'input'])->name('create.input');
+                Route::post('/create/{process_id}/input', [App\Http\Controllers\Admin\UserAccount\CreateController::class, 'inputPost'])->name('create.inputPost');
+                Route::get('/create/{process_id}/conf', [App\Http\Controllers\Admin\UserAccount\CreateController::class, 'conf'])->name('create.conf');
+                Route::post('/create/{process_id}/conf', [App\Http\Controllers\Admin\UserAccount\CreateController::class, 'confPost'])->name('create.confPost');
+                Route::get('/create/{user_account_id}/copy', [App\Http\Controllers\Admin\UserAccount\CreateController::class, 'copy'])->name('create.copy');
+                Route::get('/edit/{user_account_id}', [App\Http\Controllers\Admin\UserAccount\EditController::class, 'index'])->name('edit.index');
+                Route::get('/edit/{process_id}/input', [App\Http\Controllers\Admin\UserAccount\EditController::class, 'input'])->name('edit.input');
+                Route::post('/edit/{process_id}/input', [App\Http\Controllers\Admin\UserAccount\EditController::class, 'inputPost'])->name('edit.inputPost');
+                Route::get('/edit/{process_id}/conf', [App\Http\Controllers\Admin\UserAccount\EditController::class, 'conf'])->name('edit.conf');
+                Route::post('/edit/{process_id}/conf', [App\Http\Controllers\Admin\UserAccount\EditController::class, 'confPost'])->name('edit.confPost');
+                Route::get('/delete/{user_account_id}', [App\Http\Controllers\Admin\UserAccount\DeleteController::class, 'index'])->name('delete.index');
+                Route::post('/delete/{user_account_id}', [App\Http\Controllers\Admin\UserAccount\DeleteController::class, 'indexPost'])->name('delete.indexPost');
             });
-
+        /*
             // UserGrant management
             Route::prefix('user_grant')->as('user_grant.')->group(function () {
                 Route::get('/', [App\Http\Controllers\Admin\UserGrant\SearchController::class, 'init']);

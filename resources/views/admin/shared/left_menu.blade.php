@@ -12,7 +12,6 @@
                 href="{{ url('/v1/ad/' . request()->route('account_id')) }}"
             >Top</a>
         </li>
-    @if(false) {{-- TODO 未実装 --}}
         <li class="nav-item">
             <details 
                 class="admin-menu-group" 
@@ -27,22 +26,25 @@
                     <li class="nav-item">
                         <a
                             class="nav-link text-white"
-                            href="{{ route('admin.user-account.search.init', [
+                            href="{{ route('admin.user_account.search.init', [
                                 'account_id' => request()->route('account_id'),
                             ]); }}"
                         >ユーザアカウント</a>
                     </li>
+                @if(false) {{-- TODO 未実装 --}}
                     <li class="nav-item">
                         <a
                             class="nav-link text-white"
-                            href="{{ route('admin.user-agrant.search.init', [
+                            href="{{ route('admin.user_grant.search.init', [
                                 'account_id' => request()->route('account_id'),
                             ]); }}"
                         >ユーザ権限</a>
                     </li>
+                @endif
                 </ul>
             </details>
         </li>
+    @if(false) {{-- TODO 未実装 --}}
         <li class="nav-item">
             <details 
                 class="admin-menu-group"

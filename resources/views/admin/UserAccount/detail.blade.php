@@ -14,7 +14,7 @@
             ユーザーアカウント 詳細
         </div>
         <div>
-            <a href="{{ route('admin.user_account.edit.index', array_merge(request()->query(), ['account_id' => request()->route('account_id'), 'user_account_id' => $detail->id()->toString()])) }}" class="btn btn-primary btn-sm">編集</a>
+            <a href="{{ route('admin.user_account.edit.index', array_merge(request()->query(), ['account_id' => request()->route('account_id'), 'user_account_id' => $userAccount->id()->toString()])) }}" class="btn btn-primary btn-sm">編集</a>
         </div>
     </div>
 
