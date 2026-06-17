@@ -13,6 +13,9 @@ class Email implements Stringable
 
     public const MAX_LENGTH = 255;
 
+    public const ERROR_CODE_INVALID_FORMAT = 1001;
+    public const ERROR_CODE_TOO_LONG = 1002;
+
     /**
      * @param ?string $value
      */
@@ -33,6 +36,7 @@ class Email implements Stringable
             throw new DomainException(
                 self::class . ' value length Error'
                 . '[value: ' . mb_strimwidth($value, 0, 200, '...') . ']',
+                self::ERROR_CODE_TOO_LONG,
             );
         }
 
@@ -40,6 +44,7 @@ class Email implements Stringable
             throw new DomainException(
                 self::class . ' value email format Error'
                 . '[value: ' . mb_strimwidth($value, 0, 200, '...') . ']',
+                self::ERROR_CODE_INVALID_FORMAT,
             );
         }
 

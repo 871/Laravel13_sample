@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Application\Controller\Admin\AdminAccount;
+namespace App\Application\Controller\Admin\UserAccount;
 
 use App\Application\Controller\Shared\Process\Process\Fields\ProcessId;
 use App\Application\Controller\Shared\Process\Process\Fields\ProcessParams;
@@ -14,8 +14,8 @@ use App\Application\Controller\Shared\Process\ProcessNotFoundException;
 use App\Application\Controller\Shared\ApplicationInterface;
 use App\Application\Controller\Shared\ApplicationTrait;
 use App\Exception\ValidateException;
-use App\Infrastructure\Persistence\Eloquent\Admin\AdminAccounts\AdminAccountsRepository;
-use App\Domain\Admin\AdminAccounts\ValueObject as Vo;
+use App\Infrastructure\Persistence\Eloquent\User\UserAccounts\UserAccountsRepository;
+use App\Domain\User\UserAccounts\ValueObject as Vo;
 use App\Domain\Shared\ValueObject as SVo;
 use App\Security\Input\Cast;
 use App\Security\Input\StrictCast;
@@ -33,9 +33,9 @@ final class Edit implements ApplicationInterface
      */
     public function startInputProcess(): InputProcess
     {
-        $adminAccount = (new AdminAccountsRepository($this->datetime))->read(
+        $userAccount = (new UserAccountsRepository($this->datetime))->read(
             new Vo\Id(
-                StrictCast::toString($this->request->route('admin_account_id')),
+                StrictCast::toString($this->request->route('user_account_id')),
             ),
         );
         /** @var \App\Application\Controller\Shared\Process\ProcessFactory $processFactory */
@@ -47,16 +47,15 @@ final class Edit implements ApplicationInterface
                 '_errorMessages' => [],
                 '_errorFields' => [],
                 '_process_key' => Uuid::uuid4()->toString(),
-                'id' => $adminAccount->id()->toString(),
-                'modified_at' => $adminAccount->modifiedAt()->toString(),
-                'email' => $adminAccount->email()->toString(),
+                'id' => $userAccount->id()->toString(),
+                'modified_at' => $userAccount->modifiedAt()->toString(),
+                'email' => $userAccount->email()->toString(),
                 'password' => '',
-                'name' => $adminAccount->name()->toString(),
-                'admin_note' => $adminAccount->adminNote()->toString(),
-                'account_status_master_id' => $adminAccount->accountStatusMasterId()->toString(),
-                'is_email_verified' => $adminAccount->isEmailVerified() ? '1' : '0',
-                'password_changed_at' => $adminAccount->passwordChangedAt()->toString(),
-                'password_expires_at' => $adminAccount->passwordExpiresAt()->toString(),
+                'name' => $userAccount->name()->toString(),
+                'account_status_master_id' => $userAccount->accountStatusMasterId()->toString(),
+                'is_email_verified' => $userAccount->isEmailVerified() ? '1' : '0',
+                'password_changed_at' => $userAccount->passwordChangedAt()->toString(),
+                'password_expires_at' => $userAccount->passwordExpiresAt()->toString(),
             ]),
         );
 
@@ -130,11 +129,10 @@ final class Edit implements ApplicationInterface
         return [
             '_errorMessages' => [],
             '_errorFields' => [],
-            '_process_key' => UUID::uuid4(),
+            '_process_key' => Uuid::uuid4(),
             'email' => $this->request->input('email'),
             'password' => $this->request->input('password'),
             'name' => $this->request->input('name'),
-            'admin_note' => $this->request->input('admin_note'),
             'account_status_master_id' => $this->request->input('account_status_master_id'),
             'is_email_verified' => $this->request->input('is_email_verified') ?? '0',
             'password_changed_at' => $this->request->input('password_changed_at'),
@@ -174,12 +172,11 @@ final class Edit implements ApplicationInterface
             ->toArray();
 
         DB::transaction(function () use ($input) {
-            (new AdminAccountsRepository($this->datetime))->update(new \App\Domain\Admin\AdminAccounts\Entity\AdminAccount(
+            (new UserAccountsRepository($this->datetime))->update(new \App\Domain\User\UserAccounts\Entity\UserAccount(
                 id: new Vo\Id($input['id']),
                 email: Vo\Email::fromString(Cast::toStringOrNull($input['email'])),
                 password: Vo\Password::fromString(Cast::toStringOrNull($input['password'])),
                 name: Vo\Name::fromString(Cast::toStringOrNull($input['name'])),
-                admin_note: Vo\AdminNote::fromString(Cast::toStringOrNull($input['admin_note'])),
                 account_status_master_id: new Vo\AccountStatusMasterId(
                     Cast::toStringOrNull($input['account_status_master_id']),
                 ),
@@ -243,7 +240,7 @@ final class Edit implements ApplicationInterface
      */
     public function getAccountStatusOptions(): array
     {
-        return (new AdminAccountsRepository($this->datetime))->getAccountStatusOptions();
+        return (new UserAccountsRepository($this->datetime))->getAccountStatusOptions();
     }
 
     /**
@@ -258,7 +255,7 @@ final class Edit implements ApplicationInterface
                     'required',
                     function ($attribute, $value, $fail) {
                         try {
-                            (new AdminAccountsRepository($this->datetime))->read(
+                            (new UserAccountsRepository($this->datetime))->read(
                                 id: new Vo\Id($value),
                             );
                         } catch (\Throwable $e) {
@@ -270,7 +267,7 @@ final class Edit implements ApplicationInterface
                     'required',
                     function ($attribute, $value, $fail) use ($data) {
                         try {
-                            (new AdminAccountsRepository($this->datetime))->read(
+                            (new UserAccountsRepository($this->datetime))->read(
                                 id: new Vo\Id($data['id']),
                                 modifiedAt: new SVo\ModifiedAt($value),
                             );
@@ -282,11 +279,11 @@ final class Edit implements ApplicationInterface
                 'email' => [
                     'required',
                     function ($attribute, $value, $fail) use ($data) {
-                        $adminAccount = (new AdminAccountsRepository($this->datetime))->findByEmail(
+                        $userAccount = (new UserAccountsRepository($this->datetime))->findByEmail(
                             email: new Vo\Email($value),
                         );
-                        $adminAccount !== null 
-                        && $adminAccount->id()->toString() !== (string)$data['id'] 
+                        $userAccount !== null 
+                        && $userAccount->id()->toString() !== (string)$data['id'] 
                         && $fail('入力されたメールアドレスは既に使用されています。');
                     },
                     function ($attribute, $value, $fail) {
@@ -329,24 +326,11 @@ final class Edit implements ApplicationInterface
                         }
                     },
                 ],
-                'admin_note' => [
-                    function ($attribute, $value, $fail) {
-                        try {
-                            new Vo\AdminNote($value);
-                        } catch (DomainException $e) {
-                            $message = match ($e->getCode()) {
-                                Vo\AdminNote::ERROR_CODE_TOO_LONG => sprintf('管理者メモは%s文字以内で入力してください。', Vo\AdminNote::MAX_LENGTH),
-                                default => '管理者メモの入力が不正です。',
-                            };
-                            $fail($message);
-                        }
-                    },
-                ],
                 'account_status_master_id' => [
                     'required',
                     function ($attribute, $value, $fail) {
                         array_filter(
-                            (new AdminAccountsRepository($this->datetime))->getAccountStatusOptions(), 
+                            (new UserAccountsRepository($this->datetime))->getAccountStatusOptions(), 
                             function ($option) use ($value) {
                                 return $option->accountStatusMasterId()->toString() === (string)$value;
                             },
@@ -420,7 +404,6 @@ final class Edit implements ApplicationInterface
                 'email' => 'メールアドレス',
                 'password' => 'パスワード',
                 'name' => '表示名',
-                'admin_note' => '管理者メモ',
                 'account_status_master_id' => 'アカウントステータス',
                 'is_email_verified' => 'メールアドレス確認済み',
                 'password_changed_at' => 'パスワード変更日時',

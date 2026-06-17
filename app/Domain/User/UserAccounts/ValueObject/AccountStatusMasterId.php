@@ -11,6 +11,8 @@ class AccountStatusMasterId implements Stringable
 {
     use IntTrait;
 
+    public const ERROR_CODE_INVALID_FORMAT = 1001;
+
     private ?int $value;
 
     /**
@@ -28,6 +30,7 @@ class AccountStatusMasterId implements Stringable
             throw new DomainException(
                 self::class . ' value integer format Error'
                 . '[value: ' . $value . ']',
+                self::ERROR_CODE_INVALID_FORMAT,
             );
         }
 

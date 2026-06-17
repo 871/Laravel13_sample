@@ -56,4 +56,9 @@ interface UserAccountsRepository
      * @return ?\App\Domain\User\UserAccounts\Entity\UserAccount
      */
     public function findByEmail(Vo\Email $email): ?UserAccount;
+
+    /**
+     * @return \App\Domain\User\UserAccounts\Entity\AccountStatusMaster[]
+     */
+    public function getAccountStatusOptions(): array;
 }

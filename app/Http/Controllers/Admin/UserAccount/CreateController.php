@@ -1,0 +1,178 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Controllers\Admin\UserAccount;
+
+use App\Http\Controllers\Controller;
+use App\Application\Controller\Admin\UserAccount\Create;
+use app\Application\Controller\Shared\Process\ProcessNotFoundException;
+use App\Exception\ValidateException;
+use App\Security\Auth\AuthContextResolver;
+use Illuminate\Http\Request;
+use DateTimeImmutable;
+
+class CreateController extends Controller
+{
+    public function index(Request $request)
+    {
+        $create = new Create(
+            datetime: new DateTimeImmutable(), 
+            request: $request, 
+            authContext: AuthContextResolver::resolve($request)
+        );
+
+        return redirect()->route(
+            'admin.user_account.create.input',
+            [
+                ...$request->query(),
+                'account_id' => $request->route('account_id'),
+                'process_id' => $create->startInputProcess()->getId(),
+            ],
+        );
+    }
+
+    public function copy(Request $request)
+    {
+        $create = new Create(
+            datetime: new DateTimeImmutable(), 
+            request: $request, 
+            authContext: AuthContextResolver::resolve($request)
+        );
+
+        return redirect()->route(
+            'admin.user_account.create.input',
+            [
+                ...$request->query(),
+                'account_id' => $request->route('account_id'),
+                'process_id' => $create->startInputProcessForCopy()->getId(),
+            ],
+        );
+    }
+
+    public function input(Request $request)
+    {
+        $create = new Create(
+            datetime: new DateTimeImmutable(), 
+            request: $request, 
+            authContext: AuthContextResolver::resolve($request)
+        );
+
+        try {
+            return view(
+                'admin.UserAccount.input', 
+                [
+                    'input' => $create->getInputProcess(),
+                    'accountStatusOptions' => $create->getAccountStatusOptions(),
+                ]
+            );
+        } catch (ProcessNotFoundException $ex) {
+            logger()->warning('Input process not found', ['exception' => $ex]);
+            return $this->redirectToIndex($request);
+        }
+    }
+
+    public function inputPost(Request $request)
+    {
+        $create = new Create(
+            datetime: new DateTimeImmutable(), 
+            request: $request, 
+            authContext: AuthContextResolver::resolve($request)
+        );
+
+        try {
+            $create
+                ->inputProcessUpdate()
+                ->inputProcessValidation()
+                ;
+            return redirect()->route(
+                'admin.user_account.create.conf',
+                [
+                    ...$request->query(),
+                    'account_id' => $request->route('account_id'),
+                    'process_id' => $request->route('process_id'),
+                ],
+            );
+        } catch (ValidateException $ex) {
+            $create->inputProcessErrorUpdate($ex);
+            return redirect()->route(
+                'admin.user_account.create.input',
+                [
+                    ...$request->query(),
+                    'account_id' => $request->route('account_id'),
+                    'process_id' => $request->route('process_id'),
+                ],
+            );
+        } catch (ProcessNotFoundException $ex) {
+            logger()->warning('Input process not found', ['exception' => $ex]);
+            return $this->redirectToIndex($request);
+        }
+    }
+
+    public function conf(Request $request)
+    {
+        $create = new Create(
+            datetime: new DateTimeImmutable(), 
+            request: $request, 
+            authContext: AuthContextResolver::resolve($request)
+        );
+
+        try {
+            return view('admin.UserAccount.conf', [
+                'input' => $create->getInputProcess(),
+                'accountStatusOptions' => $create->getAccountStatusOptions(),
+            ]);
+        } catch (ProcessNotFoundException $ex) {
+            logger()->warning('Input process not found', ['exception' => $ex]);
+            return $this->redirectToIndex($request);
+        }
+    }
+
+    public function confPost(Request $request)
+    {
+        $create = new Create(
+            datetime: new DateTimeImmutable(), 
+            request: $request, 
+            authContext: AuthContextResolver::resolve($request)
+        );
+
+        try {
+            $create
+                ->inputProcessValidation()
+                ->saveInputProcess()
+                ->endInputProcess()
+                ;
+            return redirect()->route(
+                'admin.user_account.search.index',
+                [
+                    ...$request->query(),
+                    'account_id' => $request->route('account_id'),
+                ]
+            )->with('success', 'ユーザーアカウントの作成が完了しました。');
+        } catch (ValidateException $ex) {
+            $create->inputProcessErrorUpdate($ex);
+            return redirect()->route(
+                'admin.user_account.create.input',
+                [
+                    ...$request->query(),
+                    'account_id' => $request->route('account_id'),
+                    'process_id' => $create->startInputProcess()->getId(),
+                ],
+            );
+        } catch (ProcessNotFoundException $ex) {
+            logger()->warning('Input process not found', ['exception' => $ex]);
+            return $this->redirectToIndex($request);
+        }
+    }
+
+    private function redirectToIndex(Request $request): \Illuminate\Http\RedirectResponse
+    {
+        return redirect()->route(
+            'admin.user_account.create.index',
+            [
+                ...$request->query(),
+                'account_id' => $request->route('account_id'),
+            ],
+        );
+    }
+}

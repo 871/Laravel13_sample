@@ -8,13 +8,30 @@ use App\Models\User\UserAccountHistory;
 use App\Models\User\RefreshToken;
 use App\Models\Grant\GrantAccountPermission;
 use App\Models\Grant\GrantAccountRole;
+use App\Domain\Shared\Enum AS Sen;
 
 class UserAccount extends Model
 {
+    public $timestamps = false;
+
     protected $table = 'user_accounts';
-    const CREATED_AT = 'created';
-    const UPDATED_AT = 'modified';
     protected $guarded = [];
+    protected $fillable = [
+        'id',
+        'email',
+        'password',
+        'name',
+        'account_status_master_id',
+        'is_email_verified',
+        'password_changed_at',
+        'password_expires_at',
+        'created_at',
+        'created_by',
+        'created_ip',
+        'modified_at',
+        'modified_by',
+        'modified_ip',
+    ];
 
     protected $casts = [
         'id' => 'integer',
@@ -22,6 +39,10 @@ class UserAccount extends Model
         'is_email_verified' => 'boolean',
         'password_changed_at' => 'datetime',
         'password_expires_at' => 'datetime',
+        'created_at' => 'datetime',
+        'created_by' => 'integer',
+        'modified_at' => 'datetime',
+        'modified_by' => 'integer',
     ];
 
     public function accountStatusMaster()
@@ -41,11 +62,13 @@ class UserAccount extends Model
 
     public function grantAccountPermissions()
     {
-        return $this->hasMany(GrantAccountPermission::class, 'account_id');
+        return $this->hasMany(GrantAccountPermission::class, 'account_id')
+            ->where('account_type', Sen\AccountType::USER->value);
     }
 
     public function grantAccountRoles()
     {
-        return $this->hasMany(GrantAccountRole::class, 'account_id');
+        return $this->hasMany(GrantAccountRole::class, 'account_id')
+            ->where('account_type', Sen\AccountType::USER->value);
     }
 }
