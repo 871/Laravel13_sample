@@ -11,6 +11,9 @@ final class DecimalCol implements Stringable
 {
     use FloatTrait;
 
+    public const ERROR_CODE_INVALID_FORMAT = 1001;
+    public const ERROR_CODE_INVALID_RANGE = 1002;
+
     public const STEP = 0.01;
     public const SCALE = 2;
     public const MIN = 0.01;
@@ -33,7 +36,10 @@ final class DecimalCol implements Stringable
         }
 
         if (!preg_match('/^-?\d+(\.\d{0, ' . (string)self::SCALE . '})?$/', $value)) {
-            throw new DomainException("Invalid decimal format: {$value}");
+            throw new DomainException(
+                "Invalid decimal format: {$value}",
+                self::ERROR_CODE_INVALID_FORMAT,
+            );
         }
 
         if (
@@ -46,6 +52,7 @@ final class DecimalCol implements Stringable
                 . '[MIN: ' . (string)self::MIN . ']'
                 . '[MAX: ' . (string)self::MAX . ']'
                 . '[STEP: ' . (string)self::STEP . ']',
+                self::ERROR_CODE_INVALID_RANGE,
             );
         }
 

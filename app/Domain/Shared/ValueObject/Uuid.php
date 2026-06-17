@@ -11,6 +11,8 @@ use Stringable;
 class Uuid implements Stringable
 {
     use StringTrait;
+    // TODO: 参照: app/Domain/User/UserAccounts/ValueObject/Name.php:25
+    public const ERROR_CODE_INVALID_VALUE = 1001;
 
     private ?string $value;
 
@@ -28,7 +30,9 @@ class Uuid implements Stringable
         if (!preg_match('/^[0-9a-fA-F-]{36}$/', $value)) {
             throw new DomainException(
                 self::class . ' value UUID format Error'
-                . '[value: ' . mb_strimwidth($value, 0, 200, '...') . ']',
+                . '[value: ' . mb_strimwidth($value, 0, 200, '...'
+            ) . ']',
+            self::ERROR_CODE_INVALID_VALUE,
             );
         }
 

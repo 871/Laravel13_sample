@@ -11,6 +11,8 @@ class VarcharCol implements Stringable
 {
     use StringTrait;
 
+    public const ERROR_CODE_INVALID_FORMAT = 1001;
+
     public const MATCH = '/^.{1,255}$/';
 
     /**
@@ -24,6 +26,7 @@ class VarcharCol implements Stringable
                 self::class . ' value varchar format Error'
                 . '[match: ' . (string)self::MATCH . ']'
                 . '[value: ' . mb_strimwidth($value, 0, 200, '...') . ']',
+                self::ERROR_CODE_INVALID_FORMAT,
             );
         }
     }

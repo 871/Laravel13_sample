@@ -155,8 +155,8 @@
             <div class="text-center mt-4">
                 <a 
                     href="{{ route('admin.admin_account.search.index', [
-                        'account_id' => request()->route('account_id'), 
                         ...request()->query(),
+                        'account_id' => request()->route('account_id'), 
                     ]) }}" class="btn btn-secondary px-5"
                 >戻る</a>
                 <button type="submit" class="btn btn-primary px-5 me-3">確認へ</button>

@@ -22,7 +22,7 @@ Route::prefix('ad')->as('admin.')->group(function () {
         Route::middleware([
             \App\Http\Middleware\Admin\AdminAuthMiddleware::class,
             \App\Http\Middleware\Admin\PageAccessLogMiddleware::class,
-            /* 'pageAccessLog', 'adminGrant' */
+            /* 'adminGrant' */
         ])->group(function () {
             Route::get('/error/{message_id?}', [App\Http\Controllers\Admin\ErrorController::class, 'index'])->name('error.index');
             Route::get('/', [App\Http\Controllers\Admin\TopController::class, 'index'])->name('top.index');

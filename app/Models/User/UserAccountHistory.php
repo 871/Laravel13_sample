@@ -22,6 +22,10 @@ class UserAccountHistory extends Model
         'password_changed_at' => 'datetime',
         'password_expires_at' => 'datetime',
         'history_created' => 'datetime',
+        'created_at' => 'datetime',
+        'created_by' => 'integer',
+        'modified_at' => 'datetime',
+        'modified_by' => 'integer',
     ];
 
     public function userAccount()

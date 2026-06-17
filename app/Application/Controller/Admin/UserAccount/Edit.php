@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
 use DomainException;
+use DateTime;
 
 final class Edit implements ApplicationInterface
 {
@@ -135,8 +136,16 @@ final class Edit implements ApplicationInterface
             'name' => $this->request->input('name'),
             'account_status_master_id' => $this->request->input('account_status_master_id'),
             'is_email_verified' => $this->request->input('is_email_verified') ?? '0',
-            'password_changed_at' => $this->request->input('password_changed_at'),
-            'password_expires_at' => $this->request->input('password_expires_at'),
+            'password_changed_at' => (function() {
+                $value = DateTime::createFromFormat('Y-m-d\TH:i:s', $this->request->input('password_changed_at'))
+                    ?: DateTime::createFromFormat('Y-m-d\TH:i', $this->request->input('password_changed_at'));
+                return $value ? $value->format('Y-m-d\TH:i:s') : $this->request->input('password_changed_at');
+            })(),
+            'password_expires_at' => (function() {
+                $value = DateTime::createFromFormat('Y-m-d\TH:i:s', $this->request->input('password_expires_at'))
+                    ?: DateTime::createFromFormat('Y-m-d\TH:i', $this->request->input('password_expires_at'));
+                return $value ? $value->format('Y-m-d\TH:i:s') : $this->request->input('password_expires_at');
+            })(),
         ];
     }
 

@@ -11,6 +11,8 @@ class Id implements Stringable
 {
     use IntTrait;
 
+    public const ERROR_CODE_INVALID_FORMAT = 1001;
+
     /**
      * @param ?string $value
      */
@@ -31,6 +33,7 @@ class Id implements Stringable
             throw new DomainException(
                 self::class . ' value integer format Error'
                 . '[value: ' . mb_strimwidth($value, 0, 200, '...') . ']',
+                self::ERROR_CODE_INVALID_FORMAT,
             );
         }
 

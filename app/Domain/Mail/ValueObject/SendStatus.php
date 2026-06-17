@@ -8,6 +8,8 @@ use Stringable;
 
 class SendStatus implements Stringable
 {
+    public const ERROR_CODE_INVALID_VALUE = 1001;
+
     public const WAITING = 'WAITING';
     public const SENT = 'SENT';
     public const FAILED = 'FAILED';
@@ -32,6 +34,7 @@ class SendStatus implements Stringable
                 self::class . ' value out of range Error'
                 . '[value: ' . $value . ']'
                 . '[allowed: ' . implode(', ', self::VALUES) . ']',
+                self::ERROR_CODE_INVALID_VALUE,
             );
         }
     }

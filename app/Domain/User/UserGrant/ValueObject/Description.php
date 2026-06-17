@@ -13,7 +13,7 @@ class Description implements Stringable
 
     public const MAX_LENGTH = 255;
 
-    public const ERROR_CODE_LENGTH = 1003;
+    public const ERROR_CODE_LENGTH_OVER = 1001;
 
     private ?string $value;
 
@@ -31,9 +31,9 @@ class Description implements Stringable
         if (mb_strlen($value) > self::MAX_LENGTH) {
             throw new DomainException(
                 message: self::class . ' value too long'
-                . '[maxLength: ' . (string)self::MAX_LENGTH . ']'
-                . '[value: ' . mb_strimwidth($value, 0, 200, '...') . ']',
-                code: self::ERROR_CODE_LENGTH,
+                    . '[maxLength: ' . (string)self::MAX_LENGTH . ']'
+                    . '[value: ' . mb_strimwidth($value, 0, 200, '...') . ']',
+                code: self::ERROR_CODE_LENGTH_OVER,
             );
         }
 

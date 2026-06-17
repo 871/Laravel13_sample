@@ -11,6 +11,9 @@ final class FloatCol implements Stringable
 {
     use FloatTrait;
 
+    public const ERROR_CODE_INVALID_FORMAT = 1001;
+    public const ERROR_CODE_INVALID_RANGE = 1002;
+
     public const STEP = 0.00001;
     public const SCALE = 5;
     public const MIN = -99999.99999;
@@ -33,7 +36,10 @@ final class FloatCol implements Stringable
         }
 
         if (!preg_match('/^-?\d+(\.\d{0, ' . (string)self::SCALE . '})?$/', $value)) {
-            throw new DomainException("Invalid float format: {$value}");
+            throw new DomainException(
+                "Invalid float format: {$value}",
+                self::ERROR_CODE_INVALID_FORMAT,
+            );
         }
 
         if (
@@ -46,6 +52,7 @@ final class FloatCol implements Stringable
                 . '[MIN: ' . (string)self::MIN . ']'
                 . '[MAX: ' . (string)self::MAX . ']'
                 . '[STEP: ' . (string)self::STEP . ']',
+                self::ERROR_CODE_INVALID_RANGE,
             );
         }
 

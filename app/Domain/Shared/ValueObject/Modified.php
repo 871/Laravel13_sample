@@ -12,6 +12,9 @@ use Stringable;
 class Modified implements Stringable
 {
     use DateTimeTrait;
+    // TODO: 参照: app/Domain/User/UserAccounts/ValueObject/Name.php:25
+    public const ERROR_CODE_INVALID_VALUE = 1001;
+
 
     /**
      * @var ?\DateTimeInterface
@@ -34,6 +37,7 @@ class Modified implements Stringable
                 self::class . ' value datetime format Error'
                 . '[value: ' . $value . ']'
                 . '[format: ' . $format . ']',
+                self::ERROR_CODE_INVALID_VALUE,
             );
         }
 

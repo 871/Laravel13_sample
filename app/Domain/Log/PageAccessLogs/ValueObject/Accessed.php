@@ -10,6 +10,9 @@ use Stringable;
 
 class Accessed implements Stringable
 {
+    // TODO: 参照: app/Domain/User/UserAccounts/ValueObject/Name.php:25
+    public const ERROR_CODE_INVALID_VALUE = 1001;
+
     /**
      * @var \DateTimeInterface
      */
@@ -21,20 +24,12 @@ class Accessed implements Stringable
      */
     public function __construct(string $value, string $format = 'Y-m-d\\TH:i:s.u')
     {
-        // Try provided format first, then fall back to common variants without failing immediately
-        $formatsToTry = [$format, 'Y-m-d\\TH:i:s.u', 'Y-m-d\\TH:i:s'];
-        $dt = null;
-        foreach ($formatsToTry as $f) {
-            $dt = DateTimeImmutable::createFromFormat($f, $value) ?: null;
-            if ($dt !== null) {
-                break;
-            }
-        }
-
+        $dt = DateTimeImmutable::createFromFormat($format, $value) ?: null;
         if ($dt === null) {
             throw new DomainException(
                 self::class . ' value datetime format Error'
                 . '[value: ' . $value . ']',
+                self::ERROR_CODE_INVALID_VALUE,
             );
         }
 

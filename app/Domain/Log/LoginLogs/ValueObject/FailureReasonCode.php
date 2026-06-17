@@ -11,6 +11,8 @@ class FailureReasonCode implements Stringable
 {
     use StringTrait;
 
+    public const ERROR_CODE_INVALID_VALUE = 1001;
+
     public const LOGIN_ID_NOT_FOUND = 'LOGIN_ID_NOT_FOUND'; // ログインIDなし
     public const INVALID_PASSWORD = 'INVALID_PASSWORD'; // パスワード不一致
     public const PASSWORD_EXPIRED = 'PASSWORD_EXPIRED'; // パスワード有効期限切れ
@@ -39,8 +41,9 @@ class FailureReasonCode implements Stringable
     ) {
         if ($value !== null && !in_array($value, self::VALUES, true)) {
             throw new DomainException(
-                self::class . ' value length Error'
+                self::class . ' value invalid Error'
                 . '[value: ' . mb_strimwidth($value, 0, 200, '...') . ']',
+                self::ERROR_CODE_INVALID_VALUE,
             );
         }
     }

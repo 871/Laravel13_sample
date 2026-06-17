@@ -10,6 +10,8 @@ use Stringable;
 class ModifiedBy implements Stringable
 {
     use IntTrait;
+    // TODO: 参照: app/Domain/User/UserAccounts/ValueObject/Name.php:25
+    public const ERROR_CODE_INVALID_VALUE = 1001;
 
     private ?int $value;
 
@@ -28,6 +30,7 @@ class ModifiedBy implements Stringable
             throw new DomainException(
                 self::class . ' value integer format Error'
                 . '[value: ' . $value . ']',
+                self::ERROR_CODE_INVALID_VALUE,
             );
         }
 

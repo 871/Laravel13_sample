@@ -13,6 +13,8 @@ class SendScheduledAt implements Stringable
 {
     use DateTimeTrait;
 
+    public const ERROR_CODE_INVALID_FORMAT = 1001;
+
     /**
      * @var ?\DateTimeInterface
      */
@@ -35,6 +37,7 @@ class SendScheduledAt implements Stringable
                 self::class . ' value datetime format Error'
                 . '[value: ' . $value . ']'
                 . '[format: ' . $format . ']',
+                self::ERROR_CODE_INVALID_FORMAT,
             );
         }
 

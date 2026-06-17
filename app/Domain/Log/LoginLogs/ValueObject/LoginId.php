@@ -11,6 +11,8 @@ class LoginId implements Stringable
 {
     use StringTrait;
 
+    public const ERROR_CODE_MAX_LENGTH_EXCEEDED = 1001;
+
     public const MAX_LENGTH = 255;
 
     /**
@@ -23,6 +25,7 @@ class LoginId implements Stringable
             throw new DomainException(
                 self::class . ' value length Error'
                 . '[value: ' . mb_strimwidth($value, 0, 200, '...') . ']',
+                self::ERROR_CODE_MAX_LENGTH_EXCEEDED,
             );
         }
     }

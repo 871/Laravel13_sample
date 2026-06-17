@@ -8,6 +8,8 @@ use Stringable;
 
 class AccountType implements Stringable
 {
+    public const ERROR_CODE_INVALID_VALUE = 1001;
+
     public const ADMIN = 'ADMIN';
     public const USER = 'USER';
     public const VALUES = [
@@ -26,6 +28,7 @@ class AccountType implements Stringable
                 self::class . ' value out of range Error'
                 . '[value: ' . $value . ']'
                 . '[allowed: ' . implode(', ', self::VALUES) . ']',
+                self::ERROR_CODE_INVALID_VALUE,
             );
         }
     }
