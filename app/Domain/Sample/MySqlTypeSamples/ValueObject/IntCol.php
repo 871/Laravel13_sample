@@ -11,6 +11,9 @@ class IntCol implements Stringable
 {
     use IntTrait;
 
+    public const ERROR_CODE_INVALID_FORMAT = 1001;
+    public const ERROR_CODE_INVALID_RANGE = 1002;
+
     public const STEP = 1;
     public const MIN = 1;
     public const MAX = 100;
@@ -28,17 +31,26 @@ class IntCol implements Stringable
             return;
         }
 
-        if (
-            // Memo: STEPの判定は省略
-            !preg_match('/^-?\d+$/', $value)
-            || ((int)$value < self::MIN || (int)$value > self::MAX)
-        ) {
+        // Memo: STEPの判定は省略
+        if (!preg_match('/^-?\d+$/', $value)) {
+            throw new DomainException(
+                self::class . ' value format Error'
+                . '[value: ' . $value . ']'
+                . '[MIN: ' . (string)self::MIN . ']'
+                . '[MAX: ' . (string)self::MAX . ']'
+                . '[STEP: ' . (string)self::STEP . ']',
+                self::ERROR_CODE_INVALID_FORMAT,
+            );
+        }
+
+        if ((int)$value < self::MIN || (int)$value > self::MAX) {
             throw new DomainException(
                 self::class . ' value range Error'
                 . '[value: ' . $value . ']'
                 . '[MIN: ' . (string)self::MIN . ']'
                 . '[MAX: ' . (string)self::MAX . ']'
                 . '[STEP: ' . (string)self::STEP . ']',
+                self::ERROR_CODE_INVALID_RANGE,
             );
         }
 

@@ -8,6 +8,10 @@ use Stringable;
 
 class AccountId implements Stringable
 {
+    public const ERROR_CODE_NOT_EMPTY = 1001;
+    public const ERROR_CODE_INVALID_FORMAT = 1002;
+    public const ERROR_CODE_RANGE_UNDER = 1003;
+
     public const MIN = 1;
 
     /**
@@ -24,13 +28,23 @@ class AccountId implements Stringable
             throw new DomainException(
                 self::class . ' value format Error'
                 . '[value: ' . $value . ']',
+                self::ERROR_CODE_NOT_EMPTY,
             );
         }
 
-        if (!preg_match('/^\d+$/', $value) || (int)$value < self::MIN) {
+        if (!preg_match('/^\d+$/', $value)) {
+            throw new DomainException(
+                self::class . ' value format Error'
+                . '[value: ' . $value . ']',
+                self::ERROR_CODE_INVALID_FORMAT,
+            );
+        }
+
+        if ((int)$value < self::MIN) {
             throw new DomainException(
                 self::class . ' value range Error'
                 . '[value: ' . $value . ']',
+                self::ERROR_CODE_RANGE_UNDER,
             );
         }
 
@@ -67,13 +81,6 @@ class AccountId implements Stringable
      */
     public static function fromString(string $value): self
     {
-        if (preg_match('/^-?\d+$/', $value)) {
-            return new self($value);
-        }
-
-        throw new DomainException(
-            self::class . ' value not int Error'
-                . '[value: ' . $value . ']',
-        );
+        return new self($value);
     }
 }

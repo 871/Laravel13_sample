@@ -13,6 +13,8 @@ class DateTimeCol implements Stringable
 {
     use DateTimeTrait;
 
+    public const ERROR_CODE_INVALID_FORMAT = 1001;
+
     public const MIN = '1970-01-01T00:00:00';
     public const MAX = '2999-12-31T23:59:59';
 
@@ -52,9 +54,10 @@ class DateTimeCol implements Stringable
         }
 
         throw new DomainException(
-            self::class . ' value datetime format Error'
-            . '[value: ' . $value . ']'
-            . '[format: ' . $format . ']',
-        );
+                self::class . ' value datetime format Error'
+                . '[value: ' . $value . ']'
+                . '[format: ' . $format . ']',
+                self::ERROR_CODE_INVALID_FORMAT,
+            );
     }
 }

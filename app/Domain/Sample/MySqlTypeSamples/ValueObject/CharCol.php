@@ -11,6 +11,8 @@ class CharCol implements Stringable
 {
     use StringTrait;
 
+    public const ERROR_CODE_INVALID_FORMAT = 1001;
+
     public const MATCH = '/^[a-z\d\-]{10}$/i';
 
     /**
@@ -24,6 +26,7 @@ class CharCol implements Stringable
                 self::class . ' value char format Error'
                 . '[match: ' . (string)self::MATCH . ']'
                 . '[value: ' . mb_strimwidth($value, 0, 200, '...') . ']',
+                self::ERROR_CODE_INVALID_FORMAT,
             );
         }
     }

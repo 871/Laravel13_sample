@@ -11,6 +11,9 @@ final class DoubleCol implements Stringable
 {
     use FloatTrait;
 
+    public const ERROR_CODE_INVALID_FORMAT = 1001;
+    public const ERROR_CODE_INVALID_RANGE = 1002;
+
     public const STEP = 0.0005;
     public const SCALE = 4;
     public const MIN = 0.0000;
@@ -33,7 +36,10 @@ final class DoubleCol implements Stringable
         }
 
         if (!preg_match('/^-?\d+(\.\d{0, ' . (string)self::SCALE . '})?$/', $value)) {
-            throw new DomainException("Invalid double format: {$value}");
+            throw new DomainException(
+                "Invalid double format: {$value}",
+                self::ERROR_CODE_INVALID_FORMAT,
+            );
         }
 
         if (
@@ -46,6 +52,7 @@ final class DoubleCol implements Stringable
                 . '[MIN: ' . (string)self::MIN . ']'
                 . '[MAX: ' . (string)self::MAX . ']'
                 . '[STEP: ' . (string)self::STEP . ']',
+                self::ERROR_CODE_INVALID_RANGE,
             );
         }
 

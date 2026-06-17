@@ -11,6 +11,8 @@ class AccountStatusMasterName implements Stringable
 {
     use StringTrait;
 
+    public const ERROR_CODE_MAX_LENGTH_EXCEEDED = 1001;
+
     public const MAX_LENGTH = 100;
 
     private ?string $value;
@@ -31,6 +33,7 @@ class AccountStatusMasterName implements Stringable
                 self::class . ' value too long'
                 . '[maxLength: ' . (string)self::MAX_LENGTH . ']'
                 . '[value: ' . mb_strimwidth($value, 0, 200, '...') . ']',
+                self::ERROR_CODE_MAX_LENGTH_EXCEEDED,
             );
         }
 

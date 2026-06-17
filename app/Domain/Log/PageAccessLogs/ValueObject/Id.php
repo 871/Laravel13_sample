@@ -10,6 +10,8 @@ use Stringable;
 class Id implements Stringable
 {
     use StringTrait;
+    // TODO: 参照: app/Domain/User/UserAccounts/ValueObject/Name.php:25
+    public const ERROR_CODE_INVALID_FORMAT = 1001;
 
     public const MATCH = '/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i';
 
@@ -24,6 +26,7 @@ class Id implements Stringable
                 self::class . ' value uuid format Error'
                 . '[match: ' . (string)self::MATCH . ']'
                 . '[value: ' . mb_strimwidth($value, 0, 200, '...') . ']',
+                self::ERROR_CODE_INVALID_FORMAT,
             );
         }
     }

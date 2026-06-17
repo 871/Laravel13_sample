@@ -11,6 +11,9 @@ class Id implements Stringable
 {
     use IntTrait;
 
+    public const ERROR_CODE_INVALID_FORMAT = 1001;
+    public const ERROR_CODE_RANGE_OVER = 1002;
+
     public const MIN = 900000;
     public const MAX = 999999;
 
@@ -35,6 +38,7 @@ class Id implements Stringable
             throw new DomainException(
                 self::class . ' value integer format Error'
                 . '[value: ' . mb_strimwidth($value, 0, 200, '...') . ']',
+                self::ERROR_CODE_INVALID_FORMAT,
             );
         }
 
@@ -42,6 +46,7 @@ class Id implements Stringable
             throw new DomainException(
                 self::class . ' value range Error'
                 . '[value: ' . mb_strimwidth($value, 0, 200, '...') . ']',
+                self::ERROR_CODE_RANGE_OVER,
             );
         }
 

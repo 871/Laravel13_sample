@@ -11,6 +11,8 @@ class GrantAccountPermissionId implements Stringable
 {
     use StringTrait;
 
+    public const ERROR_CODE_INVALID_FORMAT = 1001;
+
     private ?string $value;
 
     /**
@@ -24,11 +26,11 @@ class GrantAccountPermissionId implements Stringable
             return;
         }
 
-
         if (!preg_match('/^[0-9a-fA-F-]{36}$/', $value)) {
             throw new DomainException(
                 self::class . ' value UUID format Error'
                 . '[value: ' . mb_strimwidth($value, 0, 200, '...') . ']',
+                self::ERROR_CODE_INVALID_FORMAT,
             );
         }
 

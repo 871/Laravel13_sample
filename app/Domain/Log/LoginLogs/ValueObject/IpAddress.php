@@ -11,6 +11,9 @@ class IpAddress implements Stringable
 {
     use StringTrait;
 
+    public const ERROR_CODE_MAX_LENGTH_EXCEEDED = 1001;
+    public const ERROR_CODE_INVALID_FORMAT = 1002;
+
     public const MAX_LENGTH = 45;
 
     /**
@@ -27,6 +30,7 @@ class IpAddress implements Stringable
             throw new DomainException(
                 self::class . ' value length Error'
                 . '[value: ' . mb_strimwidth($value, 0, 200, '...') . ']',
+                self::ERROR_CODE_MAX_LENGTH_EXCEEDED,
             );
         }
 
@@ -34,6 +38,7 @@ class IpAddress implements Stringable
             throw new DomainException(
                 self::class . ' value ip address format Error'
                 . '[value: ' . mb_strimwidth($value, 0, 200, '...') . ']',
+                self::ERROR_CODE_INVALID_FORMAT,
             );
         }
     }

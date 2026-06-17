@@ -12,14 +12,11 @@ use Stringable;
 class TimeCol implements Stringable
 {
     use TimeTrait;
+    public const ERROR_CODE_INVALID_FORMAT = 1001;
+    public const ERROR_CODE_RANGE_EXCEEDED = 1002;
 
     public const MIN = '00:00:00';
     public const MAX = '23:59:59';
-
-    /**
-     * @var ?\DateTimeInterface
-     */
-    private readonly ?DateTimeInterface $value;
 
     /**
      * @param ?string $value
@@ -37,6 +34,7 @@ class TimeCol implements Stringable
                 self::class . ' value time format Error'
                 . '[value: ' . $value . ']'
                 . '[format: ' . $format . ']',
+                self::ERROR_CODE_INVALID_FORMAT,
             );
         }
 
@@ -49,6 +47,7 @@ class TimeCol implements Stringable
                 . '[value: ' . $value . ']'
                 . '[min: ' . self::MIN . ']'
                 . '[max: ' . self::MAX . ']',
+                self::ERROR_CODE_RANGE_EXCEEDED,
             );
         }
         $this->value = $resultValue;

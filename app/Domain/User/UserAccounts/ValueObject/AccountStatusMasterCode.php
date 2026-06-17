@@ -11,6 +11,8 @@ class AccountStatusMasterCode implements Stringable
 {
     use StringTrait;
 
+    public const ERROR_CODE_INVALID_VALUE = 1001;
+
     public const PENDING = 'PENDING';
     public const ACTIVE = 'ACTIVE';
     public const SUSPENDED = 'SUSPENDED';
@@ -42,6 +44,7 @@ class AccountStatusMasterCode implements Stringable
             throw new DomainException(
                 self::class . ' value type Error'
                 . '[value: ' . mb_strimwidth($value, 0, 200, '...') . ']',
+                self::ERROR_CODE_INVALID_VALUE,
             );
         }
 

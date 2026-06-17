@@ -13,13 +13,11 @@ class DateCol implements Stringable
 {
     use DateTrait;
 
+    public const ERROR_CODE_INVALID_FORMAT = 1001;
+    public const ERROR_CODE_INVALID_RANGE = 1002;
+
     public const MIN = '1970-01-01';
     public const MAX = '2999-12-31';
-
-    /**
-     * @var ?\DateTimeInterface
-     */
-    private readonly ?DateTimeInterface $value;
 
     /**
      * @param ?string $value
@@ -37,6 +35,7 @@ class DateCol implements Stringable
                 self::class . ' value date format Error'
                 . '[value: ' . $value . ']'
                 . '[format: ' . $format . ']',
+                self::ERROR_CODE_INVALID_FORMAT,
             );
         }
 
@@ -49,6 +48,7 @@ class DateCol implements Stringable
                 . '[value: ' . $value . ']'
                 . '[min: ' . self::MIN . ']'
                 . '[max: ' . self::MAX . ']',
+                self::ERROR_CODE_INVALID_RANGE,
             );
         }
 

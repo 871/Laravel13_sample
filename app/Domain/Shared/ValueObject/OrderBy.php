@@ -7,6 +7,9 @@ use DomainException;
 
 class OrderBy
 {
+    // TODO: 参照: app/Domain/User/UserAccounts/ValueObject/Name.php:25
+    public const ERROR_CODE_INVALID_VALUE = 1001;
+
     const ASC = 'ASC';
     const DESC = 'DESC';
     public const ALLOWED_VALUES = [
@@ -25,8 +28,10 @@ class OrderBy
         if (!in_array($order, self::ALLOWED_VALUES, true)) {
             throw new DomainException(
                 self::class . ' sort order value not allowed'
-                . '[value: ' . mb_strimwidth($order, 0, 200, '...') . ']'
+                . '[value: ' . mb_strimwidth($order, 0, 200, '...'
+            ) . ']'
                 . '[allowed: ' . implode(', ', self::ALLOWED_VALUES) . ']',
+            self::ERROR_CODE_INVALID_VALUE,
             );
         }
     }

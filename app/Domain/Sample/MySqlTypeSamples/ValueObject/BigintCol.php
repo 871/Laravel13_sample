@@ -9,6 +9,7 @@ use DomainException;
 class BigintCol
 {
     use IntTrait;
+    public const ERROR_CODE_RANGE_ERROR = 1001;
 
     public const STEP = 1;
     public const MIN = -100000000000;
@@ -38,6 +39,7 @@ class BigintCol
                 . '[MIN: ' . (string)self::MIN . ']'
                 . '[MAX: ' . (string)self::MAX . ']'
                 . '[STEP: ' . (string)self::STEP . ']',
+                self::ERROR_CODE_RANGE_ERROR,
             );
         }
 

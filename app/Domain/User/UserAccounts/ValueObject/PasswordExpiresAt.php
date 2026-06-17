@@ -12,7 +12,7 @@ use Stringable;
 class PasswordExpiresAt implements Stringable
 {
     use DateTimeTrait;
-
+    
     const ERROR_CODE_INVALID_FORMAT = 1001;
 
     /**
@@ -43,9 +43,10 @@ class PasswordExpiresAt implements Stringable
         }
 
         throw new DomainException(
-            self::class . ' value datetime format Error'
-            . '[value: ' . $value . ']'
-            . '[format: ' . $format . ']',
-        );
+                self::class . ' value datetime format Error'
+                . '[value: ' . $value . ']'
+                . '[format: ' . $format . ']',
+                self::ERROR_CODE_INVALID_FORMAT,
+            );
     }
 }

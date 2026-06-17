@@ -11,6 +11,8 @@ class GrantAccountPermissionId implements Stringable
 {
     use UuidTrait;
 
+    public const ERROR_CODE_INVALID_VALUE = 1001;
+
     private ?string $value;
 
     /**
@@ -28,6 +30,7 @@ class GrantAccountPermissionId implements Stringable
             throw new DomainException(
                 self::class . ' value uuid format Error'
                 . '[value: ' . mb_strimwidth($value, 0, 200, '...') . ']',
+                self::ERROR_CODE_INVALID_VALUE,
             );
         }
 
