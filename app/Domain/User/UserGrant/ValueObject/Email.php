@@ -7,8 +7,9 @@ use App\Domain\Shared\ValueObject\Trait\StringTrait;
 use DomainException;
 use Stringable;
 
-class Email implements Stringable
-{
+use App\Domain\Shared\ValueObject\ValueObjectInterface;
+
+class Email implements Stringable, ValueObjectInterface {
     use StringTrait;
 
     const ERROR_CODE_LENGTH_OVER = 1001;

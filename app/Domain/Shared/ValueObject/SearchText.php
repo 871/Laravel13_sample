@@ -6,8 +6,7 @@ namespace App\Domain\Shared\ValueObject;
 use App\Domain\Shared\ValueObject\Trait\StringTrait;
 use Stringable;
 
-class SearchText implements Stringable
-{
+class SearchText implements Stringable, ValueObjectInterface {
     use StringTrait;
 
     /**

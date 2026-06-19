@@ -7,11 +7,14 @@ use App\Domain\Shared\ValueObject\Trait\StringTrait;
 use DomainException;
 use Stringable;
 
-class FailureReasonCode implements Stringable
-{
-    use StringTrait;
+use App\Domain\Shared\ValueObject\ValueObjectInterface;
 
-    public const ERROR_CODE_INVALID_VALUE = 1001;
+class FailureReasonCode implements Stringable, ValueObjectInterface {
+    // TODO: Added error code constants copied from ValueObjectInterface (/Users/hiro871/Develop/laravel-sample/sample-app/app/Domain/Shared/ValueObject/ValueObjectInterface.php)
+    public const ERROR_CODE_INVALID_VALUE = 1014;
+
+
+    use StringTrait;
 
     public const LOGIN_ID_NOT_FOUND = 'LOGIN_ID_NOT_FOUND'; // ログインIDなし
     public const INVALID_PASSWORD = 'INVALID_PASSWORD'; // パスワード不一致

@@ -7,11 +7,14 @@ use App\Domain\Shared\ValueObject\Trait\IntTrait;
 use DomainException;
 use Stringable;
 
-class Id implements Stringable
-{
-    use IntTrait;
+use App\Domain\Shared\ValueObject\ValueObjectInterface;
 
-    public const ERROR_CODE_INVALID_FORMAT = 1001;
+class Id implements Stringable, ValueObjectInterface {
+    // TODO: Added error code constants copied from ValueObjectInterface (/Users/hiro871/Develop/laravel-sample/sample-app/app/Domain/Shared/ValueObject/ValueObjectInterface.php)
+    public const ERROR_CODE_INVALID_FORMAT = 1003;
+
+
+    use IntTrait;
 
     /**
      * @param ?string $value

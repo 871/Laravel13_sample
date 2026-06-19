@@ -9,11 +9,14 @@ use DateTimeInterface;
 use DomainException;
 use Stringable;
 
-class DateTimeCol implements Stringable
-{
-    use DateTimeTrait;
+use App\Domain\Shared\ValueObject\ValueObjectInterface;
 
-    public const ERROR_CODE_INVALID_FORMAT = 1001;
+class DateTimeCol implements Stringable, ValueObjectInterface {
+    // TODO: Added error code constants copied from ValueObjectInterface (/Users/hiro871/Develop/laravel-sample/sample-app/app/Domain/Shared/ValueObject/ValueObjectInterface.php)
+    public const ERROR_CODE_INVALID_FORMAT = 1003;
+
+
+    use DateTimeTrait;
 
     public const MIN = '1970-01-01T00:00:00';
     public const MAX = '2999-12-31T23:59:59';

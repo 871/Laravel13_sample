@@ -7,12 +7,15 @@ use App\Domain\Shared\ValueObject\Trait\StringTrait;
 use DomainException;
 use Stringable;
 
-class IpAddress implements Stringable
-{
-    use StringTrait;
+use App\Domain\Shared\ValueObject\ValueObjectInterface;
 
-    public const ERROR_CODE_MAX_LENGTH_EXCEEDED = 1001;
-    public const ERROR_CODE_INVALID_FORMAT = 1002;
+class IpAddress implements Stringable, ValueObjectInterface {
+    // TODO: Added error code constants copied from ValueObjectInterface (/Users/hiro871/Develop/laravel-sample/sample-app/app/Domain/Shared/ValueObject/ValueObjectInterface.php)
+    public const ERROR_CODE_MAX_LENGTH_EXCEEDED = 1016;
+    public const ERROR_CODE_INVALID_FORMAT = 1003;
+
+
+    use StringTrait;
 
     public const MAX_LENGTH = 45;
 

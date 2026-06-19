@@ -9,11 +9,14 @@ use DateTimeInterface;
 use DomainException;
 use Stringable;
 
-class Created implements Stringable
-{
+use App\Domain\Shared\ValueObject\ValueObjectInterface;
+
+class Created implements Stringable, ValueObjectInterface {
+    // TODO: Added error code constants copied from ValueObjectInterface (/Users/hiro871/Develop/laravel-sample/sample-app/app/Domain/Shared/ValueObject/ValueObjectInterface.php)
+    public const ERROR_CODE_INVALID_VALUE = 1014;
+
+
     use DateTimeTrait;
-    // TODO: 参照: app/Domain/User/UserAccounts/ValueObject/Name.php:25
-    public const ERROR_CODE_INVALID_VALUE = 1001;
 
 
     /**

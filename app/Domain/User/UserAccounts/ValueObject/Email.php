@@ -7,14 +7,17 @@ use App\Domain\Shared\ValueObject\Trait\StringTrait;
 use DomainException;
 use Stringable;
 
-class Email implements Stringable
-{
+use App\Domain\Shared\ValueObject\ValueObjectInterface;
+
+class Email implements Stringable, ValueObjectInterface {
+    // TODO: Added error code constants copied from ValueObjectInterface (/Users/hiro871/Develop/laravel-sample/sample-app/app/Domain/Shared/ValueObject/ValueObjectInterface.php)
+    public const ERROR_CODE_TOO_LONG = 1012;
+    public const ERROR_CODE_INVALID_FORMAT = 1003;
+
+
     use StringTrait;
 
     public const MAX_LENGTH = 255;
-
-    public const ERROR_CODE_INVALID_FORMAT = 1001;
-    public const ERROR_CODE_TOO_LONG = 1002;
 
     /**
      * @param ?string $value

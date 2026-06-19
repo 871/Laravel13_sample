@@ -6,8 +6,7 @@ namespace App\Domain\Mail\ValueObject;
 use App\Domain\Shared\ValueObject\Trait\StringTrait;
 use Stringable;
 
-class OriginalMessageId implements Stringable
-{
+class OriginalMessageId implements Stringable, ValueObjectInterface {
     use StringTrait;
 
     /**

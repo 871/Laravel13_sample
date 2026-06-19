@@ -9,11 +9,15 @@ use DateTimeInterface;
 use DomainException;
 use Stringable;
 
-class TimeCol implements Stringable
-{
+use App\Domain\Shared\ValueObject\ValueObjectInterface;
+
+class TimeCol implements Stringable, ValueObjectInterface {
+    // TODO: Added error code constants copied from ValueObjectInterface (/Users/hiro871/Develop/laravel-sample/sample-app/app/Domain/Shared/ValueObject/ValueObjectInterface.php)
+    public const ERROR_CODE_INVALID_FORMAT = 1003;
+    public const ERROR_CODE_RANGE_EXCEEDED = 1009;
+
+
     use TimeTrait;
-    public const ERROR_CODE_INVALID_FORMAT = 1001;
-    public const ERROR_CODE_RANGE_EXCEEDED = 1002;
 
     public const MIN = '00:00:00';
     public const MAX = '23:59:59';

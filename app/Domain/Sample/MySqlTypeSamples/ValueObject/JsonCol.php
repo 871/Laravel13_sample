@@ -8,12 +8,15 @@ use DomainException;
 use JsonException;
 use Stringable;
 
-class JsonCol implements Stringable
-{
-    use JsonTrait;
+use App\Domain\Shared\ValueObject\ValueObjectInterface;
 
-    public const ERROR_CODE_INVALID_FORMAT = 1001;
-    public const ERROR_CODE_MAX_BYTE_EXCEEDED = 1002;
+class JsonCol implements Stringable, ValueObjectInterface {
+    // TODO: Added error code constants copied from ValueObjectInterface (/Users/hiro871/Develop/laravel-sample/sample-app/app/Domain/Shared/ValueObject/ValueObjectInterface.php)
+    public const ERROR_CODE_MAX_BYTE_EXCEEDED = 1006;
+    public const ERROR_CODE_INVALID_FORMAT = 1003;
+
+
+    use JsonTrait;
 
     public const MAX_BYTE = 1048567; // 1MB(1024 * 2024)
 

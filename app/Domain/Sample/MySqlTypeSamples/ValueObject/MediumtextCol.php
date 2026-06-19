@@ -7,11 +7,14 @@ use App\Domain\Shared\ValueObject\Trait\StringTrait;
 use DomainException;
 use Stringable;
 
-class MediumtextCol implements Stringable
-{
+use App\Domain\Shared\ValueObject\ValueObjectInterface;
+
+class MediumtextCol implements Stringable, ValueObjectInterface {
+    // TODO: Added error code constants copied from ValueObjectInterface (/Users/hiro871/Develop/laravel-sample/sample-app/app/Domain/Shared/ValueObject/ValueObjectInterface.php)
+    public const ERROR_CODE_MAX_LENGTH_EXCEEDED = 1016;
+
+
     use StringTrait;
-    
-    public const ERROR_CODE_MAX_LENGTH_EXCEEDED = 1001;
 
     public const MAX_LENGTH = 16777215;
 

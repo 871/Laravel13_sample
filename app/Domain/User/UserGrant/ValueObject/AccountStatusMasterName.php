@@ -7,8 +7,7 @@ use App\Domain\Shared\ValueObject\Trait\StringTrait;
 use DomainException;
 use Stringable;
 
-class AccountStatusMasterName implements Stringable
-{
+class AccountStatusMasterName implements Stringable, ValueObjectInterface {
     use StringTrait;
 
     public const MAX_LENGTH = 100;

@@ -9,11 +9,14 @@ use DateTimeInterface;
 use DomainException;
 use Stringable;
 
-class SendScheduledAt implements Stringable
-{
-    use DateTimeTrait;
+use App\Domain\Shared\ValueObject\ValueObjectInterface;
 
-    public const ERROR_CODE_INVALID_FORMAT = 1001;
+class SendScheduledAt implements Stringable, ValueObjectInterface {
+    // TODO: Added error code constants copied from ValueObjectInterface (/Users/hiro871/Develop/laravel-sample/sample-app/app/Domain/Shared/ValueObject/ValueObjectInterface.php)
+    public const ERROR_CODE_INVALID_FORMAT = 1003;
+
+
+    use DateTimeTrait;
 
     /**
      * @var ?\DateTimeInterface

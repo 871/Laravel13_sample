@@ -9,8 +9,9 @@ use DateTimeInterface;
 use DomainException;
 use Stringable;
 
-class PasswordExpiresAt implements Stringable
-{
+use App\Domain\Shared\ValueObject\ValueObjectInterface;
+
+class PasswordExpiresAt implements Stringable, ValueObjectInterface {
     use DateTimeTrait;
     
     const ERROR_CODE_INVALID_FORMAT = 1001;

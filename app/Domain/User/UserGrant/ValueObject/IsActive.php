@@ -7,15 +7,18 @@ use App\Domain\Shared\ValueObject\Trait\IntTrait;
 use DomainException;
 use Stringable;
 
-class IsActive implements Stringable
-{
+use App\Domain\Shared\ValueObject\ValueObjectInterface;
+
+class IsActive implements Stringable, ValueObjectInterface {
+    // TODO: Added error code constants copied from ValueObjectInterface (/Users/hiro871/Develop/laravel-sample/sample-app/app/Domain/Shared/ValueObject/ValueObjectInterface.php)
+    public const ERROR_CODE_OUT_OF_TYPE = 1008;
+
+
     use IntTrait;
 
     public const INACTIVE = 0;
     public const ACTIVE = 1;
     public const VALUES = [self::INACTIVE, self::ACTIVE];
-
-    public const ERROR_CODE_OUT_OF_TYPE = 1001;
 
     private ?int $value;
 

@@ -6,9 +6,13 @@ namespace App\Domain\Log\PageAccessLogs\ValueObject;
 use DomainException;
 use Stringable;
 
-class AccountType implements Stringable
-{
-    public const ERROR_CODE_INVALID_VALUE = 1001;
+use App\Domain\Shared\ValueObject\ValueObjectInterface;
+
+class AccountType implements Stringable, ValueObjectInterface {
+    // TODO: Added error code constants copied from ValueObjectInterface (/Users/hiro871/Develop/laravel-sample/sample-app/app/Domain/Shared/ValueObject/ValueObjectInterface.php)
+    public const ERROR_CODE_INVALID_VALUE = 1014;
+
+
 
     public const ADMIN = 'ADMIN';
     public const USER = 'USER';

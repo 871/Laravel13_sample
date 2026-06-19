@@ -7,13 +7,16 @@ use App\Domain\Shared\ValueObject\Trait\StringTrait;
 use DomainException;
 use Stringable;
 
-class Name implements Stringable
-{
+use App\Domain\Shared\ValueObject\ValueObjectInterface;
+
+class Name implements Stringable, ValueObjectInterface {
+    // TODO: Added error code constants copied from ValueObjectInterface (/Users/hiro871/Develop/laravel-sample/sample-app/app/Domain/Shared/ValueObject/ValueObjectInterface.php)
+    public const ERROR_CODE_LENGTH = 1005;
+
+
     use StringTrait;
 
     public const MAX_LENGTH = 100;
-
-    public const ERROR_CODE_LENGTH = 1001;
 
     private ?string $value;
 

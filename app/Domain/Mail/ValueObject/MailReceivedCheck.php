@@ -7,13 +7,17 @@ use App\Domain\Shared\ValueObject\Trait\StringTrait;
 use DomainException;
 use Stringable;
 
-class MailReceivedCheck implements Stringable
-{
+use App\Domain\Shared\ValueObject\ValueObjectInterface;
+
+class MailReceivedCheck implements Stringable, ValueObjectInterface {
+    // TODO: Added error code constants copied from ValueObjectInterface (/Users/hiro871/Develop/laravel-sample/sample-app/app/Domain/Shared/ValueObject/ValueObjectInterface.php)
+    public const ERROR_CODE_LENGTH = 1005;
+    public const ERROR_CODE_EMAIL_FORMAT = 1001;
+
+
     use StringTrait;
 
     public const MAX_LENGTH = 255;
-    public const ERROR_CODE_LENGTH = 1001;
-    public const ERROR_CODE_EMAIL_FORMAT = 1002;
 
     /**
      * @param ?string $value

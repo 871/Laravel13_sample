@@ -6,13 +6,16 @@ namespace App\Domain\Admin\AdminAccounts\ValueObject;
 use App\Domain\Shared\ValueObject\Trait\StringTrait;
 use Stringable;
 
-class AdminNote implements Stringable
-{
+use App\Domain\Shared\ValueObject\ValueObjectInterface;
+
+class AdminNote implements Stringable, ValueObjectInterface {
+    // TODO: Added error code constants copied from ValueObjectInterface (/Users/hiro871/Develop/laravel-sample/sample-app/app/Domain/Shared/ValueObject/ValueObjectInterface.php)
+    public const ERROR_CODE_TOO_LONG = 1012;
+
+
     use StringTrait;
 
     public const MAX_LENGTH = 16383;
-
-    public const ERROR_CODE_TOO_LONG = 1001;
 
     /**
      * @param ?string $value

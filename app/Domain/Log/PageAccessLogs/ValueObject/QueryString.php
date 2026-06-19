@@ -6,8 +6,7 @@ namespace App\Domain\Log\PageAccessLogs\ValueObject;
 use App\Domain\Shared\ValueObject\Trait\StringTrait;
 use Stringable;
 
-class QueryString implements Stringable
-{
+class QueryString implements Stringable, ValueObjectInterface {
     use StringTrait;
 
     /**

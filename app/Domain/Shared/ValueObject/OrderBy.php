@@ -5,10 +5,14 @@ namespace App\Domain\Shared\ValueObject;
 
 use DomainException;
 
+use App\Domain\Shared\ValueObject\ValueObjectInterface;
+
 class OrderBy
-{
-    // TODO: 参照: app/Domain/User/UserAccounts/ValueObject/Name.php:25
-    public const ERROR_CODE_INVALID_VALUE = 1001;
+ implements ValueObjectInterface {
+    // TODO: Added error code constants copied from ValueObjectInterface (/Users/hiro871/Develop/laravel-sample/sample-app/app/Domain/Shared/ValueObject/ValueObjectInterface.php)
+    public const ERROR_CODE_INVALID_VALUE = 1014;
+
+
 
     const ASC = 'ASC';
     const DESC = 'DESC';

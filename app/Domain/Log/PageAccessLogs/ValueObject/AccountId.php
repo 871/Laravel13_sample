@@ -6,11 +6,15 @@ namespace App\Domain\Log\PageAccessLogs\ValueObject;
 use DomainException;
 use Stringable;
 
-class AccountId implements Stringable
-{
-    public const ERROR_CODE_NOT_EMPTY = 1001;
-    public const ERROR_CODE_INVALID_FORMAT = 1002;
-    public const ERROR_CODE_RANGE_UNDER = 1003;
+use App\Domain\Shared\ValueObject\ValueObjectInterface;
+
+class AccountId implements Stringable, ValueObjectInterface {
+    // TODO: Added error code constants copied from ValueObjectInterface (/Users/hiro871/Develop/laravel-sample/sample-app/app/Domain/Shared/ValueObject/ValueObjectInterface.php)
+    public const ERROR_CODE_NOT_EMPTY = 1007;
+    public const ERROR_CODE_INVALID_FORMAT = 1003;
+    public const ERROR_CODE_RANGE_UNDER = 1011;
+
+
 
     public const MIN = 1;
 

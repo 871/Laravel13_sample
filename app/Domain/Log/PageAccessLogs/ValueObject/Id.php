@@ -7,11 +7,14 @@ use App\Domain\Shared\ValueObject\Trait\StringTrait;
 use DomainException;
 use Stringable;
 
-class Id implements Stringable
-{
+use App\Domain\Shared\ValueObject\ValueObjectInterface;
+
+class Id implements Stringable, ValueObjectInterface {
+    // TODO: Added error code constants copied from ValueObjectInterface (/Users/hiro871/Develop/laravel-sample/sample-app/app/Domain/Shared/ValueObject/ValueObjectInterface.php)
+    public const ERROR_CODE_INVALID_FORMAT = 1003;
+
+
     use StringTrait;
-    // TODO: 参照: app/Domain/User/UserAccounts/ValueObject/Name.php:25
-    public const ERROR_CODE_INVALID_FORMAT = 1001;
 
     public const MATCH = '/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i';
 

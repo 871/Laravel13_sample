@@ -7,11 +7,14 @@ use App\Domain\Shared\ValueObject\Trait\StringTrait;
 use DomainException;
 use Stringable;
 
-class AccountStatusMasterCode implements Stringable
-{
+use App\Domain\Shared\ValueObject\ValueObjectInterface;
+
+class AccountStatusMasterCode implements Stringable, ValueObjectInterface {
+    // TODO: Added error code constants copied from ValueObjectInterface (/Users/hiro871/Develop/laravel-sample/sample-app/app/Domain/Shared/ValueObject/ValueObjectInterface.php)
+    public const ERROR_CODE_INVALID_VALUE = 1014;
+
+
     use StringTrait;
-    
-    public const ERROR_CODE_INVALID_VALUE = 1001;
 
     public const PENDING = 'PENDING';
     public const ACTIVE = 'ACTIVE';

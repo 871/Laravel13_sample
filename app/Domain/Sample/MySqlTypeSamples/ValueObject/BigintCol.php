@@ -6,10 +6,15 @@ namespace App\Domain\Sample\MySqlTypeSamples\ValueObject;
 use App\Domain\Shared\ValueObject\Trait\IntTrait;
 use DomainException;
 
+use App\Domain\Shared\ValueObject\ValueObjectInterface;
+
 class BigintCol
-{
+ implements ValueObjectInterface {
+    // TODO: Added error code constants copied from ValueObjectInterface (/Users/hiro871/Develop/laravel-sample/sample-app/app/Domain/Shared/ValueObject/ValueObjectInterface.php)
+    public const ERROR_CODE_RANGE_ERROR = 1018;
+
+
     use IntTrait;
-    public const ERROR_CODE_RANGE_ERROR = 1001;
 
     public const STEP = 1;
     public const MIN = -100000000000;

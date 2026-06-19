@@ -7,12 +7,15 @@ use App\Domain\Shared\ValueObject\Trait\IntTrait;
 use DomainException;
 use Stringable;
 
-class GrantRoleId implements Stringable
-{
-    use IntTrait;
+use App\Domain\Shared\ValueObject\ValueObjectInterface;
 
-    public const ERROR_CODE_INVALID_FORMAT = 1001;
-    public const ERROR_CODE_RANGE_OVER = 1002;
+class GrantRoleId implements Stringable, ValueObjectInterface {
+    // TODO: Added error code constants copied from ValueObjectInterface (/Users/hiro871/Develop/laravel-sample/sample-app/app/Domain/Shared/ValueObject/ValueObjectInterface.php)
+    public const ERROR_CODE_INVALID_FORMAT = 1003;
+    public const ERROR_CODE_RANGE_OVER = 1010;
+
+
+    use IntTrait;
 
     private ?int $value;
 

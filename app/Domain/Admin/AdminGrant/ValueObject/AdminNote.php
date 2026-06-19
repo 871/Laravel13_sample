@@ -6,8 +6,7 @@ namespace App\Domain\Admin\AdminGrant\ValueObject;
 use App\Domain\Shared\ValueObject\Trait\StringTrait;
 use Stringable;
 
-class AdminNote implements Stringable
-{
+class AdminNote implements Stringable, ValueObjectInterface {
     use StringTrait;
 
     private ?string $value;

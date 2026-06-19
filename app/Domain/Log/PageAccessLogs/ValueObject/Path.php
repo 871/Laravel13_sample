@@ -6,9 +6,13 @@ namespace App\Domain\Log\PageAccessLogs\ValueObject;
 use DomainException;
 use Stringable;
 
-class Path implements Stringable
-{
-    public const ERROR_CODE_MAX_LENGTH_EXCEEDED = 1001;
+use App\Domain\Shared\ValueObject\ValueObjectInterface;
+
+class Path implements Stringable, ValueObjectInterface {
+    // TODO: Added error code constants copied from ValueObjectInterface (/Users/hiro871/Develop/laravel-sample/sample-app/app/Domain/Shared/ValueObject/ValueObjectInterface.php)
+    public const ERROR_CODE_MAX_LENGTH_EXCEEDED = 1016;
+
+
 
     public const MAX_LENGTH = 2048;
 

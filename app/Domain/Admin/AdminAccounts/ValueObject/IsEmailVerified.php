@@ -7,11 +7,14 @@ use App\Domain\Shared\ValueObject\Trait\IntTrait;
 use DomainException;
 use Stringable;
 
-class IsEmailVerified implements Stringable
-{
-    use IntTrait;
+use App\Domain\Shared\ValueObject\ValueObjectInterface;
 
-    public const ERROR_CODE_OUT_OF_RANGE = 1001;
+class IsEmailVerified implements Stringable, ValueObjectInterface {
+    // TODO: Added error code constants copied from ValueObjectInterface (/Users/hiro871/Develop/laravel-sample/sample-app/app/Domain/Shared/ValueObject/ValueObjectInterface.php)
+    public const ERROR_CODE_OUT_OF_RANGE = 1015;
+
+
+    use IntTrait;
 
     public const VALUES = [0, 1];
 

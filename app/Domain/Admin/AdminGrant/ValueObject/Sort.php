@@ -7,13 +7,16 @@ use App\Domain\Shared\ValueObject\Trait\IntTrait;
 use DomainException;
 use Stringable;
 
-class Sort implements Stringable
-{
+use App\Domain\Shared\ValueObject\ValueObjectInterface;
+
+class Sort implements Stringable, ValueObjectInterface {
+    // TODO: Added error code constants copied from ValueObjectInterface (/Users/hiro871/Develop/laravel-sample/sample-app/app/Domain/Shared/ValueObject/ValueObjectInterface.php)
+    public const ERROR_CODE_INTEGER_FORMAT = 1002;
+
+
     use IntTrait;
 
     private ?int $value;
-
-    public const ERROR_CODE_INTEGER_FORMAT = 1001;
 
     /**
      * @param ?string $value

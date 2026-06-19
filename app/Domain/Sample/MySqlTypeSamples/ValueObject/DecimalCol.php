@@ -7,12 +7,15 @@ use App\Domain\Shared\ValueObject\Trait\FloatTrait;
 use DomainException;
 use Stringable;
 
-final class DecimalCol implements Stringable
-{
-    use FloatTrait;
+use App\Domain\Shared\ValueObject\ValueObjectInterface;
 
-    public const ERROR_CODE_INVALID_FORMAT = 1001;
-    public const ERROR_CODE_INVALID_RANGE = 1002;
+final class DecimalCol implements Stringable, ValueObjectInterface {
+    // TODO: Added error code constants copied from ValueObjectInterface (/Users/hiro871/Develop/laravel-sample/sample-app/app/Domain/Shared/ValueObject/ValueObjectInterface.php)
+    public const ERROR_CODE_INVALID_FORMAT = 1003;
+    public const ERROR_CODE_INVALID_RANGE = 1004;
+
+
+    use FloatTrait;
 
     public const STEP = 0.01;
     public const SCALE = 2;
